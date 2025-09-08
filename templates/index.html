@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome - InternGenius{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row align-items-center min-vh-75">
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold text-primary mb-4">
+                Welcome to <span class="text-gradient">InternGenius</span>
+            </h1>
+            <p class="lead text-muted mb-4">
+                The intelligent platform that connects students with the perfect internship opportunities. 
+                Whether you're a student seeking experience or a company looking for talent, we've got you covered.
+            </p>
+            
+            {% if not current_user.is_authenticated %}
+                <div class="d-flex gap-3 mb-4">
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Get Started
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                    </a>
+                </div>
+            {% else %}
+                <div class="d-flex gap-3 mb-4">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-lg-6 text-center">
+            <div class="hero-illustration">
+                <i class="fas fa-users-gear display-1 text-primary opacity-75"></i>
+                <div class="mt-3">
+                    <i class="fas fa-graduation-cap fs-1 text-success me-3"></i>
+                    <i class="fas fa-handshake fs-1 text-warning me-3"></i>
+                    <i class="fas fa-building fs-1 text-info"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mt-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="display-6 fw-bold">Why Choose InternGenius?</h2>
+            <p class="text-muted">Discover what makes our platform unique</p>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="bg-primary bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                        <i class="fas fa-graduation-cap text-white fs-4"></i>
+                    </div>
+                    <h5 class="card-title">For Students</h5>
+                    <p class="card-text text-muted">
+                        Discover internships that match your skills, interests, and career goals. 
+                        Build your profile and get noticed by top companies.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="bg-success bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                        <i class="fas fa-building text-white fs-4"></i>
+                    </div>
+                    <h5 class="card-title">For Companies</h5>
+                    <p class="card-text text-muted">
+                        Post internship opportunities and connect with talented students. 
+                        Streamline your recruitment process with intelligent matching.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="bg-info bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                        <i class="fas fa-cogs text-white fs-4"></i>
+                    </div>
+                    <h5 class="card-title">Smart Matching</h5>
+                    <p class="card-text text-muted">
+                        Our AI-powered system ensures the best matches between students and opportunities, 
+                        saving time and improving outcomes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    {% if not current_user.is_authenticated %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="bg-primary bg-gradient rounded-3 p-5 text-center text-white">
+                <h3 class="display-6 fw-bold mb-3">Ready to Get Started?</h3>
+                <p class="lead mb-4">Join thousands of students and companies already using InternGenius</p>
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-rocket me-2"></i>Create Your Account
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.min-vh-75 {
+    min-height: 75vh;
+}
+
+.text-gradient {
+    background: linear-gradient(45deg, #007bff, #28a745);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-illustration {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+}
+</style>
+{% endblock %}
