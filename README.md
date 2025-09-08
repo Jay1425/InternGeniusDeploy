@@ -1,116 +1,132 @@
-# 🎓 InternGenius - AI-Based Drop-out Prediction & Counseling System
+# 🎓 InternGenius - AI-Powered Internship Matching Platform
 
-[![Problem ID](https://img.shields.io/badge/Problem%20ID-25102-blue.svg)](https://github.com/vishakha1221/InternGenius)
+[![Problem ID](https://img.shields.io/badge/Problem%20ID-25033-blue.svg)](https://github.com/vishakha1221/InternGenius)
 [![Status](https://img.shields.io/badge/Status-In%20Development-orange.svg)](https://github.com/vishakha1221/InternGenius)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **Empowering Educational Institutions with Early Detection, Transparency, and Timely Intervention**
+> **Connecting Students with Opportunities: Inclusive, Accessible, Intelligent**
 
-An intelligent system that consolidates student data from multiple sources, applies rule-based and ML-light logic to detect at-risk students, and enables proactive counseling intervention to prevent drop-outs.
+An AI-powered platform that matches students from diverse backgrounds with relevant internship opportunities based on their skills, interests, and profile, ensuring equal access regardless of digital literacy or prior experience.
 
 ---
 
-## 🎯 Problem Statement Overview (Problem ID: 25102)
+## 📌 Problem Statement (PS 25033)
+
+The PM Internship Scheme receives thousands of applications from students across India's rural, tribal, and urban areas. Many of these applicants are first-generation learners with limited digital exposure and no prior internship experience.
+
+With hundreds of opportunities available, candidates struggle to:
+- Identify which internships match their skills/interests
+- Avoid misaligned applications that reduce their chances
+- Gain equal access regardless of background or location
+
+👉 This leads to missed opportunities, low engagement, and inefficiency.
 
 ### **Objective**
-Build an **AI-based drop-out prediction and counseling system** that consolidates student data from multiple sources into a single dashboard, applies transparent rule-based + ML-light logic to detect at-risk students, and notifies mentors/guardians for timely intervention.
-
-**Focus**: Simplicity, transparency, and usability over complex analytics.
+To develop a transparent, AI-powered internship matching platform that ensures students:
+- Discover most relevant internships aligned with their profile
+- Receive guidance through skill-based recommendations
+- Gain access in an inclusive and accessible way
 
 ---
 
-## 🔄 System Flowchart
+## ⚙️ System Architecture
+
+### � Inputs
+- 🎓 **Student Profile** → Education, skills, interests, location
+- � **Internship Listings** → Sector, eligibility, requirements
+- 📝 **Optional Skill Assessment** → Short test to refine matching
+
+### 🔹 Processing
+- ✅ Rule-based filtering (eligibility check)
+- 🤖 AI-powered recommendation engine (ranking matches)
+
+### 🔹 Outputs
+- � **Student Dashboard** → Recommended internships, application tracking
+- 🏢 **Employer Dashboard** → Shortlisted candidates, filtering tools
+- 👩‍💼 **Admin Dashboard** → Analytics on inclusivity, region, and sector
 
 ```mermaid
 flowchart TD
-    A[📊 Data Input Layer] --> B[🔄 Data Consolidation]
-    A1[📋 Attendance Spreadsheet] --> B
-    A2[📝 Test/Assessment Results] --> B
-    A3[💰 Fee Payment Records] --> B
-    A4[🔁 Subject Attempts History] --> B
+    A[Student Input] --> B[Profile Creation]
+    C[Employer Input] --> D[Internship Listings]
     
-    B --> C[🧠 Risk Detection Engine]
-    C --> D[📏 Rule-Based Thresholds]
-    C --> E[🤖 ML-Light Prediction]
+    B --> E[Data Processing Layer]
+    D --> E
     
-    D --> F{Risk Assessment}
-    E --> F
+    E --> F[Rule-based Filtering]
+    E --> G[AI Recommendation Engine]
     
-    F -->|Low Risk| G1[🟢 Green Zone]
-    F -->|Medium Risk| G2[🟡 Yellow Zone] 
-    F -->|High Risk| G3[🔴 Red Zone]
+    F --> H{Match Generation}
+    G --> H
     
-    G1 --> H[📱 Dashboard Outputs]
-    G2 --> H
-    G3 --> H
+    H --> I[Student Dashboard]
+    H --> J[Employer Dashboard]
+    H --> K[Admin Analytics]
     
-    H --> I1[👨‍🏫 Mentor Dashboard]
-    H --> I2[👩‍💼 Admin Dashboard]
+    I --> L[Notification System]
     
-    I1 --> J[🔔 Notification Engine]
-    I2 --> J
-    
-    J --> K1[📧 Mentor Alerts]
-    J --> K2[📱 Guardian SMS/Email]
-    J --> K3[💬 WhatsApp Notifications]
-    
-    K1 --> L[🤝 Intervention & Counseling]
-    K2 --> L
-    K3 --> L
-    
-    L --> M[📝 Progress Tracking]
-    M --> N[🔄 Feedback Loop]
-    N --> C
+    L --> M[Email Alerts]
+    L --> N[SMS Notifications]
+    L --> O[WhatsApp Updates]
     
     style A fill:#e1f5fe
-    style C fill:#fff3e0
-    style F fill:#fce4ec
-    style H fill:#f3e5f5
-    style L fill:#e8f5e8
+    style C fill:#e1f5fe
+    style E fill:#fff3e0
+    style H fill:#fce4ec
+    style I fill:#f3e5f5
+    style J fill:#f3e5f5
+    style K fill:#f3e5f5
 ```
 
 ---
 
 ## 🚀 How It Works
 
-### **1. Data Collection & Integration**
-- **📋 Attendance Data**: Automated import from existing spreadsheets/LMS
-- **📝 Assessment Scores**: Integration with exam management systems
-- **💰 Fee Records**: Connection to finance management systems
-- **🔁 Academic History**: Subject attempts, backlogs, and re-appears tracking
+### **1. Student Onboarding & Profiling**
+- **🎓 Education Details**: Qualification, institution, specialization, grades
+- **� Skill Assessment**: Technical, soft skills, and competencies
+- **�️ Geographic Preferences**: Location preferences and mobility options
+- **🎯 Career Interests**: Sectors, roles, and long-term goals
 
-### **2. Intelligent Risk Detection**
+### **2. Internship Opportunity Management**
 
-#### **Rule-Based Thresholds** (Transparent Logic)
-- 🚨 **High Risk**: Attendance < 60%
-- ⚠️ **Medium Risk**: Test scores declining > 20%
-- 🚨 **High Risk**: More than 3 subject attempts
-- ⚠️ **Medium Risk**: Fee dues > 1 month
+#### **Listing Creation & Curation**
+- Standardized format for all internship opportunities
+- Detailed skill requirements and eligibility criteria
+- Clear expectations, duration, and stipend information
+- Location, mode (remote/in-person), and sector categorization
 
-#### **ML-Light Prediction** (Optional Enhancement)
-- Logistic regression for drop-out probability
-- Decision tree models for interpretable results
-- Color-coded risk categories for instant recognition
+#### **Intelligent Matching Algorithm**
+- Primary filtering based on eligibility criteria
+- AI-powered ranking based on skill alignment
+- Consideration for geographic constraints and preferences
+- Diversity and inclusion factors in recommendation
 
-### **3. Dashboard & Monitoring**
+### **3. User Interfaces**
 
-#### **👨‍🏫 Mentor Dashboard**
-- Consolidated student records with risk indicators
-- Interactive trend charts (attendance & performance)
-- At-risk student highlighting with specific reasons
-- Intervention history and progress tracking
+#### **� Student Dashboard**
+- Personalized internship recommendations
+- Application tracking and status updates
+- Skill gap analysis and improvement suggestions
+- Document management for resumes and certificates
+
+#### **🏢 Employer Dashboard**
+- Candidate shortlisting and filtering tools
+- Application review and management
+- Interview scheduling and feedback recording
+- Analytics on applicant pool and diversity metrics
 
 #### **👩‍💼 Admin Dashboard**
-- Institute-wide risk distribution analytics
-- Department and batch-wise overview
-- Performance metrics and system insights
-- Comprehensive reporting tools
+- Platform-wide usage analytics
+- Regional and demographic insights
+- Sector-wise application distribution
+- Performance metrics and system health monitoring
 
-### **4. Proactive Intervention**
-- **Weekly alerts** to mentors with at-risk student lists
-- **Automated notifications** to parents/guardians
-- **Counseling session scheduling** and tracking
-- **Progress monitoring** with feedback loops
+### **4. Notification & Engagement System**
+- Smart alerts for matching opportunities
+- Application deadline reminders
+- Interview preparation resources
+- Feedback collection mechanisms
 
 ---
 
@@ -118,57 +134,62 @@ flowchart TD
 
 | Feature | Description | Impact |
 |---------|-------------|--------|
-| 📊 **Multi-Source Integration** | Seamless data import from existing systems | No disruption to current workflows |
-| 🎯 **Transparent Rules** | Clear, understandable risk criteria | Easy adoption by educators |
-| 🚦 **Color-Coded Alerts** | Intuitive visual risk indicators | Quick identification of at-risk students |
-| 🤖 **Lightweight AI** | Optional ML enhancement | Improved accuracy without complexity |
-| ⏰ **Early Detection** | Proactive risk identification | Prevention over reaction |
-| 📱 **Multi-Channel Alerts** | SMS, Email, WhatsApp notifications | Comprehensive stakeholder engagement |
-| 📈 **Progress Tracking** | Intervention outcome monitoring | Continuous improvement |
+| 🎓 **Student Profiling** | Collects education, skills, and preferences | Personalized recommendations |
+| � **Internship Curation** | Curated listings + smart filters | Reduces confusion & misaligned applications |
+| � **Skill Test (Optional)** | In-built quiz with anti-cheating | Ensures fair shortlisting |
+| 🤖 **AI Recommendation Engine** | Matches profiles to best-fit opportunities | Increases placement success |
+| � **Alerts & Notifications** | SMS/Email/WhatsApp updates | Keeps students engaged |
+| 🌍 **Accessibility** | Simple UI + multilingual support | Inclusivity for all learners |
+| 📊 **Analytics Dashboard** | Real-time insights for admins | Data-driven decisions |
 
 ---
 
-## 🎯 Target Impact
+## 📊 Expected Impact
 
-### **For Educational Institutions**
-- ✅ Identify at-risk students **weeks before critical points**
-- ✅ Reduce drop-out rates through **early intervention**
-- ✅ Improve **student retention and success rates**
-- ✅ Enhance **mentor-student relationships**
+- 🎯 **Better alignment** between student skills and internship opportunities
+- 📈 **Increased internship success rate** across India
+- 🌍 **Inclusivity** for rural, tribal, and underserved youth
+- 🏢 **Streamlined recruitment** process for employers
 
-### **For Students & Families**
-- ✅ **Timely support** and counseling
-- ✅ **Transparent communication** about academic standing
-- ✅ **Proactive guidance** for academic improvement
-- ✅ **Family involvement** in student success
+### **For Students**
+- ✅ **Relevant opportunities** that match their true potential
+- ✅ **Equal access** regardless of background or location
+- ✅ **Skill development** guidance based on market demand
+- ✅ **Higher selection rates** through better-matched applications
 
-### **For System Administrators**
-- ✅ **Data-driven insights** for institutional planning
-- ✅ **Resource optimization** for counseling services
-- ✅ **Compliance tracking** and reporting
-- ✅ **Scalable solution** for growing institutions
+### **For Employers**
+- ✅ **Qualified candidates** aligned with position requirements
+- ✅ **Diverse talent pool** from across regions
+- ✅ **Reduced screening time** through pre-matched profiles
+- ✅ **Higher retention** due to better fit
+
+### **For Administrators**
+- ✅ **Data-driven insights** on internship ecosystem
+- ✅ **Improved placement metrics** across institutions
+- ✅ **Enhanced inclusivity** tracking and reporting
+- ✅ **Scalable solution** for national implementation
 
 ---
 
-## 🛠️ Technology Stack
-
-### **Backend**
-- **Database**: PostgreSQL/MySQL for student records
-- **API**: Node.js/Express or Python/FastAPI
-- **ML Engine**: Scikit-learn for lightweight models
-- **Data Processing**: Pandas for data manipulation
+## 🛠️ Tech Stack
 
 ### **Frontend**
-- **Dashboard**: React.js with responsive design
-- **Visualization**: Chart.js/D3.js for analytics
-- **UI Framework**: Material-UI or Tailwind CSS
+- **Framework**: React.js / Next.js
+- **Styling**: TailwindCSS
+- **UI/UX**: Responsive design with accessibility features
 - **Mobile**: Progressive Web App (PWA)
 
-### **Integration**
-- **File Processing**: Support for Excel, CSV, JSON
-- **Notifications**: Twilio (SMS), SendGrid (Email), WhatsApp API
-- **Authentication**: JWT-based secure access
-- **Deployment**: Docker containers, cloud-ready
+### **Backend**
+- **API**: FastAPI / Node.js (Express)
+- **Database**: PostgreSQL / MySQL
+- **AI Engine**: Scikit-learn / TensorFlow (Recommendation System)
+- **Authentication**: OAuth 2.0 / JWT
+
+### **Integration & Deployment**
+- **Notifications**: Twilio / SendGrid API
+- **Language Support**: I18n internationalization
+- **Accessibility**: WCAG 2.1 compliance
+- **Deployment**: Docker + AWS / Azure / GCP
 
 ---
 
@@ -199,46 +220,66 @@ npm run migrate  # or python manage.py migrate
 npm start  # or python app.py
 ```
 
-### **Data Import**
+### **Data Setup**
 ```bash
-# Import sample data
-npm run import-sample-data
+# Import sample internship data
+npm run seed-internships
 
-# Or import your own data
-npm run import -- --attendance attendance.xlsx --grades grades.xlsx --fees fees.xlsx
+# Import sample student profiles
+npm run seed-profiles
 ```
 
 ---
 
 ## 📊 Usage Examples
 
-### **1. Setting Up Risk Thresholds**
+### **1. Student Profile Creation**
 ```javascript
-const riskThresholds = {
-  attendance: { high: 60, medium: 75 },
-  gradeDecline: { high: 20, medium: 10 },
-  subjectAttempts: { high: 3, medium: 2 },
-  feeDues: { high: 30, medium: 15 } // days
-};
+// Create new student profile
+const studentProfile = await createProfile({
+  education: {
+    degree: "B.Tech",
+    institution: "NIT Surat",
+    specialization: "Computer Science",
+    gradYear: 2023
+  },
+  skills: ["Python", "Data Analysis", "Web Development"],
+  interests: ["AI/ML", "Software Development"],
+  location: {
+    current: "Surat, Gujarat",
+    preferred: ["Ahmedabad", "Pune", "Remote"]
+  }
+});
 ```
 
-### **2. Generating Risk Reports**
+### **2. Internship Matching**
 ```javascript
-// Get weekly at-risk students
-const atRiskStudents = await generateWeeklyReport({
-  department: 'Computer Science',
-  semester: 3,
-  riskLevel: ['medium', 'high']
+// Get personalized internship recommendations
+const recommendations = await getRecommendations({
+  studentId: "user123",
+  filters: {
+    remote: true,
+    duration: "3-6 months",
+    stipend: "paid"
+  },
+  limit: 10
 });
 ```
 
 ### **3. Sending Notifications**
 ```javascript
-// Notify mentors and guardians
+// Send opportunity alerts to students
 await sendNotifications({
-  students: atRiskStudents,
-  channels: ['email', 'sms'],
-  template: 'weekly-alert'
+  recipientType: "student",
+  filters: {
+    interests: ["Data Science"],
+    location: "Gujarat"
+  },
+  template: "new-opportunity",
+  data: {
+    internshipId: "intern456",
+    deadline: "2025-09-30"
+  }
 });
 ```
 
@@ -267,31 +308,31 @@ We welcome contributions from educators, developers, and students! Here's how yo
 
 ---
 
-## 📈 Roadmap
+## � Roadmap
 
-### **Phase 1: Foundation** (Current)
-- ✅ Basic data ingestion and consolidation
-- ✅ Rule-based risk detection
-- ✅ Simple dashboard interface
-- 🔄 Notification system implementation
+### **Phase 1: Foundation**
+- 📋 Student profiles + Internship DB + Basic filtering
+- 📋 User authentication and profile management
+- 📋 Core matching algorithm implementation
+- 📋 Basic dashboard interfaces
 
-### **Phase 2: Enhancement** (Next 3 months)
-- 🔄 ML model integration
-- 🔄 Advanced analytics and reporting
-- 🔄 Mobile application development
-- 🔄 Integration with popular LMS platforms
+### **Phase 2: Intelligence**
+- � AI recommendation engine integration
+- � Skill test integration and assessment
+- � Advanced matching algorithms
+- � Performance analytics implementation
 
-### **Phase 3: Scale** (6 months)
-- 📋 Multi-institution support
-- 📋 Advanced intervention workflows
-- 📋 Predictive analytics dashboard
-- 📋 API marketplace for third-party integrations
+### **Phase 3: Engagement**
+- 📋 Notifications and alert systems
+- 📋 Employer dashboards and candidate filtering
+- 📋 Application tracking and status updates
+- 📋 Feedback and rating systems
 
-### **Phase 4: Innovation** (12 months)
-- 📋 AI-powered counseling recommendations
-- 📋 Behavioral pattern analysis
-- 📋 Outcome prediction modeling
-- 📋 Research collaboration features
+### **Phase 4: Scale & Access**
+- 📋 Multilingual support for regional languages
+- 📋 Accessibility enhancements for all users
+- 📋 Mobile optimization and offline capabilities
+- 📋 Pan-India scaling and performance optimization
 
 ---
 
@@ -317,18 +358,23 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🙏 Acknowledgments
+## �‍💻 Team
 
-- Educational institutions for providing valuable insights
+**___________**
+- [Add other members with roles]
+
+## �🙏 Acknowledgments
+
+- PM Internship Scheme for the opportunity
 - Open-source community for foundational tools
-- Students and educators who inspired this solution
+- Students from diverse backgrounds who provided insights
 - Contributors who help improve the system
 
 ---
 
 <div align="center">
 
-**Made with ❤️ for Educational Excellence**
+**Made with ❤️ for Inclusive Opportunity Access**
 
 [⭐ Star this repository](https://github.com/vishakha1221/InternGenius) | [🐛 Report Bug](https://github.com/vishakha1221/InternGenius/issues) | [💡 Request Feature](https://github.com/vishakha1221/InternGenius/issues)
 
