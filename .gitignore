@@ -83,7 +83,6 @@ logs/
 mongodb_data/
 
 # ML Models and Data
-models/
 data/
 *.pkl
 *.joblib
