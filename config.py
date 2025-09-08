@@ -9,7 +9,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'interngenius-secret-key-change-in-production'
     
     # MongoDB Configuration
-    MONGO_URI = os.environ.get('MONGO_URI') or 'mongodb://localhost:27017/interngenius'
+    MONGO_URI = os.environ.get('MONGO_URI') or 'mongodb+srv://jayraychura13_db_user:jUhWmtYndMBViwq5@interngenius.iwai3zh.mongodb.net/interngenius'
     
     # Flask-Login Configuration
     REMEMBER_COOKIE_DURATION = 86400  # 1 day in seconds
@@ -35,17 +35,17 @@ class Config:
 class DevelopmentConfig(Config):
     """Development configuration."""
     DEBUG = True
-    MONGO_URI = os.environ.get('DEV_MONGO_URI') or 'mongodb://localhost:27017/interngenius_dev'
+    MONGO_URI = os.environ.get('DEV_MONGO_URI') or 'mongodb+srv://jayraychura13_db_user:jUhWmtYndMBViwq5@interngenius.iwai3zh.mongodb.net/interngenius_dev'
 
 class ProductionConfig(Config):
     """Production configuration."""
     DEBUG = False
-    MONGO_URI = os.environ.get('PROD_MONGO_URI') or 'mongodb://localhost:27017/interngenius_prod'
+    MONGO_URI = os.environ.get('PROD_MONGO_URI') or 'mongodb+srv://jayraychura13_db_user:jUhWmtYndMBViwq5@interngenius.iwai3zh.mongodb.net/interngenius_prod'
 
 class TestingConfig(Config):
     """Testing configuration."""
     TESTING = True
-    MONGO_URI = 'mongodb://localhost:27017/interngenius_test'
+    MONGO_URI = 'mongodb+srv://jayraychura13_db_user:jUhWmtYndMBViwq5@interngenius.iwai3zh.mongodb.net/interngenius_test'
     WTF_CSRF_ENABLED = False
 
 # Configuration dictionary

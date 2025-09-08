@@ -53,7 +53,7 @@ def signup():
             return render_template('auth/signup.html', form=form)
         
         # Create new user
-        user = User(
+        user = User.create_user(
             email=email,
             password=form.password.data,
             role=form.role.data,
