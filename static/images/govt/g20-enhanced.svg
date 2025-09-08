@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <!-- Background Circle -->
+  <circle cx="120" cy="120" r="110" fill="#FFFFFF" stroke="#09539a" stroke-width="5"/>
+  
+  <!-- Outer decorative ring -->
+  <circle cx="120" cy="120" r="95" fill="none" stroke="#FF9933" stroke-width="2" stroke-dasharray="5,3"/>
+  
+  <!-- G20 Text -->
+  <g>
+    <text x="120" y="110" font-family="Arial" font-size="70" font-weight="bold" text-anchor="middle" fill="#09539a">G20</text>
+    <text x="120" y="145" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="#FF9933">INDIA 2025</text>
+  </g>
+  
+  <!-- Lotus Symbol (Simplified) -->
+  <g transform="translate(120, 45) scale(0.5)">
+    <!-- Lotus petals -->
+    <path d="M0,0 C-20,-30 -40,-40 -60,-30 C-30,-60 0,-70 30,-60 C40,-40 20,-30 0,0 Z" fill="#FF9933" opacity="0.8"/>
+    <path d="M0,0 C20,-30 40,-40 60,-30 C30,-60 0,-70 -30,-60 C-40,-40 -20,-30 0,0 Z" fill="#FF9933" opacity="0.8"/>
+    <path d="M0,0 C-10,-40 -5,-60 0,-70 C5,-60 10,-40 0,0 Z" fill="#FF9933" opacity="0.8"/>
+    
+    <!-- Center -->
+    <circle cx="0" cy="0" r="10" fill="#138808"/>
+  </g>
+  
+  <!-- Decorative Chakra elements around the bottom -->
+  <path d="M120,200 C70,190 40,160 30,120 C35,122 40,125 45,128 C52,165 80,190 120,200 Z" fill="#138808" opacity="0.2"/>
+  <path d="M120,200 C170,190 200,160 210,120 C205,122 200,125 195,128 C188,165 160,190 120,200 Z" fill="#138808" opacity="0.2"/>
+</svg>

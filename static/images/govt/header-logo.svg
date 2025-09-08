@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="100" viewBox="0 0 400 100">
+  <!-- Background -->
+  <rect x="0" y="0" width="400" height="100" fill="#FFFFFF" rx="5" ry="5"/>
+  
+  <!-- Left section - Emblem -->
+  <g transform="translate(30, 15) scale(0.7)">
+    <!-- Base -->
+    <rect x="30" y="70" width="40" height="6" fill="#09539a"/>
+    
+    <!-- Column -->
+    <rect x="40" y="50" width="20" height="20" fill="#09539a"/>
+    
+    <!-- Capital -->
+    <ellipse cx="50" cy="50" rx="25" ry="6" fill="#09539a"/>
+    
+    <!-- Lions (Simplified) -->
+    <path d="M25,50 C25,35 35,30 50,40 C65,30 75,35 75,50" stroke="#09539a" stroke-width="2" fill="none"/>
+    
+    <!-- Ashoka Chakra -->
+    <circle cx="50" cy="40" r="15" fill="#FFFFFF" stroke="#09539a" stroke-width="1.5"/>
+    
+    <!-- Chakra Spokes -->
+    <g stroke="#09539a" stroke-width="1">
+      <line x1="50" y1="25" x2="50" y2="55"/>
+      <line x1="35" y1="40" x2="65" y2="40"/>
+      <line x1="39.4" y1="29.4" x2="60.6" y2="50.6"/>
+      <line x1="39.4" y1="50.6" x2="60.6" y2="29.4"/>
+      <line x1="36.7" y1="33.2" x2="63.3" y2="46.8"/>
+      <line x1="36.7" y1="46.8" x2="63.3" y2="33.2"/>
+      <line x1="43.2" y1="26.7" x2="56.8" y2="53.3"/>
+      <line x1="43.2" y1="53.3" x2="56.8" y2="26.7"/>
+    </g>
+    
+    <!-- Text -->
+    <text x="50" y="82" font-family="Arial" font-size="8" font-weight="bold" text-anchor="middle" fill="#09539a">सत्यमेव जयते</text>
+  </g>
+  
+  <!-- Right section - InternGenius -->
+  <g transform="translate(100, 0)">
+    <!-- Portal name -->
+    <text x="10" y="45" font-family="Arial" font-size="28" font-weight="bold" fill="#09539a">InternGenius</text>
+    
+    <!-- Tagline -->
+    <text x="10" y="65" font-family="Arial" font-size="16" fill="#333333">National Internship Portal</text>
+    
+    <!-- Government of India -->
+    <text x="10" y="85" font-family="Arial" font-size="14" fill="#666666">Ministry of Education, Government of India</text>
+  </g>
+  
+  <!-- Tricolor accent -->
+  <rect x="0" y="95" width="133" height="5" fill="#FF9933"/>
+  <rect x="133" y="95" width="134" height="5" fill="#FFFFFF"/>
+  <rect x="267" y="95" width="133" height="5" fill="#138808"/>
+</svg>

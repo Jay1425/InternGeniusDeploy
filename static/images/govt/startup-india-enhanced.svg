@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <!-- Background -->
+  <rect x="10" y="10" width="220" height="220" rx="10" fill="#FFFFFF" stroke="#09539a" stroke-width="3"/>
+  
+  <!-- Tricolor bars on top and bottom -->
+  <rect x="10" y="10" width="220" height="15" rx="5" fill="#FF9933"/>
+  <rect x="10" y="215" width="220" height="15" rx="5" fill="#138808"/>
+  
+  <!-- Startup India Text -->
+  <text x="120" y="50" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="#09539a">Startup India</text>
+  <text x="120" y="75" font-family="Arial" font-size="14" text-anchor="middle" fill="#666666">स्टार्टअप इंडिया</text>
+  
+  <!-- Startup rocket illustration -->
+  <g transform="translate(120, 150) rotate(-45)">
+    <!-- Rocket body -->
+    <path d="M-15,-40 C-15,-45 -10,-50 0,-50 C10,-50 15,-45 15,-40 L15,20 C15,25 10,30 0,30 C-10,30 -15,25 -15,20 Z" fill="#09539a"/>
+    
+    <!-- Rocket window -->
+    <circle cx="0" cy="-20" r="10" fill="#FFFFFF"/>
+    <circle cx="0" cy="-20" r="7" fill="#FF9933"/>
+    
+    <!-- Rocket fins -->
+    <path d="M-15,0 L-30,15 L-30,0 Z" fill="#FF9933"/>
+    <path d="M15,0 L30,15 L30,0 Z" fill="#FF9933"/>
+    
+    <!-- Rocket bottom -->
+    <path d="M-15,20 L-10,35 L0,25 L10,35 L15,20 Z" fill="#FF9933"/>
+    
+    <!-- Rocket flame -->
+    <path d="M-8,30 C-8,45 0,55 0,55 C0,55 8,45 8,30 Z" fill="#FF9933" opacity="0.8">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="1s" repeatCount="indefinite" />
+    </path>
+  </g>
+  
+  <!-- Growth chart -->
+  <g transform="translate(60, 170)">
+    <!-- Axes -->
+    <line x1="0" y1="0" x2="0" y2="-40" stroke="#09539a" stroke-width="2"/>
+    <line x1="0" y1="0" x2="60" y2="0" stroke="#09539a" stroke-width="2"/>
+    
+    <!-- Growth line -->
+    <path d="M0,0 L15,-10 L30,-15 L45,-25 L60,-35" stroke="#138808" stroke-width="3" fill="none"/>
+    
+    <!-- Data points -->
+    <circle cx="0" cy="0" r="3" fill="#138808"/>
+    <circle cx="15" cy="-10" r="3" fill="#138808"/>
+    <circle cx="30" cy="-15" r="3" fill="#138808"/>
+    <circle cx="45" cy="-25" r="3" fill="#138808"/>
+    <circle cx="60" cy="-35" r="3" fill="#138808"/>
+  </g>
+  
+  <!-- Light bulb for idea -->
+  <g transform="translate(180, 120)">
+    <path d="M0,-20 C15,-20 20,-5 20,5 C20,15 15,20 10,20 L-10,20 C-15,20 -20,15 -20,5 C-20,-5 -15,-20 0,-20 Z" fill="#FF9933"/>
+    <path d="M-5,20 L-5,25 L5,25 L5,20 Z" fill="#09539a"/>
+    <path d="M-3,25 L-3,30 L3,30 L3,25 Z" fill="#09539a"/>
+    
+    <!-- Light rays -->
+    <g stroke="#FF9933" stroke-width="2">
+      <line x1="0" y1="-30" x2="0" y2="-25" />
+      <line x1="-15" y1="-25" x2="-12" y2="-22" />
+      <line x1="15" y1="-25" x2="12" y2="-22" />
+      <line x1="-25" y1="-15" x2="-22" y2="-12" />
+      <line x1="25" y1="-15" x2="22" y2="-12" />
+      <line x1="-30" y1="0" x2="-25" y2="0" />
+      <line x1="30" y1="0" x2="25" y2="0" />
+    </g>
+  </g>
+</svg>

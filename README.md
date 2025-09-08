@@ -1,8 +1,9 @@
-# 🎓 InternGenius - AI-Powered Internship Matching Platform
+# 🎓 InternGenius - National Internship Portal
 
-[![Problem ID](https://img.shields.io/badge/Problem%20ID-25033-blue.svg)](https://github.com/vishakha1221/InternGenius)
-[![Status](https://img.shields.io/badge/Status-In%20Development-orange.svg)](https://github.com/vishakha1221/InternGenius)
+[![Problem ID](https://img.shields.io/badge/Problem%20ID-25033-blue.svg)](https://github.com/InternGenius)
+[![Status](https://img.shields.io/badge/Status-In%20Development-orange.svg)](https://github.com/InternGenius)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Government](https://img.shields.io/badge/Government%20of%20India-Initiative-ff9933.svg)](https://education.gov.in/)
 
 > **Connecting Students with Opportunities: Inclusive, Accessible, Intelligent**
 
@@ -10,7 +11,7 @@ An AI-powered platform that matches students from diverse backgrounds with relev
 
 ---
 
-## 📌 Problem Statement (PS 25034)
+## 📌 Problem Statement (PS 25033)
 
 The PM Internship Scheme receives thousands of applications from students across India's rural, tribal, and urban areas. Many of these applicants are first-generation learners with limited digital exposure and no prior internship experience.
 
@@ -22,10 +23,11 @@ With hundreds of opportunities available, candidates struggle to:
 👉 This leads to missed opportunities, low engagement, and inefficiency.
 
 ### **Objective**
-To develop a transparent, AI-powered internship matching platform that ensures students:
+To develop a transparent, accessible, and inclusive national internship portal that ensures students:
 - Discover most relevant internships aligned with their profile
 - Receive guidance through skill-based recommendations
 - Gain access in an inclusive and accessible way
+- Experience a government-standard digital platform with robust security and accessibility features
 
 ---
 
@@ -572,7 +574,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## �‍💻 Team
 
-**___________**
+**Team InternGenius**
+- Pujan Shah - Team Leader
 - [Add other members with roles]
 
 ## �🙏 Acknowledgments

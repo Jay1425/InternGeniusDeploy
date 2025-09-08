@@ -1,0 +1,233 @@
+/* Additional styles for government website */
+.govt-feature-card {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.govt-feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.govt-initiative-img {
+    width: 100%;
+    height: 140px;
+    object-fit: contain;
+    padding: 15px;
+    background-color: #f8f9fa;
+}
+
+.accessibility-controls a {
+    margin: 0 5px;
+    color: #09539a;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.accessibility-section {
+    background-color: #f8f9fa;
+    padding: 1rem 0;
+    border-top: 1px solid #dee2e6;
+    font-size: 0.9rem;
+}
+
+/* High contrast mode */
+.high-contrast {
+    background-color: black !important;
+    color: white !important;
+}
+
+.high-contrast .navbar-govt,
+.high-contrast .govt-feature-card,
+.high-contrast .govt-initiative-card,
+.high-contrast .govt-stat-card {
+    background-color: black !important;
+    color: white !important;
+    border-color: yellow !important;
+}
+
+.high-contrast .navbar-govt .nav-link,
+.high-contrast .govt-section-title,
+.high-contrast .govt-feature-title {
+    color: yellow !important;
+}
+
+.large-text {
+    font-size: 120% !important;
+}
+
+/* Hero banner styling */
+.govt-hero-wrapper {
+    background: linear-gradient(135deg, rgba(9,83,154,0.05) 0%, rgba(255,255,255,0.8) 100%);
+    padding: 40px 0;
+    margin-bottom: 50px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.govt-hero-banner {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    position: relative;
+    padding: 0;
+    border: 1px solid rgba(9,83,154,0.1);
+}
+
+.govt-hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 100%;
+    background: linear-gradient(to bottom, #FF9933 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #138808 66.66%);
+}
+
+.govt-hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.govt-hero-text {
+    padding: 40px 30px 40px 50px;
+}
+
+.hero-badges .badge {
+    font-size: 14px;
+    padding: 6px 12px;
+    font-weight: 500;
+}
+
+.gov-main-title {
+    color: #09539a;
+    font-size: 48px;
+    font-weight: 700;
+    margin-top: 0;
+    letter-spacing: -0.5px;
+}
+
+.gov-tagline {
+    color: #d76b00;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.hero-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    height: 300px;
+}
+
+.hero-image-container img {
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.hero-stats {
+    margin-top: 10px;
+}
+
+/* Dashboard preview cards */
+.dashboard-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.dashboard-icon {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
+.dashboard-icon img {
+    width: 80px;
+    height: 80px;
+}
+
+.dashboard-content {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.dashboard-title {
+    color: #09539a;
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-description {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive adjustments */
+.govt-stat-box {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-left: 4px solid #09539a;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 120px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+}
+
+.govt-stat-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.govt-stat-number {
+    font-size: 22px;
+    font-weight: 700;
+    color: #09539a;
+    margin-bottom: 0;
+}
+
+.govt-stat-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+@media (max-width: 991px) {
+    .govt-hero-text {
+        padding: 30px !important;
+        text-align: center;
+    }
+    
+    .gov-main-title {
+        font-size: 36px;
+    }
+    
+    .gov-tagline {
+        font-size: 22px;
+    }
+    
+    .hero-image-container {
+        height: 220px;
+    }
+    
+    .govt-stat-number {
+        font-size: 20px;
+    }
+}
