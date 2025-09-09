@@ -1,0 +1,1080 @@
+{% extends "base.html" %}
+
+{% block title %}Student Profile - InternGenius{% endblock %}
+
+{% block custom_css %}
+<link href="{{ url_for('static', filename='css/profile-styles.css') }}" rel="stylesheet">
+<style>
+    /* Student Profile Styling */
+    .profile-container {
+        max-width: 1100px;
+        margin: 2rem auto;
+        padding: 0;
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, var(--govt-primary) 0%, #0a65bb 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px 12px 0 0;
+        position: relative;
+    }
+
+    .profile-content {
+        background-color: #fff;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
+        padding: 2rem;
+    }
+
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        object-fit: cover;
+    }
+
+    .profile-name {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-headline {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 1rem;
+    }
+
+    .profile-details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .profile-detail-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-detail-item i {
+        color: rgba(255, 255, 255, 0.8);
+        margin-right: 0.5rem;
+        width: 20px;
+        text-align: center;
+    }
+
+    .profile-quick-stats {
+        display: flex;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        gap: 2rem;
+        margin-top: 1.5rem;
+    }
+
+    .quick-stat {
+        text-align: center;
+    }
+
+    .quick-stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+
+    .quick-stat-label {
+        font-size: 0.85rem;
+        opacity: 0.8;
+    }
+
+    .profile-nav {
+        background-color: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-pills .nav-link {
+        color: #495057;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+    }
+
+    .nav-pills .nav-link.active {
+        background-color: var(--govt-primary);
+        color: white;
+    }
+
+    .profile-section {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+    }
+
+    .profile-section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--govt-primary);
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .skill-card {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        margin-bottom: 1rem;
+    }
+
+    .skill-icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: var(--govt-primary);
+        color: white;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+
+    .skill-info {
+        flex-grow: 1;
+    }
+
+    .skill-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .skill-level {
+        height: 6px;
+        background-color: #e9ecef;
+        border-radius: 3px;
+        margin-top: 0.5rem;
+    }
+
+    .skill-level-bar {
+        height: 100%;
+        background-color: var(--govt-primary);
+        border-radius: 3px;
+    }
+
+    .skill-tag {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        background-color: #e9ecef;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        color: #495057;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+
+    .timeline::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 6px;
+        width: 3px;
+        background-color: #e9ecef;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-bottom: 2rem;
+    }
+
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+
+    .timeline-dot {
+        position: absolute;
+        left: -2rem;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background-color: var(--govt-primary);
+        top: 5px;
+    }
+
+    .timeline-content {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+    }
+
+    .timeline-date {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .timeline-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--govt-primary);
+    }
+
+    .document-card {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .document-icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: var(--govt-primary);
+        color: white;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+
+    .document-info {
+        flex-grow: 1;
+    }
+
+    .document-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .document-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .document-actions a {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        background-color: #e9ecef;
+        color: #495057;
+        transition: all 0.2s;
+    }
+
+    .document-actions a:hover {
+        background-color: var(--govt-primary);
+        color: white;
+    }
+
+    .profile-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .profile-actions .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .profile-actions .btn i {
+        margin-right: 0.5rem;
+    }
+
+    .profile-badge {
+        display: inline-flex;
+        align-items: center;
+        background-color: rgba(9, 83, 154, 0.1);
+        color: var(--govt-primary);
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-right: 0.75rem;
+    }
+
+    .profile-badge i {
+        margin-right: 0.35rem;
+    }
+
+    /* Animation effects */
+    .profile-card, .profile-section, .skill-card, .timeline-content, .document-card {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .profile-section:hover, .skill-card:hover, .timeline-content:hover, .document-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .profile-header {
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-quick-stats {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quick-stat {
+            padding: 0.5rem 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="row align-items-center">
+            <div class="col-lg-2 col-md-3 text-center text-md-start mb-4 mb-md-0">
+                {% if student.documents.photo %}
+                    <img id="mainProfilePhoto" src="{{ url_for('static', filename='uploads/photos/' + student.documents.photo) }}" alt="{{ student.personal_info.first_name }}'s Profile" class="profile-avatar">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/user-placeholder.svg') }}" alt="Profile Placeholder" class="profile-avatar">
+                {% endif %}
+            </div>
+            <div class="col-lg-6 col-md-5 text-center text-md-start">
+                <h1 class="profile-name">{{ student.personal_info.first_name }} {{ student.personal_info.middle_name }} {{ student.personal_info.last_name }}</h1>
+                <p class="profile-headline">Student at {{ student.education[0].institution if student.education else "Educational Institution" }}</p>
+                
+                <div class="profile-badges mb-3">
+                    <span class="profile-badge"><i class="fas fa-user-graduate"></i> {{ student.education[0].qualification if student.education else "Student" }}</span>
+                    <span class="profile-badge"><i class="fas fa-map-marker-alt"></i> {{ student.address.city if student.address else "Location" }}, {{ student.address.state if student.address else "State" }}</span>
+                </div>
+                
+                <div class="profile-details">
+                    <div class="profile-detail-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>{{ student.personal_info.email }}</span>
+                    </div>
+                    <div class="profile-detail-item">
+                        <i class="fas fa-phone"></i>
+                        <span>{{ student.personal_info.phone }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 d-none d-md-block">
+                <div class="profile-quick-stats">
+                    <div class="quick-stat">
+                        <div class="quick-stat-value">{{ student.education|length if student.education else 0 }}</div>
+                        <div class="quick-stat-label">Qualifications</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value">{{ student.skills.technical_skills.split(',')|length if student.skills.technical_skills else 0 }}</div>
+                        <div class="quick-stat-label">Skills</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value">{{ student.preferences.interests.split(',')|length if student.preferences.interests else 0 }}</div>
+                        <div class="quick-stat-label">Interests</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Content -->
+    <div class="profile-content">
+        <!-- Profile Navigation -->
+        <div class="profile-nav">
+            <ul class="nav nav-pills" id="profile-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab">Overview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="education-tab" data-bs-toggle="pill" data-bs-target="#education" type="button" role="tab">Education</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="skills-tab" data-bs-toggle="pill" data-bs-target="#skills" type="button" role="tab">Skills & Interests</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="documents-tab" data-bs-toggle="pill" data-bs-target="#documents" type="button" role="tab">Documents</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="preferences-tab" data-bs-toggle="pill" data-bs-target="#preferences" type="button" role="tab">Preferences</button>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Tab Content -->
+        <div class="tab-content" id="profile-tab-content">
+            <!-- Overview Tab -->
+            <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <!-- About Section -->
+                        <div class="profile-section">
+                            <h3 class="profile-section-title"><i class="fas fa-user me-2"></i>About</h3>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <h5 class="fw-bold">Personal Information</h5>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>Full Name:</strong></td>
+                                            <td>{{ student.personal_info.first_name }} {{ student.personal_info.middle_name }} {{ student.personal_info.last_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Date of Birth:</strong></td>
+                                            <td>{{ student.personal_info.dob }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Gender:</strong></td>
+                                            <td>{{ student.personal_info.gender|title }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Nationality:</strong></td>
+                                            <td>{{ student.personal_info.nationality }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <h5 class="fw-bold">Contact Information</h5>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>Email:</strong></td>
+                                            <td>{{ student.personal_info.email }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Phone:</strong></td>
+                                            <td>{{ student.personal_info.phone }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Address:</strong></td>
+                                            <td>
+                                                {{ student.address.address_line1 }},
+                                                {% if student.address.address_line2 %}{{ student.address.address_line2 }},{% endif %}
+                                                {{ student.address.city }}, {{ student.address.state }}, {{ student.address.pincode }}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Education Summary -->
+                        <div class="profile-section">
+                            <h3 class="profile-section-title"><i class="fas fa-graduation-cap me-2"></i>Education</h3>
+                            {% if student.education %}
+                                {% for edu in student.education[:2] %}
+                                <div class="timeline-content mb-4">
+                                    <div class="timeline-date">{{ edu.passing_year }}</div>
+                                    <div class="timeline-title">{{ edu.qualification }} in {{ edu.specialization }}</div>
+                                    <div>{{ edu.institution }}</div>
+                                    {% if edu.percentage %}
+                                    <div class="mt-2 badge bg-success">Score: {{ edu.percentage }}</div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                                {% if student.education|length > 2 %}
+                                <div class="text-center">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="document.getElementById('education-tab').click()">
+                                        View all qualifications
+                                    </button>
+                                </div>
+                                {% endif %}
+                            {% else %}
+                                <p>No education details available.</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Skills Summary -->
+                        <div class="profile-section">
+                            <h3 class="profile-section-title"><i class="fas fa-tools me-2"></i>Key Skills</h3>
+                            {% if student.skills.technical_skills %}
+                                <div class="row">
+                                    {% for skill in student.skills.technical_skills.split(',')[:6] %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="skill-tag">{{ skill.strip() }}</div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% if student.skills.technical_skills.split(',')|length > 6 %}
+                                <div class="text-center">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="document.getElementById('skills-tab').click()">
+                                        View all skills
+                                    </button>
+                                </div>
+                                {% endif %}
+                            {% else %}
+                                <p>No skills listed.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <!-- Profile Card -->
+                        <div class="profile-section">
+                            <div class="text-center mb-4">
+                                {% if student.documents.photo %}
+                                    <img src="{{ url_for('static', filename='uploads/photos/' + student.documents.photo) }}" alt="{{ student.personal_info.first_name }}'s Profile" class="profile-avatar mb-3" style="width: 120px; height: 120px;">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='images/user-placeholder.svg') }}" alt="Profile Placeholder" class="profile-avatar mb-3" style="width: 120px; height: 120px;">
+                                {% endif %}
+                                <h4>{{ student.personal_info.first_name }} {{ student.personal_info.last_name }}</h4>
+                                <p class="text-muted">{{ student.education[0].qualification if student.education else "Student" }} | {{ student.education[0].specialization if student.education else "" }}</p>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                {% if student.documents.resume %}
+                                <a href="{{ url_for('static', filename='uploads/resumes/' + student.documents.resume) }}" class="btn btn-outline-primary" target="_blank">
+                                    <i class="fas fa-file-alt me-2"></i>View Resume
+                                </a>
+                                {% endif %}
+                                <a href="#" class="btn btn-outline-secondary" onclick="window.print()">
+                                    <i class="fas fa-print me-2"></i>Print Profile
+                                </a>
+                            </div>
+                            
+                            <hr>
+                            
+                            <h5 class="fw-bold mb-3">Interests</h5>
+                            {% if student.preferences.interests %}
+                                <div class="d-flex flex-wrap">
+                                    {% for interest in student.preferences.interests.split(',') %}
+                                    <div class="skill-tag">{{ interest.strip() }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p>No interests listed.</p>
+                            {% endif %}
+                            
+                            <hr>
+                            
+                            <h5 class="fw-bold mb-3">Languages</h5>
+                            {% if student.skills.languages %}
+                                <div class="d-flex flex-wrap">
+                                    {% for language in student.skills.languages.split(',') %}
+                                    <div class="skill-tag">{{ language.strip() }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p>No languages listed.</p>
+                            {% endif %}
+                            
+                            <hr>
+                            
+                            <h5 class="fw-bold mb-3">Registered On</h5>
+                            <p>{{ student.registration_date }}</p>
+                        </div>
+                        
+                        <!-- Document Quick Access -->
+                        {% if student.documents.resume or student.documents.additional_docs %}
+                        <div class="profile-section">
+                            <h5 class="fw-bold mb-3">Documents</h5>
+                            
+                            {% if student.documents.resume %}
+                            <div class="document-card mb-3">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="document-info">
+                                    <div class="document-name">Resume/CV</div>
+                                    <small class="text-muted">{{ student.documents.resume }}</small>
+                                </div>
+                                <div class="document-actions">
+                                    <a href="{{ url_for('static', filename='uploads/resumes/' + student.documents.resume) }}" target="_blank" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ url_for('static', filename='uploads/resumes/' + student.documents.resume) }}" download title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if student.documents.additional_docs %}
+                            <div class="document-card">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-archive"></i>
+                                </div>
+                                <div class="document-info">
+                                    <div class="document-name">Additional Documents</div>
+                                    <small class="text-muted">{{ student.documents.additional_docs }}</small>
+                                </div>
+                                <div class="document-actions">
+                                    <a href="{{ url_for('static', filename='uploads/documents/' + student.documents.additional_docs) }}" target="_blank" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ url_for('static', filename='uploads/documents/' + student.documents.additional_docs) }}" download title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Education Tab -->
+            <div class="tab-pane fade" id="education" role="tabpanel" aria-labelledby="education-tab">
+                <div class="profile-section">
+                    <h3 class="profile-section-title"><i class="fas fa-graduation-cap me-2"></i>Education History</h3>
+                    
+                    {% if student.education %}
+                    <div class="timeline">
+                        {% for edu in student.education %}
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">{{ edu.passing_year }}</div>
+                                <div class="timeline-title">{{ edu.qualification }} in {{ edu.specialization }}</div>
+                                <div class="mb-2">{{ edu.institution }}</div>
+                                {% if edu.percentage %}
+                                <div class="d-flex align-items-center mt-3">
+                                    <span class="me-2">Performance: </span>
+                                    <div class="progress flex-grow-1" style="height: 8px;">
+                                        {% set score = edu.percentage|float %}
+                                        {% if '%' in edu.percentage %}
+                                            {% set score = edu.percentage.replace('%', '')|float %}
+                                        {% endif %}
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ score if score <= 100 else 100 }}%"></div>
+                                    </div>
+                                    <span class="ms-2 badge bg-success">{{ edu.percentage }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No education details have been added yet.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Skills Tab -->
+            <div class="tab-pane fade" id="skills" role="tabpanel" aria-labelledby="skills-tab">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="profile-section">
+                            <h3 class="profile-section-title"><i class="fas fa-code me-2"></i>Technical Skills</h3>
+                            
+                            {% if student.skills.technical_skills %}
+                                {% for skill in student.skills.technical_skills.split(',') %}
+                                <div class="skill-card">
+                                    <div class="skill-icon">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                    <div class="skill-info">
+                                        <div class="skill-name">{{ skill.strip() }}</div>
+                                        <div class="skill-level">
+                                            <div class="skill-level-bar" style="width: {{ range(60, 95)|random }}%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                No technical skills have been added yet.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div class="profile-section">
+                            <h3 class="profile-section-title"><i class="fas fa-comments me-2"></i>Soft Skills</h3>
+                            
+                            {% if student.skills.soft_skills %}
+                                {% for skill in student.skills.soft_skills.split(',') %}
+                                <div class="skill-card">
+                                    <div class="skill-icon" style="background-color: #6B7A8F;">
+                                        <i class="fas fa-user-friends"></i>
+                                    </div>
+                                    <div class="skill-info">
+                                        <div class="skill-name">{{ skill.strip() }}</div>
+                                        <div class="skill-level">
+                                            <div class="skill-level-bar" style="width: {{ range(70, 95)|random }}%; background-color: #6B7A8F;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                No soft skills have been added yet.
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="profile-section">
+                            <h3 class="profile-section-title"><i class="fas fa-lightbulb me-2"></i>Areas of Interest</h3>
+                            
+                            {% if student.preferences.interests %}
+                            <div class="row">
+                                {% for interest in student.preferences.interests.split(',') %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="skill-tag" style="width: 100%; text-align: center; padding: 0.75rem;">{{ interest.strip() }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                No areas of interest have been added yet.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Documents Tab -->
+            <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+                <div class="profile-section">
+                    <h3 class="profile-section-title"><i class="fas fa-file-alt me-2"></i>Documents</h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Resume/CV</h5>
+                                </div>
+                                <div class="card-body">
+                                    {% if student.documents.resume %}
+                                        <div class="text-center mb-3">
+                                            <i class="fas fa-file-pdf fa-5x text-danger mb-3"></i>
+                                            <h5>{{ student.documents.resume }}</h5>
+                                        </div>
+                                        
+                                        <div class="d-grid gap-2">
+                                            <a href="{{ url_for('static', filename='uploads/resumes/' + student.documents.resume) }}" class="btn btn-primary" target="_blank">
+                                                <i class="fas fa-eye me-2"></i>View Resume
+                                            </a>
+                                            <a href="{{ url_for('static', filename='uploads/resumes/' + student.documents.resume) }}" class="btn btn-outline-primary" download>
+                                                <i class="fas fa-download me-2"></i>Download Resume
+                                            </a>
+                                        </div>
+                                    {% else %}
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-file-upload fa-3x text-muted mb-3"></i>
+                                            <p class="mb-0">No resume has been uploaded yet.</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Profile Photo</h5>
+                                </div>
+                                <div class="card-body">
+                                    {% if student.documents.photo %}
+                                        <div class="text-center mb-3">
+                                            <img src="{{ url_for('static', filename='uploads/photos/' + student.documents.photo) }}" alt="{{ student.personal_info.first_name }}'s Photo" class="img-fluid rounded document-photo" style="max-height: 200px;">
+                                        </div>
+                                        
+                                        <div class="d-grid gap-2">
+                                            <a href="{{ url_for('static', filename='uploads/photos/' + student.documents.photo) }}" class="btn btn-primary photo-link" target="_blank">
+                                                <i class="fas fa-eye me-2"></i>View Full Size
+                                            </a>
+                                            <a href="{{ url_for('static', filename='uploads/photos/' + student.documents.photo) }}" class="btn btn-outline-primary photo-link" download>
+                                                <i class="fas fa-download me-2"></i>Download Photo
+                                            </a>
+                                        </div>
+                                    {% else %}
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-camera fa-3x text-muted mb-3"></i>
+                                            <p class="mb-0">No profile photo has been uploaded yet.</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Additional Documents</h5>
+                                </div>
+                                <div class="card-body">
+                                    {% if student.documents.additional_docs %}
+                                        <div class="text-center mb-3">
+                                            <i class="fas fa-file-archive fa-5x text-primary mb-3"></i>
+                                            <h5>{{ student.documents.additional_docs }}</h5>
+                                        </div>
+                                        
+                                        <div class="d-grid gap-2">
+                                            <a href="{{ url_for('static', filename='uploads/documents/' + student.documents.additional_docs) }}" class="btn btn-primary" target="_blank">
+                                                <i class="fas fa-eye me-2"></i>View Document
+                                            </a>
+                                            <a href="{{ url_for('static', filename='uploads/documents/' + student.documents.additional_docs) }}" class="btn btn-outline-primary" download>
+                                                <i class="fas fa-download me-2"></i>Download Document
+                                            </a>
+                                        </div>
+                                    {% else %}
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-file-upload fa-3x text-muted mb-3"></i>
+                                            <p class="mb-0">No additional documents have been uploaded.</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preferences Tab -->
+            <div class="tab-pane fade" id="preferences" role="tabpanel" aria-labelledby="preferences-tab">
+                <div class="profile-section">
+                    <h3 class="profile-section-title"><i class="fas fa-sliders-h me-2"></i>Internship Preferences</h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-map-marker-alt text-danger me-2"></i>Preferred Locations</h5>
+                                    {% if student.preferences.preferred_locations %}
+                                        <div class="d-flex flex-wrap mt-3">
+                                            {% for location in student.preferences.preferred_locations.split(',') %}
+                                            <span class="badge bg-light text-dark border me-2 mb-2 p-2">{{ location.strip() }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <p class="card-text text-muted">No preferred locations specified.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-laptop-house text-success me-2"></i>Work Mode</h5>
+                                    {% if student.preferences.work_mode %}
+                                        <div class="mt-3">
+                                            <span class="badge bg-success p-2">{{ student.preferences.work_mode|title }}</span>
+                                            
+                                            <div class="mt-3">
+                                                {% if student.preferences.work_mode == 'onsite' %}
+                                                    <p><i class="fas fa-building me-2 text-muted"></i>Prefers working at office premises</p>
+                                                {% elif student.preferences.work_mode == 'remote' %}
+                                                    <p><i class="fas fa-home me-2 text-muted"></i>Prefers working from home</p>
+                                                {% elif student.preferences.work_mode == 'hybrid' %}
+                                                    <p><i class="fas fa-exchange-alt me-2 text-muted"></i>Prefers a mix of office and remote work</p>
+                                                {% else %}
+                                                    <p><i class="fas fa-check-circle me-2 text-muted"></i>Flexible with any work arrangement</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <p class="card-text text-muted">No work mode preference specified.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-calendar-alt text-primary me-2"></i>Duration & Availability</h5>
+                                    {% if student.preferences.internship_duration %}
+                                        <div class="mt-3">
+                                            <p><strong>Preferred Duration:</strong> 
+                                            {% if student.preferences.internship_duration == '1_month' %}
+                                                1 month
+                                            {% elif student.preferences.internship_duration == '1-2_months' %}
+                                                1-2 months
+                                            {% elif student.preferences.internship_duration == '2-3_months' %}
+                                                2-3 months
+                                            {% elif student.preferences.internship_duration == '3-6_months' %}
+                                                3-6 months
+                                            {% elif student.preferences.internship_duration == '6-12_months' %}
+                                                6-12 months
+                                            {% else %}
+                                                Flexible
+                                            {% endif %}
+                                            </p>
+                                            
+                                            {% if student.preferences.availability %}
+                                            <p><strong>Can Start:</strong> 
+                                            {% if student.preferences.availability == 'immediately' %}
+                                                Immediately
+                                            {% elif student.preferences.availability == 'within_1_week' %}
+                                                Within 1 week
+                                            {% elif student.preferences.availability == 'within_2_weeks' %}
+                                                Within 2 weeks
+                                            {% elif student.preferences.availability == 'within_1_month' %}
+                                                Within 1 month
+                                            {% else %}
+                                                After 1 month
+                                            {% endif %}
+                                            </p>
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <p class="card-text text-muted">No duration preferences specified.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-rupee-sign text-warning me-2"></i>Stipend Expectation</h5>
+                                    {% if student.preferences.expected_stipend %}
+                                        <div class="mt-3">
+                                            <span class="badge bg-warning text-dark p-2">
+                                            {% if student.preferences.expected_stipend == 'unpaid' %}
+                                                Unpaid/Certificate Only
+                                            {% elif student.preferences.expected_stipend == 'upto_5000' %}
+                                                Up to ₹5,000 per month
+                                            {% elif student.preferences.expected_stipend == '5000_10000' %}
+                                                ₹5,000 - ₹10,000 per month
+                                            {% elif student.preferences.expected_stipend == '10000_15000' %}
+                                                ₹10,000 - ₹15,000 per month
+                                            {% elif student.preferences.expected_stipend == '15000_20000' %}
+                                                ₹15,000 - ₹20,000 per month
+                                            {% elif student.preferences.expected_stipend == 'above_20000' %}
+                                                Above ₹20,000 per month
+                                            {% else %}
+                                                Flexible
+                                            {% endif %}
+                                            </span>
+                                        </div>
+                                    {% else %}
+                                        <p class="card-text text-muted">No stipend expectations specified.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Actions -->
+        <div class="profile-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="fas fa-home"></i> Return to Homepage
+            </a>
+            <a href="#" class="btn btn-outline-secondary" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Profile
+            </a>
+            <a href="#" class="btn btn-outline-primary">
+                <i class="fas fa-share-alt"></i> Share Profile
+            </a>
+            <a href="#" class="btn btn-outline-success">
+                <i class="fas fa-edit"></i> Edit Profile
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab navigation with URL hash support
+        const url = document.location.toString();
+        if (url.match('#')) {
+            const tabId = url.split('#')[1];
+            const tab = document.getElementById(tabId + '-tab');
+            if (tab) {
+                tab.click();
+            }
+        }
+        
+        // Update URL when tab changes
+        const tabEls = document.querySelectorAll('button[data-bs-toggle="pill"]');
+        tabEls.forEach(tabEl => {
+            tabEl.addEventListener('shown.bs.tab', function (e) {
+                const id = e.target.getAttribute('data-bs-target').replace('#', '');
+                history.replaceState(null, null, '#' + id);
+            });
+        });
+
+        // Share profile functionality
+        const shareBtn = document.querySelector('.profile-actions .btn-outline-primary');
+        if (shareBtn && navigator.share) {
+            shareBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                navigator.share({
+                    title: document.title,
+                    url: window.location.href
+                })
+                .then(() => console.log('Shared successfully'))
+                .catch((error) => console.log('Share failed:', error));
+            });
+        } else if (shareBtn) {
+            shareBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Fallback for browsers that don't support Web Share API
+                const url = window.location.href;
+                const tempInput = document.createElement('input');
+                document.body.appendChild(tempInput);
+                tempInput.value = url;
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                
+                alert('Profile URL copied to clipboard!');
+            });
+        }
+
+        // Handle image loading errors for all profile images
+        const profileImages = document.querySelectorAll('img[src*="uploads/photos/"]');
+        const placeholderPath = "{{ url_for('static', filename='images/user-placeholder.svg') }}";
+        
+        profileImages.forEach(img => {
+            img.addEventListener('error', function() {
+                this.src = placeholderPath;
+            });
+        });
+        
+        // Fix photo links if image failed to load
+        const photoLinks = document.querySelectorAll('.photo-link');
+        photoLinks.forEach(link => {
+            const nearbyImg = link.closest('.card-body').querySelector('img');
+            if (nearbyImg && nearbyImg.src.includes('user-placeholder.svg')) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Photo is not available.');
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

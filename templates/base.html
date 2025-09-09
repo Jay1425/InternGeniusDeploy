@@ -275,7 +275,7 @@
         }
     </style>
     
-    {% block extra_css %}{% endblock %}
+    {% block custom_css %}{% endblock %}
 </head>
 <body>
     <!-- Navigation -->
@@ -328,38 +328,16 @@
                 </ul>
                 
                 <ul class="navbar-nav ms-auto">
-                    {% if current_user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle govt-user-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle me-1"></i>{{ current_user.get_full_name() }}
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ url_for('dashboard') }}">
-                                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                                </a></li>
-                                {% if current_user.role == 'student' %}
-                                    <li><a class="dropdown-item" href="{{ url_for('student.profile') }}">
-                                        <i class="fas fa-user me-2"></i>Profile
-                                    </a></li>
-                                {% endif %}
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">
-                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                </a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link govt-auth-link" href="{{ url_for('auth.login') }}">
-                                <i class="fas fa-sign-in-alt me-1"></i>Login
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link govt-auth-link signup-link" href="{{ url_for('auth.signup') }}">
-                                <i class="fas fa-user-plus me-1"></i>Sign Up
-                            </a>
-                        </li>
-                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link govt-auth-link" href="{{ url_for('login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link govt-auth-link signup-link" href="{{ url_for('signup') }}">
+                            <i class="fas fa-user-plus me-1"></i>Sign Up
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -370,17 +348,7 @@
 
     <!-- Flash Messages -->
     <div class="container mt-3">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }} alert-dismissible fade show" role="alert">
-                        <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' if category == 'success' else 'info-circle' }} me-2"></i>
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+        <!-- Flash messages section (simplified version) -->
     </div>
 
     <!-- Main Content -->
@@ -469,6 +437,6 @@
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/accessibility.js') }}"></script>
     
-    {% block extra_js %}{% endblock %}
+    {% block custom_js %}{% endblock %}
 </body>
 </html>

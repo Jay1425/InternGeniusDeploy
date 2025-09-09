@@ -53,37 +53,29 @@
                         employability and skill development.
                     </p>
                     
-                    {% if not current_user.is_authenticated %}
-                        <div class="mb-4">
-                            <div class="d-flex flex-wrap gap-3 mb-3">
-                                <a href="{{ url_for('auth.signup') }}" class="btn btn-primary btn-lg gov-btn">
-                                    <i class="fas fa-user-plus me-2"></i>Register Now
-                                </a>
-                                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-lg">
-                                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
-                                </a>
-                            </div>
-                            <div class="registration-buttons mt-2">
-                                <div class="btn-group w-100">
-                                    <a href="{{ url_for('auth.direct_student_registration') }}" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-user-graduate me-1"></i>Student
-                                    </a>
-                                    <a href="{{ url_for('auth.direct_company_registration') }}" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-building me-1"></i>Organization
-                                    </a>
-                                    <a href="{{ url_for('auth.direct_admin_registration') }}" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-user-shield me-1"></i>Administrator
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="d-flex gap-3 mb-4">
-                            <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg gov-btn">
-                                <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                    <div class="mb-4">
+                        <div class="d-flex flex-wrap gap-3 mb-3">
+                            <a href="{{ url_for('direct_student_registration') }}" class="btn btn-primary btn-lg gov-btn">
+                                <i class="fas fa-user-plus me-2"></i>Register Now
+                            </a>
+                            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Sign In
                             </a>
                         </div>
-                    {% endif %}
+                        <div class="registration-buttons mt-2">
+                            <div class="btn-group w-100">
+                                <a href="{{ url_for('direct_student_registration') }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-user-graduate me-1"></i>Student
+                                </a>
+                                <a href="{{ url_for('direct_company_registration') }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-building me-1"></i>Organization
+                                </a>
+                                <a href="{{ url_for('direct_admin_registration') }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-user-shield me-1"></i>Administrator
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="col-lg-6 text-center govt-hero-image">
@@ -151,7 +143,6 @@
     </div>
 
     <!-- Registration Options Section -->
-    {% if not current_user.is_authenticated %}
     <div class="row mb-5">
         <div class="col-12">
             <div class="govt-section-header">
@@ -175,7 +166,7 @@
                     <li><i class="fas fa-check-circle"></i> Get AI-powered internship recommendations</li>
                     <li><i class="fas fa-check-circle"></i> Build your professional profile</li>
                 </ul>
-                <a href="{{ url_for('auth.direct_student_registration') }}" class="btn btn-primary registration-btn">
+                <a href="{{ url_for('direct_student_registration') }}" class="btn btn-primary registration-btn">
                     <i class="fas fa-user-graduate me-2"></i>Register as Student
                 </a>
             </div>
@@ -195,7 +186,7 @@
                     <li><i class="fas fa-check-circle"></i> Find qualified candidates from across India</li>
                     <li><i class="fas fa-check-circle"></i> Government incentives for participation</li>
                 </ul>
-                <a href="{{ url_for('auth.direct_company_registration') }}" class="btn btn-primary registration-btn">
+                <a href="{{ url_for('direct_company_registration') }}" class="btn btn-primary registration-btn">
                     <i class="fas fa-building me-2"></i>Register as Organization
                 </a>
             </div>
@@ -215,13 +206,12 @@
                     <li><i class="fas fa-check-circle"></i> Access detailed platform analytics</li>
                     <li><i class="fas fa-check-circle"></i> Manage user accounts and content</li>
                 </ul>
-                <a href="{{ url_for('auth.direct_admin_registration') }}" class="btn btn-primary registration-btn">
+                <a href="{{ url_for('direct_admin_registration') }}" class="btn btn-primary registration-btn">
                     <i class="fas fa-user-shield me-2"></i>Register as Administrator
                 </a>
             </div>
         </div>
     </div>
-    {% endif %}
 
     <!-- Dashboard Preview Section -->
     <div class="row mb-5">
@@ -241,7 +231,7 @@
                 <div class="dashboard-content">
                     <h3 class="dashboard-title">Student Dashboard</h3>
                     <p class="dashboard-description">Create profile, apply for internships, track applications, and showcase your skills.</p>
-                    <a href="/preview/student" class="btn btn-primary">Preview</a>
+                    <a href="#" class="btn btn-primary">Preview</a>
                 </div>
             </div>
         </div>
@@ -254,7 +244,7 @@
                 <div class="dashboard-content">
                     <h3 class="dashboard-title">Company Dashboard</h3>
                     <p class="dashboard-description">Post internships, review applications, manage interns, and generate certificates.</p>
-                    <a href="/preview/company" class="btn btn-primary">Preview</a>
+                    <a href="#" class="btn btn-primary">Preview</a>
                 </div>
             </div>
         </div>
@@ -267,7 +257,7 @@
                 <div class="dashboard-content">
                     <h3 class="dashboard-title">Admin Dashboard</h3>
                     <p class="dashboard-description">Verify companies, monitor activities, generate reports, and ensure platform integrity.</p>
-                    <a href="/preview/admin" class="btn btn-primary">Preview</a>
+                    <a href="#" class="btn btn-primary">Preview</a>
                 </div>
             </div>
         </div>
@@ -298,7 +288,7 @@
                     <li>Skill development and career guidance</li>
                     <li>Official certificates recognized nationwide</li>
                 </ul>
-                <a href="{{ url_for('auth.direct_student_registration') }}" class="govt-feature-link">Register as Student <i class="fas fa-arrow-right ms-1"></i></a>
+                <a href="{{ url_for('direct_student_registration') }}" class="govt-feature-link">Register as Student <i class="fas fa-arrow-right ms-1"></i></a>
             </div>
         </div>
         
@@ -315,7 +305,7 @@
                     <li>Streamlined application management tools</li>
                     <li>Support CSR goals through inclusive hiring</li>
                 </ul>
-                <a href="{{ url_for('auth.direct_company_registration') }}" class="govt-feature-link">Register as Organization <i class="fas fa-arrow-right ms-1"></i></a>
+                <a href="{{ url_for('direct_company_registration') }}" class="govt-feature-link">Register as Organization <i class="fas fa-arrow-right ms-1"></i></a>
             </div>
         </div>
         
@@ -426,14 +416,13 @@
     </div>
 
     <!-- Call to Action -->
-    {% if not current_user.is_authenticated %}
     <div class="row mb-5">
         <div class="col-12">
             <div class="govt-cta">
                 <div class="govt-cta-content">
                     <h3 class="govt-cta-title">Join the National Internship Program</h3>
                     <p class="govt-cta-text">Build Skills. Gain Experience. Serve the Nation.</p>
-                    <a href="{{ url_for('auth.signup') }}" class="btn btn-light btn-lg govt-cta-btn">
+                    <a href="{{ url_for('signup') }}" class="btn btn-light btn-lg govt-cta-btn">
                         <i class="fas fa-user-plus me-2"></i>Register Now
                     </a>
                 </div>
@@ -441,7 +430,6 @@
             </div>
         </div>
     </div>
-    {% endif %}
 
     <!-- Important Links Section -->
     <div class="row mb-5">

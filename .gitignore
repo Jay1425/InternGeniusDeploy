@@ -93,6 +93,12 @@ data/
 # Uploads
 uploads/
 temp/
+static/uploads/photos/*
+static/uploads/resumes/*
+static/uploads/documents/*
+!static/uploads/photos/.gitkeep
+!static/uploads/resumes/.gitkeep
+!static/uploads/documents/.gitkeep
 
 # Static files (if using collectstatic)
 staticfiles/

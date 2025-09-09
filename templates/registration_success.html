@@ -1,0 +1,475 @@
+{% extends "base.html" %}
+
+{% block title %}Registration Successful - InternGenius{% endblock %}
+
+{% block custom_css %}
+<link href="{{ url_for('static', filename='css/profile-styles.css') }}" rel="stylesheet">
+<style>
+    .success-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .success-header {
+        background: linear-gradient(135deg, var(--govt-primary) 0%, #0a65bb 100%);
+        color: white;
+        padding: 2rem;
+        position: relative;
+    }
+
+    .success-icon {
+        font-size: 5rem;
+        color: #ffffff;
+        margin-bottom: 1rem;
+        animation: pulseAnimation 1.5s infinite;
+    }
+
+    @keyframes pulseAnimation {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .success-heading {
+        color: #ffffff;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .success-message {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+
+    .success-content {
+        padding: 2rem;
+    }
+
+    .details-container {
+        background-color: #f8f9fa;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-top: 2rem;
+        text-align: left;
+        box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .details-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+    }
+
+    .details-header {
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        color: var(--govt-primary);
+    }
+
+    .detail-item {
+        margin-bottom: 1rem;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .govt-logo {
+        height: 60px;
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-card {
+        border-radius: 12px;
+        background-color: white;
+        box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-card-header {
+        background-color: var(--govt-primary);
+        color: white;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .profile-card-content {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 5px solid white;
+        object-fit: cover;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .success-actions {
+        margin-top: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .success-actions .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .success-actions .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .success-actions .btn i {
+        margin-right: 0.5rem;
+    }
+
+    .education-card, .skills-card {
+        padding: 1.5rem;
+        border-radius: 12px;
+        background-color: white;
+        box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .education-card:hover, .skills-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+    }
+
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: rgba(9, 83, 154, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--govt-primary);
+        margin-right: 1rem;
+    }
+
+    .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .skill-tag {
+        background-color: rgba(9, 83, 154, 0.1);
+        color: var(--govt-primary);
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+    }
+
+    /* Animation effects */
+    .fadeInUp {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .fadeInLeft {
+        animation: fadeInLeft 0.6s ease-out;
+    }
+
+    .fadeInRight {
+        animation: fadeInRight 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes fadeInRight {
+        from {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .success-actions {
+            flex-direction: column;
+        }
+
+        .success-actions .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container success-container mt-5">
+    <div class="success-header">
+        <img src="{{ url_for('static', filename='images/emblem_of_india.svg') }}" alt="Government of India" class="govt-logo">
+        
+        <i class="fas fa-check-circle success-icon"></i>
+        <h2 class="success-heading">Registration Successful!</h2>
+        <p class="success-message">Thank you for registering with InternGenius - National Internship Portal</p>
+    </div>
+    
+    <div class="success-content">
+        <div class="alert alert-success" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            Your application has been submitted successfully. Our team will review your details and get back to you soon.
+        </div>
+        
+        <div class="row mt-5">
+            <div class="col-lg-4 mb-4">
+                <div class="profile-card fadeInLeft">
+                    <div class="profile-card-header">
+                        <h5 class="mb-0">Profile Information</h5>
+                    </div>
+                    <div class="profile-card-content">
+                        {% if form_data.get('photo_filename') %}
+                            <img id="profilePhoto" src="{{ url_for('static', filename='uploads/photos/' + form_data.get('photo_filename', '')) }}" alt="Profile Photo" class="profile-image">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/user-placeholder.svg') }}" alt="Profile Placeholder" class="profile-image">
+                        {% endif %}
+                        
+                        <script>
+                            document.getElementById('profilePhoto')?.addEventListener('error', function() {
+                                this.src = "{{ url_for('static', filename='images/user-placeholder.svg') }}";
+                            });
+                        </script>
+                        
+                        <h4>{{ form_data.get('first_name', '') }} {{ form_data.get('last_name', '') }}</h4>
+                        <p class="text-muted mb-3">{{ form_data.get('qualification_1', 'Student') }} | {{ form_data.get('institution_1', '') }}</p>
+                        
+                        <div class="d-flex justify-content-center align-items-center mb-3">
+                            <div class="me-3 text-center">
+                                <i class="fas fa-envelope text-muted"></i>
+                                <p class="small mb-0">{{ form_data.get('email', '') }}</p>
+                            </div>
+                            <div class="text-center">
+                                <i class="fas fa-phone text-muted"></i>
+                                <p class="small mb-0">{{ form_data.get('phone', '') }}</p>
+                            </div>
+                        </div>
+                        
+                        {% if form_data.get('resume_filename') %}
+                            <a href="{{ url_for('static', filename='uploads/resumes/' + form_data.get('resume_filename', '')) }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                                <i class="fas fa-file-alt me-2"></i>View Resume
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <div class="details-container fadeInRight">
+                    <h4 class="details-header">Registration Details</h4>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Full Name:</span> 
+                                {{ form_data.get('first_name', '') }} {{ form_data.get('middle_name', '') }} {{ form_data.get('last_name', '') }}
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Date of Birth:</span> 
+                                {{ form_data.get('dob', '') }}
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Gender:</span> 
+                                {{ form_data.get('gender', '')|title }}
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Category:</span> 
+                                {{ form_data.get('category', '')|upper }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Email:</span> 
+                                {{ form_data.get('email', '') }}
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Phone:</span> 
+                                {{ form_data.get('phone', '') }}
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Nationality:</span> 
+                                {{ form_data.get('nationality', '') }}
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Registration Date:</span> 
+                                {{ now.strftime('%d %B, %Y') if now else '' }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Address Section -->
+                    <h5 class="mt-4 mb-3">Address Information</h5>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="detail-item">
+                                <span class="detail-label">Address:</span> 
+                                {{ form_data.get('address_line1', '') }}{% if form_data.get('address_line2') %}, {{ form_data.get('address_line2') }}{% endif %}, {{ form_data.get('city', '') }}, {{ form_data.get('state', '') }} - {{ form_data.get('pincode', '') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education Card -->
+                <div class="education-card d-flex fadeInUp" style="animation-delay: 0.3s;">
+                    <div class="card-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h5>Educational Qualification</h5>
+                        <div class="detail-item">
+                            <span class="detail-label">Qualification:</span> 
+                            {{ form_data.get('qualification_1', '') }} in {{ form_data.get('specialization_1', '') }}
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Institution:</span> 
+                            {{ form_data.get('institution_1', '') }}
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Passing Year:</span> 
+                            {{ form_data.get('passing_year_1', '') }}
+                        </div>
+                        {% if form_data.get('percentage_1') %}
+                        <div class="detail-item">
+                            <span class="detail-label">Percentage/CGPA:</span> 
+                            {{ form_data.get('percentage_1', '') }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Skills Card -->
+                <div class="skills-card fadeInUp" style="animation-delay: 0.6s;">
+                    <h5><i class="fas fa-tools me-2"></i>Skills & Preferences</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Technical Skills:</span>
+                                <div class="skill-tags">
+                                    {% for skill in form_data.get('skills', '').split(',') %}
+                                        {% if skill.strip() %}
+                                            <span class="skill-tag">{{ skill.strip() }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Areas of Interest:</span>
+                                <div class="skill-tags">
+                                    {% for interest in form_data.get('interests', '').split(',') %}
+                                        {% if interest.strip() %}
+                                            <span class="skill-tag">{{ interest.strip() }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Preferred Work Mode:</span> 
+                                {{ form_data.get('work_mode', '')|title }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Internship Duration:</span> 
+                                {% set duration = form_data.get('internship_duration', '') %}
+                                {% if duration == '1_month' %}
+                                    1 month
+                                {% elif duration == '1-2_months' %}
+                                    1-2 months
+                                {% elif duration == '2-3_months' %}
+                                    2-3 months
+                                {% elif duration == '3-6_months' %}
+                                    3-6 months
+                                {% elif duration == '6-12_months' %}
+                                    6-12 months
+                                {% else %}
+                                    Flexible
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-info mt-4 fadeInUp" style="animation-delay: 0.9s;">
+            <i class="fas fa-envelope me-2"></i>
+            You will receive a confirmation email shortly with your registration details and next steps.
+        </div>
+        
+        <div class="success-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="fas fa-home me-2"></i>Return to Homepage
+            </a>
+            <a href="{{ url_for('student_profile') }}" class="btn btn-outline-primary">
+                <i class="fas fa-user me-2"></i>View Complete Profile
+            </a>
+            {% if form_data.get('resume_filename') %}
+            <a href="{{ url_for('static', filename='uploads/resumes/' + form_data.get('resume_filename', '')) }}" class="btn btn-outline-secondary" target="_blank" download>
+                <i class="fas fa-download me-2"></i>Download Resume
+            </a>
+            {% endif %}
+            <button type="button" class="btn btn-outline-success" onclick="window.print()">
+                <i class="fas fa-print me-2"></i>Print Registration
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

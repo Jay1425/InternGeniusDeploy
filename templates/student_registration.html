@@ -1,0 +1,1591 @@
+{% extends "base.html" %}
+
+{% block title %}Student Registration - InternGenius{% endblock %}
+
+{% block custom_css %}
+<style>
+    /* Government Portal Theme Colors */
+    :root {
+        --govt-primary: #FF6F61;
+        --govt-secondary: #6B7A8F;
+        --govt-accent: #F7C331;
+        --govt-dark: #2C3E50;
+        --govt-light: #F3F4F6;
+        --govt-success: #2ECC71;
+        --govt-danger: #E74C3C;
+        --govt-warning: #F39C12;
+        --govt-info: #3498DB;
+    }
+
+    body {
+        background-color: #f5f7fa;
+    }
+
+    .registration-container {
+        max-width: 950px;
+        margin: 2rem auto;
+        padding: 0;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+    }
+
+    .registration-header {
+        background: linear-gradient(135deg, var(--govt-primary) 0%, #ff8f61 100%);
+        color: white;
+        padding: 2rem;
+        position: relative;
+    }
+
+    .registration-header::after {
+        content: "";
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        right: 0;
+        height: 20px;
+        background: linear-gradient(to bottom right, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%);
+    }
+
+    .form-content {
+        padding: 2rem;
+    }
+
+    .form-section {
+        display: none;
+        animation: fadeIn 0.5s;
+    }
+
+    .form-section.active {
+        display: block;
+    }
+
+    .section-title {
+        color: var(--govt-primary);
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .section-title i {
+        margin-right: 10px;
+        background-color: var(--govt-primary);
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+
+    /* Form Control Styles */
+    .form-control, .form-select {
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--govt-primary);
+        box-shadow: 0 0 0 0.25rem rgba(255, 111, 97, 0.25);
+    }
+
+    .input-with-icon {
+        position: relative;
+    }
+    
+    .input-with-icon .form-control {
+        padding-left: 40px;
+    }
+    
+    .input-with-icon i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
+
+    /* Required Field Style */
+    .required-field::after {
+        content: "*";
+        color: var(--govt-danger);
+        margin-left: 3px;
+    }
+
+    /* Progress Indicator */
+    .step-progress {
+        display: flex;
+        margin-bottom: 2rem;
+    }
+
+    .step-item {
+        flex: 1;
+        text-align: center;
+        padding: 0.5rem;
+        position: relative;
+    }
+
+    .step-item:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        top: 25px;
+        left: 50%;
+        width: 100%;
+        height: 3px;
+        background-color: #e0e0e0;
+        z-index: 1;
+    }
+
+    .step-circle {
+        width: 50px;
+        height: 50px;
+        background-color: #e0e0e0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+        color: #fff;
+        font-weight: 600;
+        position: relative;
+        z-index: 2;
+    }
+
+    .step-title {
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .step-item.active .step-circle {
+        background-color: var(--govt-primary);
+    }
+
+    .step-item.active .step-title {
+        color: var(--govt-primary);
+        font-weight: 600;
+    }
+
+    .step-item.completed .step-circle {
+        background-color: var(--govt-success);
+    }
+
+    .step-item.completed:not(:last-child)::after {
+        background-color: var(--govt-success);
+    }
+
+    /* Form Navigation Buttons */
+    .form-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+    }
+
+    .btn-next, .btn-prev, .btn-submit {
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-next, .btn-submit {
+        background-color: var(--govt-primary);
+        border-color: var(--govt-primary);
+        color: white;
+    }
+
+    .btn-next:hover, .btn-submit:hover {
+        background-color: #e5634f;
+        border-color: #e5634f;
+    }
+
+    .btn-prev {
+        background-color: #e0e0e0;
+        border-color: #e0e0e0;
+        color: #333;
+    }
+
+    .btn-prev:hover {
+        background-color: #c8c8c8;
+        border-color: #c8c8c8;
+    }
+
+    /* Help Text */
+    .help-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 0.5rem;
+    }
+
+    /* File Upload Styling */
+    .file-upload-container {
+        border: 2px dashed #dee2e6;
+        padding: 2rem 1rem;
+        text-align: center;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .file-upload-container:hover {
+        border-color: var(--govt-primary);
+        background-color: #fff8f7;
+    }
+
+    .upload-icon {
+        font-size: 2.5rem;
+        color: var(--govt-primary);
+        margin-bottom: 1rem;
+        transition: all 0.3s;
+    }
+
+    .file-upload-container:hover .upload-icon {
+        transform: scale(1.1);
+    }
+
+    .file-preview {
+        display: none;
+        max-width: 100%;
+        max-height: 150px;
+        margin: 1rem auto;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    /* Education Entry Styling */
+    .education-entry {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid var(--govt-primary);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .add-education-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2rem;
+        padding: 0.6rem 1.5rem;
+    }
+
+    .add-education-btn i {
+        margin-right: 0.5rem;
+    }
+
+    /* Floating Labels */
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        height: calc(3.5rem + 2px);
+        padding: 1.625rem 0.75rem 0.625rem;
+    }
+
+    .form-floating > label {
+        padding: 1rem 0.75rem;
+        color: #6c757d;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Card Style Alert */
+    .card-alert {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid var(--govt-primary);
+        background-color: #fff8f7;
+    }
+
+    .card-alert.info {
+        border-color: var(--govt-info);
+        background-color: #edf7fd;
+    }
+
+    .card-alert i {
+        color: var(--govt-primary);
+        margin-right: 0.5rem;
+    }
+
+    .card-alert.info i {
+        color: var(--govt-info);
+    }
+
+    /* Skill Chips */
+    .skill-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 0.5rem;
+    }
+
+    .skill-chip {
+        background-color: #f0f0f0;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .skill-chip i {
+        margin-left: 5px;
+        cursor: pointer;
+        color: #6c757d;
+    }
+
+    .skill-chip i:hover {
+        color: var(--govt-danger);
+    }
+
+    /* Tooltip Styles */
+    .tooltip-icon {
+        display: inline-block;
+        margin-left: 5px;
+        color: #6c757d;
+        cursor: help;
+    }
+    
+    /* Response Indicators */
+    .input-response-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: none;
+    }
+
+    .is-valid ~ .valid-feedback-icon {
+        display: block;
+        color: var(--govt-success);
+    }
+
+    .is-invalid ~ .invalid-feedback-icon {
+        display: block;
+        color: var(--govt-danger);
+    }
+
+    /* Custom Checkbox */
+    .custom-checkbox {
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .custom-checkbox .form-check-input {
+        width: 20px;
+        height: 20px;
+        margin-top: 3px;
+    }
+    
+    .custom-checkbox .form-check-label {
+        font-size: 0.95rem;
+        margin-left: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container registration-container mt-5">
+    <div class="registration-header">
+        <div class="d-flex align-items-center mb-4">
+            <img src="{{ url_for('static', filename='images/emblem_of_india.svg') }}" alt="Government of India" class="govt-logo" style="height: 70px; margin-right: 1rem;">
+            <div>
+                <h2 class="mb-0 fw-bold">Student Registration</h2>
+                <p class="mb-0 opacity-75">InternGenius - National Internship Portal</p>
+            </div>
+        </div>
+        <p class="mb-0">Join thousands of students discovering relevant internship opportunities aligned with their skills and interests.</p>
+    </div>
+
+    <div class="form-content">
+        <!-- Step Progress Indicator -->
+        <div class="step-progress">
+            <div class="step-item active" id="step-item-1">
+                <div class="step-circle">1</div>
+                <div class="step-title">Personal Information</div>
+            </div>
+            <div class="step-item" id="step-item-2">
+                <div class="step-circle">2</div>
+                <div class="step-title">Education & Address</div>
+            </div>
+            <div class="step-item" id="step-item-3">
+                <div class="step-circle">3</div>
+                <div class="step-title">Skills & Preferences</div>
+            </div>
+            <div class="step-item" id="step-item-4">
+                <div class="step-circle">4</div>
+                <div class="step-title">Documents & Review</div>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('register_student') }}" enctype="multipart/form-data" id="registrationForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <!-- Personal Information - Step 1 -->
+        <div class="form-section active" id="section-1">
+            <h4 class="section-title">
+                <i class="fas fa-user"></i> Personal Information
+            </h4>
+
+            <div class="card-alert info mb-4">
+                <i class="fas fa-info-circle"></i>
+                Please fill in your personal details as they appear on your official documents.
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="firstName" class="form-label required-field">First Name</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" class="form-control" id="firstName" name="first_name" placeholder="Enter your first name" required>
+                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                    </div>
+                    <div class="invalid-feedback">Please enter your first name</div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="middleName" class="form-label">Middle Name</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" class="form-control" id="middleName" name="middle_name" placeholder="Enter your middle name">
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="lastName" class="form-label required-field">Last Name</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Enter your last name" required>
+                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                    </div>
+                    <div class="invalid-feedback">Please enter your last name</div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label required-field">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                    </div>
+                    <div class="invalid-feedback">Please enter a valid email address</div>
+                    <div class="help-text">This will be used as your login username</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="phone" class="form-label required-field">Mobile Number</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-phone-alt"></i>
+                        <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
+                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                    </div>
+                    <div class="invalid-feedback">Please enter a valid 10-digit mobile number</div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-4 mb-3">
+                    <label for="dob" class="form-label required-field">Date of Birth</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="date" class="form-control" id="dob" name="dob" required>
+                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                    </div>
+                    <div class="invalid-feedback">Please enter your date of birth</div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="gender" class="form-label required-field">Gender</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-venus-mars"></i>
+                        <select class="form-select" id="gender" name="gender" required>
+                            <option value="" selected disabled>Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer_not_to_say">Prefer not to say</option>
+                        </select>
+                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                    </div>
+                    <div class="invalid-feedback">Please select your gender</div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="category" class="form-label required-field">Category</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-id-card"></i>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="" selected disabled>Select category</option>
+                            <option value="general">General</option>
+                            <option value="obc">OBC</option>
+                            <option value="sc">SC</option>
+                            <option value="st">ST</option>
+                            <option value="ews">EWS</option>
+                        </select>
+                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                    </div>
+                    <div class="invalid-feedback">Please select your category</div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6 mb-3">
+                    <label for="aadhaar" class="form-label required-field">Aadhaar Number</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-id-card-alt"></i>
+                        <input type="text" class="form-control" id="aadhaar" name="aadhaar" placeholder="XXXX XXXX XXXX" required>
+                        <input type="hidden" id="aadhaar_raw" name="aadhaar_raw">
+                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                    </div>
+                    <div class="invalid-feedback">Please enter a valid 12-digit Aadhaar number</div>
+                    <div class="help-text">Enter your 12-digit Aadhaar number without spaces</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="nationality" class="form-label required-field">Nationality</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-flag"></i>
+                        <input type="text" class="form-control" id="nationality" name="nationality" placeholder="Enter your nationality" required value="Indian">
+                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                    </div>
+                    <div class="invalid-feedback">Please enter your nationality</div>
+                </div>
+            </div>
+
+            <div class="form-navigation mt-4">
+                <button type="button" class="btn btn-next">Next: Education & Address <i class="fas fa-arrow-right ms-2"></i></button>
+            </div>
+        </div>
+
+        <!-- Education & Address - Step 2 -->
+        <div class="form-section" id="section-2">
+            <h4 class="section-title">
+                <i class="fas fa-graduation-cap"></i> Education & Address
+            </h4>
+            
+            <!-- Education Information -->
+            <div class="mb-4">
+                <h5 class="fw-bold mb-3">Educational Details</h5>
+                
+                <div class="card-alert info mb-4">
+                    <i class="fas fa-info-circle"></i>
+                    Your education details help us match you with internships that align with your academic background.
+                </div>
+                
+                <div class="education-entries">
+                    <div class="education-entry" id="education-entry-1">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="qualification" class="form-label required-field">Qualification</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-certificate"></i>
+                                    <select class="form-select" id="qualification" name="qualification_1" required>
+                                        <option value="" selected disabled>Select your qualification</option>
+                                        <option value="high_school">High School (10th)</option>
+                                        <option value="intermediate">Intermediate (12th)</option>
+                                        <option value="diploma">Diploma</option>
+                                        <option value="bachelors">Bachelor's Degree</option>
+                                        <option value="masters">Master's Degree</option>
+                                        <option value="phd">PhD</option>
+                                    </select>
+                                </div>
+                                <div class="invalid-feedback">Please select your qualification</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="specialization" class="form-label required-field">Specialization/Stream</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-book"></i>
+                                    <input type="text" class="form-control" id="specialization" name="specialization_1" placeholder="e.g., Computer Science, Mechanical Engineering" required>
+                                </div>
+                                <div class="invalid-feedback">Please enter your specialization</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="institution" class="form-label required-field">Institution/University</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-university"></i>
+                                    <input type="text" class="form-control" id="institution" name="institution_1" placeholder="Enter your institution name" required>
+                                </div>
+                                <div class="invalid-feedback">Please enter your institution name</div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="passingYear" class="form-label required-field">Year of Passing</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-calendar"></i>
+                                    <select class="form-select" id="passingYear" name="passing_year_1" required>
+                                        <option value="" selected disabled>Select year</option>
+                                        {% for year in range(2025, 2000, -1) %}
+                                        <option value="{{ year }}">{{ year }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="invalid-feedback">Please select your passing year</div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="percentage" class="form-label required-field">Percentage/CGPA</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                    <input type="text" class="form-control" id="percentage" name="percentage_1" placeholder="Enter marks" required>
+                                </div>
+                                <div class="invalid-feedback">Please enter your percentage or CGPA</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-outline-primary add-education-btn" id="addEducationBtn">
+                    <i class="fas fa-plus-circle"></i> Add Another Qualification
+                </button>
+            </div>
+
+            <!-- Address Information -->
+            <div class="mt-5">
+                <h5 class="fw-bold mb-3">Current Address</h5>
+                
+                <div class="mb-3">
+                    <label for="addressLine1" class="form-label required-field">Address Line 1</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-home"></i>
+                        <input type="text" class="form-control" id="addressLine1" name="address_line1" placeholder="House/Flat No., Building Name, Street" required>
+                    </div>
+                    <div class="invalid-feedback">Please enter your address</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="addressLine2" class="form-label">Address Line 2</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" class="form-control" id="addressLine2" name="address_line2" placeholder="Locality/Area/Landmark">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="city" class="form-label required-field">City</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-city"></i>
+                            <input type="text" class="form-control" id="city" name="city" placeholder="Enter city name" required>
+                        </div>
+                        <div class="invalid-feedback">Please enter your city</div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="state" class="form-label required-field">State</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-map"></i>
+                            <select class="form-select" id="state" name="state" required>
+                                <option value="" selected disabled>Select state</option>
+                                <option value="andhra_pradesh">Andhra Pradesh</option>
+                                <option value="arunachal_pradesh">Arunachal Pradesh</option>
+                                <option value="assam">Assam</option>
+                                <option value="bihar">Bihar</option>
+                                <option value="chhattisgarh">Chhattisgarh</option>
+                                <option value="goa">Goa</option>
+                                <option value="gujarat">Gujarat</option>
+                                <option value="haryana">Haryana</option>
+                                <option value="himachal_pradesh">Himachal Pradesh</option>
+                                <option value="jharkhand">Jharkhand</option>
+                                <option value="karnataka">Karnataka</option>
+                                <option value="kerala">Kerala</option>
+                                <option value="madhya_pradesh">Madhya Pradesh</option>
+                                <option value="maharashtra">Maharashtra</option>
+                                <option value="manipur">Manipur</option>
+                                <option value="meghalaya">Meghalaya</option>
+                                <option value="mizoram">Mizoram</option>
+                                <option value="nagaland">Nagaland</option>
+                                <option value="odisha">Odisha</option>
+                                <option value="punjab">Punjab</option>
+                                <option value="rajasthan">Rajasthan</option>
+                                <option value="sikkim">Sikkim</option>
+                                <option value="tamil_nadu">Tamil Nadu</option>
+                                <option value="telangana">Telangana</option>
+                                <option value="tripura">Tripura</option>
+                                <option value="uttar_pradesh">Uttar Pradesh</option>
+                                <option value="uttarakhand">Uttarakhand</option>
+                                <option value="west_bengal">West Bengal</option>
+                                <option value="andaman_nicobar">Andaman & Nicobar Islands</option>
+                                <option value="chandigarh">Chandigarh</option>
+                                <option value="dadra_nagar_haveli">Dadra & Nagar Haveli and Daman & Diu</option>
+                                <option value="delhi">Delhi</option>
+                                <option value="jammu_kashmir">Jammu & Kashmir</option>
+                                <option value="ladakh">Ladakh</option>
+                                <option value="lakshadweep">Lakshadweep</option>
+                                <option value="puducherry">Puducherry</option>
+                            </select>
+                        </div>
+                        <div class="invalid-feedback">Please select your state</div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="pincode" class="form-label required-field">PIN Code</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-map-pin"></i>
+                            <input type="text" class="form-control" id="pincode" name="pincode" pattern="[0-9]{6}" placeholder="6-digit PIN code" required>
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid 6-digit PIN code</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-navigation mt-4">
+                <button type="button" class="btn btn-prev"><i class="fas fa-arrow-left me-2"></i> Previous: Personal Info</button>
+                <button type="button" class="btn btn-next">Next: Skills & Preferences <i class="fas fa-arrow-right ms-2"></i></button>
+            </div>
+        </div>
+
+        <!-- Skills & Preferences - Step 3 -->
+        <div class="form-section" id="section-3">
+            <h4 class="section-title">
+                <i class="fas fa-tools"></i> Skills & Preferences
+            </h4>
+
+            <div class="card-alert info mb-4">
+                <i class="fas fa-info-circle"></i>
+                The better we understand your skills and preferences, the more accurately we can match you with relevant internships.
+            </div>
+
+            <!-- Technical Skills Section -->
+            <div class="mb-4">
+                <h5 class="fw-bold mb-3">Skills</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="skills" class="form-label required-field">Technical Skills</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-code"></i>
+                            <input type="text" class="form-control" id="skills" name="skills" placeholder="e.g., Python, Java, Data Analysis" required>
+                        </div>
+                        <div class="invalid-feedback">Please enter at least one technical skill</div>
+                        <div class="help-text">Enter comma-separated skills</div>
+                        <div class="skill-chips" id="techSkillChips"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="softSkills" class="form-label required-field">Soft Skills</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-comments"></i>
+                            <input type="text" class="form-control" id="softSkills" name="soft_skills" placeholder="e.g., Communication, Leadership, Teamwork" required>
+                        </div>
+                        <div class="invalid-feedback">Please enter at least one soft skill</div>
+                        <div class="help-text">Enter comma-separated skills</div>
+                        <div class="skill-chips" id="softSkillChips"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interests & Languages -->
+            <div class="mb-4">
+                <h5 class="fw-bold mb-3">Interests & Languages</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="interests" class="form-label required-field">Areas of Interest</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lightbulb"></i>
+                            <select class="form-select" id="interests" name="interests" required multiple>
+                                <option value="software_development">Software Development</option>
+                                <option value="data_science">Data Science & Analytics</option>
+                                <option value="web_development">Web Development</option>
+                                <option value="mobile_development">Mobile App Development</option>
+                                <option value="ui_ux">UI/UX Design</option>
+                                <option value="digital_marketing">Digital Marketing</option>
+                                <option value="content_writing">Content Writing</option>
+                                <option value="finance">Finance & Accounting</option>
+                                <option value="hr">Human Resources</option>
+                                <option value="mechanical">Mechanical Engineering</option>
+                                <option value="civil">Civil Engineering</option>
+                                <option value="electrical">Electrical Engineering</option>
+                                <option value="chemical">Chemical Engineering</option>
+                                <option value="artificial_intelligence">Artificial Intelligence</option>
+                                <option value="blockchain">Blockchain</option>
+                                <option value="cloud_computing">Cloud Computing</option>
+                            </select>
+                        </div>
+                        <div class="invalid-feedback">Please select at least one area of interest</div>
+                        <div class="help-text">Hold Ctrl/Cmd to select multiple options</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="languages" class="form-label required-field">Languages Known</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-language"></i>
+                            <input type="text" class="form-control" id="languages" name="languages" placeholder="e.g., English, Hindi, Gujarati" required>
+                        </div>
+                        <div class="invalid-feedback">Please enter the languages you know</div>
+                        <div class="help-text">Enter comma-separated languages</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Internship Preferences -->
+            <div class="mb-4">
+                <h5 class="fw-bold mb-3">Internship Preferences</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="preferredLocations" class="form-label required-field">Preferred Work Locations</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <input type="text" class="form-control" id="preferredLocations" name="preferred_locations" placeholder="e.g., Mumbai, Delhi, Remote" required>
+                        </div>
+                        <div class="invalid-feedback">Please enter your preferred locations</div>
+                        <div class="help-text">Enter comma-separated locations or 'Remote'</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="expectedStipend" class="form-label">Expected Monthly Stipend (₹)</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-rupee-sign"></i>
+                            <select class="form-select" id="expectedStipend" name="expected_stipend">
+                                <option value="" selected disabled>Select expected stipend range</option>
+                                <option value="unpaid">Unpaid/Certificate Only</option>
+                                <option value="upto_5000">Up to ₹5,000</option>
+                                <option value="5000_10000">₹5,000 - ₹10,000</option>
+                                <option value="10000_15000">₹10,000 - ₹15,000</option>
+                                <option value="15000_20000">₹15,000 - ₹20,000</option>
+                                <option value="above_20000">Above ₹20,000</option>
+                                <option value="flexible">Flexible</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="internshipDuration" class="form-label required-field">Preferred Internship Duration</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                            <select class="form-select" id="internshipDuration" name="internship_duration" required>
+                                <option value="" selected disabled>Select duration</option>
+                                <option value="1_month">1 month</option>
+                                <option value="1-2_months">1-2 months</option>
+                                <option value="2-3_months">2-3 months</option>
+                                <option value="3-6_months">3-6 months</option>
+                                <option value="6-12_months">6-12 months</option>
+                                <option value="flexible">Flexible</option>
+                            </select>
+                        </div>
+                        <div class="invalid-feedback">Please select your preferred duration</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="workMode" class="form-label required-field">Preferred Work Mode</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-laptop-house"></i>
+                            <select class="form-select" id="workMode" name="work_mode" required>
+                                <option value="" selected disabled>Select mode</option>
+                                <option value="onsite">Onsite</option>
+                                <option value="remote">Remote</option>
+                                <option value="hybrid">Hybrid</option>
+                                <option value="flexible">Flexible</option>
+                            </select>
+                        </div>
+                        <div class="invalid-feedback">Please select your preferred work mode</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label for="availability" class="form-label required-field">Availability to Start</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-business-time"></i>
+                            <select class="form-select" id="availability" name="availability" required>
+                                <option value="" selected disabled>When can you start?</option>
+                                <option value="immediately">Immediately</option>
+                                <option value="within_1_week">Within 1 week</option>
+                                <option value="within_2_weeks">Within 2 weeks</option>
+                                <option value="within_1_month">Within 1 month</option>
+                                <option value="after_1_month">After 1 month</option>
+                            </select>
+                        </div>
+                        <div class="invalid-feedback">Please select your availability</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-navigation mt-4">
+                <button type="button" class="btn btn-prev"><i class="fas fa-arrow-left me-2"></i> Previous: Education & Address</button>
+                <button type="button" class="btn btn-next">Next: Documents & Review <i class="fas fa-arrow-right ms-2"></i></button>
+            </div>
+        </div>
+
+        <!-- Documents & Review - Step 4 -->
+        <div class="form-section" id="section-4">
+            <h4 class="section-title">
+                <i class="fas fa-file-alt"></i> Documents & Review
+            </h4>
+
+            <!-- Document Upload Section -->
+            <div class="mb-5">
+                <h5 class="fw-bold mb-3">Upload Documents</h5>
+                
+                <div class="card-alert info mb-4">
+                    <i class="fas fa-info-circle"></i>
+                    Please upload your resume and photo for your profile. Your resume helps employers learn more about your qualifications.
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label required-field">Resume/CV</label>
+                        <div class="file-upload-container" id="resumeUploadContainer">
+                            <i class="fas fa-file-upload upload-icon"></i>
+                            <p class="mb-1">Drag & drop your resume here or click to browse</p>
+                            <p class="text-muted small">Supported formats: PDF, DOCX (Max: 2MB)</p>
+                            <input type="file" class="d-none" id="resumeUpload" name="resume" accept=".pdf,.docx" required>
+                            <img src="" alt="Resume Preview" class="file-preview" id="resumePreview">
+                        </div>
+                        <div class="invalid-feedback">Please upload your resume</div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Profile Photo</label>
+                        <div class="file-upload-container" id="photoUploadContainer">
+                            <i class="fas fa-image upload-icon"></i>
+                            <p class="mb-1">Drag & drop your photo here or click to browse</p>
+                            <p class="text-muted small">Supported formats: JPG, PNG (Max: 1MB)</p>
+                            <input type="file" class="d-none" id="photoUpload" name="photo" accept=".jpg,.jpeg,.png">
+                            <img src="" alt="Photo Preview" class="file-preview" id="photoPreview">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Additional Documents (Optional)</label>
+                        <div class="file-upload-container" id="additionalDocsContainer">
+                            <i class="fas fa-file-alt upload-icon"></i>
+                            <p class="mb-1">Upload certificates, projects, or portfolios</p>
+                            <p class="text-muted small">Supported formats: PDF, ZIP (Max: 5MB)</p>
+                            <input type="file" class="d-none" id="additionalDocs" name="additional_docs" accept=".pdf,.zip">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terms and Privacy -->
+            <div class="mb-4">
+                <h5 class="fw-bold mb-3">Terms & Privacy</h5>
+                
+                <div class="card border rounded p-3 mb-3">
+                    <div class="custom-checkbox mb-2">
+                        <input class="form-check-input" type="checkbox" id="termsCheck" name="terms_accepted" required>
+                        <label class="form-check-label" for="termsCheck">
+                            I have read and agree to the <a href="#" target="_blank">Terms and Conditions</a> and <a href="#" target="_blank">Privacy Policy</a> of InternGenius
+                        </label>
+                    </div>
+                    
+                    <div class="custom-checkbox mb-2">
+                        <input class="form-check-input" type="checkbox" id="dataCheck" name="data_accuracy" required>
+                        <label class="form-check-label" for="dataCheck">
+                            I certify that all information provided is accurate and complete to the best of my knowledge
+                        </label>
+                    </div>
+                    
+                    <div class="custom-checkbox mb-2">
+                        <input class="form-check-input" type="checkbox" id="communicationCheck" name="communication_consent">
+                        <label class="form-check-label" for="communicationCheck">
+                            I agree to receive communications about relevant internship opportunities and updates from InternGenius (Optional)
+                        </label>
+                    </div>
+                    
+                    <div class="custom-checkbox">
+                        <input class="form-check-input" type="checkbox" id="verificationCheck" name="verification_consent" required>
+                        <label class="form-check-label" for="verificationCheck">
+                            I understand that my details may be verified and shared with potential employers for internship opportunities
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="alert alert-warning mt-3">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Important:</strong> Please review all your information before submitting. Once submitted, you'll receive a confirmation email with your registration details.
+                </div>
+            </div>
+
+            <div class="form-navigation mt-4">
+                <button type="button" class="btn btn-prev"><i class="fas fa-arrow-left me-2"></i> Previous: Skills & Preferences</button>
+                <button type="submit" class="btn btn-submit"><i class="fas fa-check-circle me-2"></i> Submit Registration</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Multi-step form navigation
+        const sections = document.querySelectorAll('.form-section');
+        const stepItems = document.querySelectorAll('.step-item');
+        const form = document.getElementById('registrationForm');
+        let currentStep = 0;
+        
+        // Navigation buttons
+        const nextBtns = document.querySelectorAll('.btn-next');
+        const prevBtns = document.querySelectorAll('.btn-prev');
+        
+        // Form validation
+        function validateSection(sectionIndex) {
+            const currentSection = sections[sectionIndex];
+            const requiredFields = currentSection.querySelectorAll('[required]');
+            let valid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value) {
+                    field.classList.add('is-invalid');
+                    valid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                    field.classList.add('is-valid');
+                }
+                
+                // Special validation for email
+                if (field.type === 'email' && field.value) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(field.value)) {
+                        field.classList.add('is-invalid');
+                        valid = false;
+                    }
+                }
+                
+                // Special validation for mobile
+                if (field.name === 'phone' && field.value) {
+                    const phoneRegex = /^[0-9]{10}$/;
+                    if (!phoneRegex.test(field.value)) {
+                        field.classList.add('is-invalid');
+                        valid = false;
+                    }
+                }
+                
+                // Special validation for PIN code
+                if (field.name === 'pincode' && field.value) {
+                    const pincodeRegex = /^[0-9]{6}$/;
+                    if (!pincodeRegex.test(field.value)) {
+                        field.classList.add('is-invalid');
+                        valid = false;
+                    }
+                }
+                
+                // Special validation for Aadhaar
+                if (field.name === 'aadhaar' && field.value) {
+                    const rawValue = document.getElementById('aadhaar_raw').value;
+                    const aadhaarRegex = /^[0-9]{12}$/;
+                    if (!rawValue || !aadhaarRegex.test(rawValue)) {
+                        field.classList.add('is-invalid');
+                        valid = false;
+                    }
+                }
+                
+                // Special validation for date fields
+                if (field.type === 'date' && field.value) {
+                    const selectedDate = new Date(field.value);
+                    const currentDate = new Date();
+                    
+                    if (field.name === 'dob') {
+                        // Check if age is at least 16 years
+                        const minAgeDate = new Date();
+                        minAgeDate.setFullYear(currentDate.getFullYear() - 16);
+                        
+                        if (selectedDate > minAgeDate) {
+                            field.classList.add('is-invalid');
+                            valid = false;
+                        }
+                    }
+                }
+                
+                // Validation for multi-select fields
+                if (field.multiple && field.selectedOptions.length === 0) {
+                    field.classList.add('is-invalid');
+                    valid = false;
+                }
+            });
+            
+            // Special validation for file inputs
+            if (sectionIndex === 3) { // Documents & Review section
+                const resumeUpload = document.getElementById('resumeUpload');
+                if (resumeUpload && resumeUpload.hasAttribute('required') && (!resumeUpload.files || resumeUpload.files.length === 0)) {
+                    document.getElementById('resumeUploadContainer').classList.add('is-invalid');
+                    valid = false;
+                }
+            }
+            
+            return valid;
+        }
+        
+        // Update steps
+        function updateSteps(newStep) {
+            // Hide all sections
+            sections.forEach((section, idx) => {
+                section.classList.remove('active');
+                stepItems[idx].classList.remove('active', 'completed');
+            });
+            
+            // Show current section
+            sections[newStep].classList.add('active');
+            stepItems[newStep].classList.add('active');
+            
+            // Mark completed steps
+            for (let i = 0; i < newStep; i++) {
+                stepItems[i].classList.add('completed');
+            }
+            
+            // Scroll to top of form
+            document.querySelector('.registration-container').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Next button click
+        nextBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (validateSection(currentStep)) {
+                    currentStep++;
+                    updateSteps(currentStep);
+                } else {
+                    // Show toast notification
+                    showToast('Please fill all required fields correctly', 'warning');
+                    
+                    // Scroll to first invalid field
+                    const invalidFields = sections[currentStep].querySelectorAll('.is-invalid');
+                    if (invalidFields.length > 0) {
+                        invalidFields[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        });
+        
+        // Previous button click
+        prevBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                currentStep--;
+                updateSteps(currentStep);
+            });
+        });
+        
+        // Form input validation
+        const inputs = form.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                if (input.hasAttribute('required')) {
+                    if (input.value) {
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                    } else {
+                        input.classList.remove('is-valid');
+                        input.classList.add('is-invalid');
+                    }
+                }
+            });
+        });
+        
+        // File upload handling with validation
+        const fileUploads = [
+            { container: 'resumeUploadContainer', input: 'resumeUpload', preview: 'resumePreview', maxSize: 2, acceptedTypes: ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'] },
+            { container: 'photoUploadContainer', input: 'photoUpload', preview: 'photoPreview', maxSize: 1, acceptedTypes: ['image/jpeg', 'image/png'] },
+            { container: 'additionalDocsContainer', input: 'additionalDocs', preview: null, maxSize: 5, acceptedTypes: ['application/pdf', 'application/zip', 'application/x-zip-compressed'] }
+        ];
+        
+        fileUploads.forEach(upload => {
+            const container = document.getElementById(upload.container);
+            const input = document.getElementById(upload.input);
+            
+            container.addEventListener('click', function() {
+                input.click();
+            });
+            
+            input.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    const fileName = file.name;
+                    const fileSize = (file.size / 1024 / 1024).toFixed(2); // in MB
+                    const fileType = file.type;
+                    const uploadIcon = container.querySelector('.upload-icon');
+                    const uploadText = container.querySelector('p:first-of-type');
+                    
+                    // Validate file size
+                    if (fileSize > upload.maxSize) {
+                        uploadIcon.className = 'fas fa-exclamation-circle upload-icon';
+                        uploadIcon.style.color = '#dc3545';
+                        uploadText.textContent = `File too large: ${fileName} (${fileSize} MB). Max size: ${upload.maxSize}MB`;
+                        this.value = '';
+                        return;
+                    }
+                    
+                    // Validate file type
+                    if (upload.acceptedTypes && !upload.acceptedTypes.includes(fileType)) {
+                        uploadIcon.className = 'fas fa-exclamation-circle upload-icon';
+                        uploadIcon.style.color = '#dc3545';
+                        uploadText.textContent = `Invalid file type: ${fileName}. Please upload correct format.`;
+                        this.value = '';
+                        return;
+                    }
+                    
+                    // File is valid
+                    uploadIcon.className = 'fas fa-check-circle upload-icon';
+                    uploadIcon.style.color = '#28a745';
+                    uploadText.textContent = `Selected: ${fileName} (${fileSize} MB)`;
+                    
+                    // If there's a preview element and it's an image
+                    if (upload.preview && fileType.startsWith('image/')) {
+                        const preview = document.getElementById(upload.preview);
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                            preview.style.display = 'block';
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    }
+                    
+                    // If it's required, mark it as valid
+                    if (input.hasAttribute('required')) {
+                        input.classList.remove('is-invalid');
+                        input.classList.add('is-valid');
+                        container.classList.remove('is-invalid');
+                    }
+                }
+            });
+            
+            // Drag and drop functionality
+            container.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#0d6efd';
+                this.style.backgroundColor = '#f8f9fa';
+            });
+            
+            container.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#dee2e6';
+                this.style.backgroundColor = '';
+            });
+            
+            container.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#dee2e6';
+                this.style.backgroundColor = '';
+                
+                input.files = e.dataTransfer.files;
+                
+                // Trigger change event
+                const event = new Event('change', { bubbles: true });
+                input.dispatchEvent(event);
+            });
+        });
+        
+        // Add education entry
+        let educationCount = 1;
+        document.getElementById('addEducationBtn').addEventListener('click', function() {
+            educationCount++;
+            const educationContainer = document.querySelector('.education-entry').cloneNode(true);
+            educationContainer.id = `education-entry-${educationCount}`;
+            
+            // Update IDs and names
+            const inputs = educationContainer.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                const newName = input.name.replace('_1', `_${educationCount}`);
+                input.name = newName;
+                input.value = '';
+                input.classList.remove('is-valid', 'is-invalid');
+                
+                if (input.id) {
+                    input.id = input.id + educationCount;
+                }
+            });
+            
+            // Update labels
+            const labels = educationContainer.querySelectorAll('label');
+            labels.forEach(label => {
+                if (label.getAttribute('for')) {
+                    const newFor = label.getAttribute('for') + educationCount;
+                    label.setAttribute('for', newFor);
+                }
+            });
+            
+            // Add remove button
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'row mt-2';
+            rowDiv.innerHTML = `
+                <div class="col-12 text-end">
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-education-btn">
+                        <i class="fas fa-trash-alt me-1"></i> Remove
+                    </button>
+                </div>
+            `;
+            
+            educationContainer.appendChild(rowDiv);
+            
+            // Add to DOM
+            document.querySelector('.education-entries').appendChild(educationContainer);
+            
+            // Add remove event listener
+            const removeBtn = educationContainer.querySelector('.remove-education-btn');
+            removeBtn.addEventListener('click', function() {
+                educationContainer.remove();
+            });
+            
+            // Show toast
+            showToast('New education entry added', 'info');
+        });
+        
+        // Skill chips functionality with improved validation
+        const skillInputs = [
+            { input: 'skills', container: 'techSkillChips', placeholder: 'Enter technical skills' },
+            { input: 'softSkills', container: 'softSkillChips', placeholder: 'Enter soft skills' }
+        ];
+        
+        skillInputs.forEach(skillInput => {
+            const input = document.getElementById(skillInput.input);
+            const container = document.getElementById(skillInput.container);
+            const originalPlaceholder = input.placeholder;
+            
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ',') {
+                    e.preventDefault();
+                    if (this.value.trim()) {
+                        addSkillChip(this.value.trim(), container, input);
+                        this.value = '';
+                    }
+                }
+            });
+            
+            input.addEventListener('blur', function() {
+                if (this.value.trim()) {
+                    addSkillChip(this.value.trim(), container, input);
+                    this.value = '';
+                }
+            });
+            
+            // Listen for chips to update the hidden input
+            const observer = new MutationObserver(function() {
+                updateSkillsInputValue(container, input);
+            });
+            
+            observer.observe(container, { childList: true });
+            
+            // Focus/blur effects for better UX
+            input.addEventListener('focus', function() {
+                this.placeholder = 'Type and press Enter or comma';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.placeholder = originalPlaceholder;
+            });
+        });
+        
+        function addSkillChip(skill, container, inputElement) {
+            if (skill) {
+                const skills = skill.split(',').filter(s => s.trim());
+                skills.forEach(s => {
+                    // Check if this skill already exists
+                    const existingSkills = Array.from(container.querySelectorAll('.skill-chip'))
+                        .map(chip => chip.textContent.trim().toLowerCase());
+                    
+                    if (!existingSkills.includes(s.trim().toLowerCase())) {
+                        const chip = document.createElement('div');
+                        chip.className = 'skill-chip';
+                        chip.innerHTML = `${s.trim()} <i class="fas fa-times"></i>`;
+                        
+                        chip.querySelector('i').addEventListener('click', function() {
+                            chip.remove();
+                            updateSkillsInputValue(container, inputElement);
+                        });
+                        
+                        container.appendChild(chip);
+                    }
+                });
+                
+                // Update the hidden input value
+                updateSkillsInputValue(container, inputElement);
+            }
+        }
+        
+        function updateSkillsInputValue(container, inputElement) {
+            const skills = Array.from(container.querySelectorAll('.skill-chip'))
+                .map(chip => chip.textContent.trim())
+                .join(', ');
+            
+            if (skills) {
+                inputElement.value = skills;
+                inputElement.classList.remove('is-invalid');
+                inputElement.classList.add('is-valid');
+            } else {
+                if (inputElement.hasAttribute('required')) {
+                    inputElement.classList.remove('is-valid');
+                    inputElement.classList.add('is-invalid');
+                }
+            }
+        }
+        
+        // Toast notification system
+        function showToast(message, type = 'info') {
+            // Create toast container if it doesn't exist
+            let toastContainer = document.querySelector('.toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+                document.body.appendChild(toastContainer);
+            }
+            
+            // Create a unique ID for this toast
+            const toastId = 'toast-' + Date.now();
+            
+            // Set the icon and background color based on type
+            let icon, bgClass;
+            switch(type) {
+                case 'success':
+                    icon = 'fa-check-circle';
+                    bgClass = 'bg-success';
+                    break;
+                case 'warning':
+                    icon = 'fa-exclamation-triangle';
+                    bgClass = 'bg-warning text-dark';
+                    break;
+                case 'danger':
+                case 'error':
+                    icon = 'fa-exclamation-circle';
+                    bgClass = 'bg-danger';
+                    break;
+                case 'info':
+                default:
+                    icon = 'fa-info-circle';
+                    bgClass = 'bg-primary';
+            }
+            
+            // Create toast HTML
+            const toastHtml = `
+                <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                    <div class="toast-header ${bgClass} text-white">
+                        <i class="fas ${icon} me-2"></i>
+                        <strong class="me-auto">InternGenius</strong>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            
+            // Add toast to container
+            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+            
+            // Initialize and show the toast
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+            
+            // Remove toast from DOM after it's hidden
+            toastElement.addEventListener('hidden.bs.toast', function() {
+                toastElement.remove();
+            });
+        }
+        
+        // Form submission with validation and loading indicator
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate the current section
+            if (validateSection(currentStep)) {
+                // Show loading indicator
+                const submitBtn = document.querySelector('.btn-submit');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Processing...';
+                submitBtn.disabled = true;
+                
+                // Submit the form
+                showToast('Submitting your registration...', 'info');
+                setTimeout(() => {
+                    this.submit();
+                }, 500);
+            } else {
+                showToast('Please complete all required fields correctly', 'warning');
+                
+                // Scroll to first invalid field
+                const invalidFields = sections[currentStep].querySelectorAll('.is-invalid');
+                if (invalidFields.length > 0) {
+                    invalidFields[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+        
+        // Form field masking for better UX
+        // Phone number masking
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                // Remove all non-digits
+                let value = this.value.replace(/\D/g, '');
+                
+                // Limit to 10 digits
+                if (value.length > 10) {
+                    value = value.substring(0, 10);
+                }
+                
+                // Format as needed (e.g., XXX-XXX-XXXX or keep as is)
+                this.value = value;
+            });
+        }
+        
+        // Aadhaar number masking
+        const aadhaarInput = document.getElementById('aadhaar');
+        const aadhaarRawInput = document.getElementById('aadhaar_raw');
+        
+        if (aadhaarInput && aadhaarRawInput) {
+            aadhaarInput.addEventListener('input', function(e) {
+                // Remove all non-digits
+                let value = this.value.replace(/\D/g, '');
+                
+                // Limit to 12 digits
+                if (value.length > 12) {
+                    value = value.substring(0, 12);
+                }
+                
+                // Store raw value in the hidden field
+                aadhaarRawInput.value = value;
+                
+                // Format with spaces for readability: XXXX XXXX XXXX
+                let formattedValue = '';
+                for (let i = 0; i < value.length; i++) {
+                    if (i > 0 && i % 4 === 0) {
+                        formattedValue += ' ';
+                    }
+                    formattedValue += value.charAt(i);
+                }
+                
+                this.value = formattedValue;
+                
+                // Validate the Aadhaar number
+                if (value.length === 12) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else if (value.length > 0) {
+                    this.classList.remove('is-valid');
+                    this.classList.add('is-invalid');
+                }
+            });
+            
+            // Custom validation for Aadhaar field
+            aadhaarInput.addEventListener('blur', function() {
+                const rawValue = aadhaarRawInput.value;
+                if (rawValue && rawValue.length !== 12) {
+                    this.classList.add('is-invalid');
+                    showToast('Aadhaar number must be exactly 12 digits', 'warning');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

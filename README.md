@@ -1,11 +1,48 @@
-# 🎓 InternGenius - National Internship Portal
+# 🎓 InternGenius - National Internship Portal (Simplified Version)
 
 [![Problem ID](https://img.shields.io/badge/Problem%20ID-25033-blue.svg)](https://github.com/InternGenius)
-[![Status](https://img.shields.io/badge/Status-In%20Development-orange.svg)](https://github.com/InternGenius)
+[![Status](https://img.shields.io/badge/Status-Demo%20Ready-brightgreen.svg)](https://github.com/InternGenius)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Government](https://img.shields.io/badge/Government%20of%20India-Initiative-ff9933.svg)](https://education.gov.in/)
 
 > **Connecting Students with Opportunities: Inclusive, Accessible, Intelligent**
+
+## Project Overview
+
+InternGenius is a comprehensive AI-powered national internship platform designed to connect students with relevant internship opportunities based on their skills, interests, and profiles. Our mission is to ensure equal access to quality internships for all students, regardless of their background or digital literacy.
+
+````markdown
+# 🎓 InternGenius - National Internship Portal
+
+[![Problem ID](https://img.shields.io/badge/Problem%20ID-25033-blue.svg)](https://github.com/InternGenius)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](https://github.com/InternGenius)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Government](https://img.shields.io/badge/Government%20of%20India-Initiative-ff9933.svg)](https://education.gov.in/)
+
+> **Connecting Students with Opportunities: Inclusive, Accessible, Intelligent**
+
+## Project Overview
+
+InternGenius is a comprehensive AI-powered national internship platform designed to connect students with relevant internship opportunities based on their skills, interests, and profiles. Our mission is to ensure equal access to quality internships for all students, regardless of their background or digital literacy. This project is developed as part of the Smart India Hackathon (SIH) to address the need for an inclusive and accessible national internship portal.
+
+### Quick Start Installation
+
+1. Ensure you have Python 3.8+ installed
+2. Set up virtual environment (venv):
+   ```
+   python -m venv venv
+   venv\Scripts\activate  # Windows
+   source venv/bin/activate  # Linux/Mac
+   ```
+3. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+4. Run the application:
+   ```
+   python simple_app.py
+   ```
+5. Open your browser and go to `http://127.0.0.1:5000`
 
 An AI-powered platform that matches students from diverse backgrounds with relevant internship opportunities based on their skills, interests, and profile, ensuring equal access regardless of digital literacy or prior experience.
 
@@ -152,16 +189,32 @@ flask run
 - **Sign Up**: http://127.0.0.1:5000/auth/signup
 
 ### **8. Registration Process**
-The registration process consists of two steps:
-1. **Direct Role-Based Registration**: Based on user role (student, company, admin)
-   - Basic user information collection
-   - Role-specific initial data collection
-2. **Role-Specific Profile Completion**:
-   - **Student Profile**: Academic information, skills, resume, etc.
-   - **Company Profile**: Company details, industry, logo, verification documents
-   - **Admin Profile**: Department, authorization documents, security questions
+The registration process consists of a multi-step form with comprehensive data collection:
 
-Each role has a dedicated registration flow with appropriate fields and validation.
+#### **Student Registration**:
+1. **Personal Information**: 
+   - Basic details (name, contact, DOB, gender)
+   - Government IDs (Aadhaar)
+   - Demographic information
+
+2. **Education & Address**: 
+   - Academic qualifications with multiple entries
+   - Current residential address
+   - Location details
+
+3. **Skills & Preferences**:
+   - Technical and soft skills
+   - Language proficiency
+   - Internship preferences (location, duration, work mode)
+   - Availability status
+
+4. **Documents & Review**:
+   - Resume/CV upload (required)
+   - Profile photo upload
+   - Additional documents
+   - Terms and conditions acceptance
+
+The form features real-time validation, intelligent file upload handling, and a user-friendly interface with progress indicators.
 
 ### **9. Create Test Accounts**
 ```
