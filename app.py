@@ -2,6 +2,8 @@ from flask import Flask, render_template, redirect, url_for, flash
 from flask_pymongo import PyMongo
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, current_user
+from flask_session import Session
+from flask_wtf.csrf import CSRFProtect
 from config import config
 import os
 
@@ -9,6 +11,8 @@ import os
 mongo = PyMongo()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
+sess = Session()
+csrf = CSRFProtect()
 
 def create_app(config_name=None):
     """Application factory pattern."""
@@ -21,10 +25,12 @@ def create_app(config_name=None):
     # Initialize extensions
     mongo.init_app(app)
     bcrypt.init_app(app)
+    csrf.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
     login_manager.login_message = 'Please log in to access this page.'
     login_manager.login_message_category = 'info'
+    sess.init_app(app)
     
     # User loader for Flask-Login
     from models.user_model import User

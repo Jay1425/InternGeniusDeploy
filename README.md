@@ -151,18 +151,36 @@ flask run
 - **Login**: http://127.0.0.1:5000/auth/login
 - **Sign Up**: http://127.0.0.1:5000/auth/signup
 
-### **8. Create Test Accounts**
+### **8. Registration Process**
+The registration process consists of two steps:
+1. **Direct Role-Based Registration**: Based on user role (student, company, admin)
+   - Basic user information collection
+   - Role-specific initial data collection
+2. **Role-Specific Profile Completion**:
+   - **Student Profile**: Academic information, skills, resume, etc.
+   - **Company Profile**: Company details, industry, logo, verification documents
+   - **Admin Profile**: Department, authorization documents, security questions
+
+Each role has a dedicated registration flow with appropriate fields and validation.
+
+### **9. Create Test Accounts**
 ```
 Student Account:
-- Register with role: "Student"
+- Navigate to /auth/student to access direct student registration
+- Complete the initial registration form
+- Complete the student profile form
 - Access student dashboard at /student/dashboard
 
 Company Account:  
-- Register with role: "Company/Organization"
+- Navigate to /auth/company to access direct company registration
+- Complete the initial registration form
+- Complete the company profile form
 - Access company dashboard at /company/dashboard
 
 Admin Account:
-- Register with role: "Administrator" 
+- Navigate to /auth/admin to access direct admin registration
+- Complete the initial registration form
+- Complete the admin profile form with verification code
 - Access admin dashboard at /admin/dashboard
 ```
 

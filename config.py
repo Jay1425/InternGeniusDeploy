@@ -1,4 +1,5 @@
 import os
+import tempfile
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -7,6 +8,12 @@ class Config:
     """Base configuration class."""
     # Flask Configuration
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'interngenius-secret-key-change-in-production'
+    
+    # Session Configuration
+    SESSION_TYPE = 'filesystem'
+    SESSION_FILE_DIR = os.path.join(tempfile.gettempdir(), 'flask_session')
+    SESSION_PERMANENT = False
+    SESSION_USE_SIGNER = True
     
     # MongoDB Configuration
     MONGO_URI = os.environ.get('MONGO_URI') or 'mongodb://localhost:27017/interngenius'
@@ -26,7 +33,7 @@ class Config:
     
     # File Upload Configuration
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
-    UPLOAD_FOLDER = 'uploads'
+    UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static', 'uploads')
     
     # ML Models Configuration
     ML_MODELS_PATH = 'ml_module/models/'

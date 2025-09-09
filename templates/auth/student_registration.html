@@ -1,0 +1,424 @@
+{% extends "base.html" %}
+
+{% block title %}Complete Student Registration - InternGenius{% endblock %}
+
+{% block content %}
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 mt-4">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-graduate text-primary display-4 mb-3"></i>
+                        <h2 class="card-title fw-bold">Complete Your Student Profile</h2>
+                        <p class="text-muted">Help us match you with the right internship opportunities</p>
+                    </div>
+
+                    <!-- Registration Progress -->
+                    <div class="registration-progress mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="progress-label completed">Basic Info</span>
+                            <span class="progress-label active">Student Profile</span>
+                            <span class="progress-label">Complete</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 50%"></div>
+                        </div>
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {{ form.hidden_tag() }}
+
+                        <!-- Academic Information Section -->
+                        <div class="form-section mb-4">
+                            <h5 class="section-title">
+                                <i class="fas fa-graduation-cap me-2"></i>Academic Information
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    {{ form.institution.label(class="form-label fw-semibold") }}
+                                    {{ form.institution(class="form-control") }}
+                                    {% if form.institution.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.institution.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    {{ form.degree.label(class="form-label fw-semibold") }}
+                                    {{ form.degree(class="form-select") }}
+                                    {% if form.degree.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.degree.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    {{ form.graduation_year.label(class="form-label fw-semibold") }}
+                                    {{ form.graduation_year(class="form-select") }}
+                                    {% if form.graduation_year.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.graduation_year.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    {{ form.field_of_study.label(class="form-label fw-semibold") }}
+                                    {{ form.field_of_study(class="form-control") }}
+                                    {% if form.field_of_study.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.field_of_study.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact & Location Section -->
+                        <div class="form-section mb-4">
+                            <h5 class="section-title">
+                                <i class="fas fa-map-marker-alt me-2"></i>Contact & Location
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    {{ form.phone.label(class="form-label fw-semibold") }}
+                                    {{ form.phone(class="form-control") }}
+                                    {% if form.phone.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.phone.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    {{ form.city.label(class="form-label fw-semibold") }}
+                                    {{ form.city(class="form-control") }}
+                                    {% if form.city.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.city.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    {{ form.state.label(class="form-label fw-semibold") }}
+                                    {{ form.state(class="form-control") }}
+                                    {% if form.state.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.state.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skills & Interests Section -->
+                        <div class="form-section mb-4">
+                            <h5 class="section-title">
+                                <i class="fas fa-tools me-2"></i>Skills & Interests
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    {{ form.skills.label(class="form-label fw-semibold") }}
+                                    {{ form.skills(class="form-control", id="skillsInput") }}
+                                    <div id="skillTags" class="d-flex flex-wrap gap-1 mt-2"></div>
+                                    {% if form.skills.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.skills.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">Enter your skills separated by commas</div>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    {{ form.interests.label(class="form-label fw-semibold") }}
+                                    {{ form.interests(class="form-control", id="interestsInput") }}
+                                    <div id="interestTags" class="d-flex flex-wrap gap-1 mt-2"></div>
+                                    {% if form.interests.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.interests.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">Enter your areas of interest separated by commas</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Documents Section -->
+                        <div class="form-section mb-4">
+                            <h5 class="section-title">
+                                <i class="fas fa-file-alt me-2"></i>Documents
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    {{ form.resume.label(class="form-label fw-semibold") }}
+                                    {{ form.resume(class="form-control", id="resumeUpload") }}
+                                    {% if form.resume.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.resume.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div id="resumePreview" class="mt-2"></div>
+                                    <div class="form-text">Upload your latest resume (PDF format, max 2MB)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bio Section -->
+                        <div class="form-section mb-4">
+                            <h5 class="section-title">
+                                <i class="fas fa-user me-2"></i>About You
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    {{ form.bio.label(class="form-label fw-semibold") }}
+                                    {{ form.bio(class="form-control") }}
+                                    {% if form.bio.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.bio.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">
+                                        <span id="bioCount">0</span>/500 characters
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Social Media & Portfolio -->
+                        <div class="form-section mb-4">
+                            <h5 class="section-title">
+                                <i class="fas fa-link me-2"></i>Online Presence (Optional)
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    {{ form.linkedin.label(class="form-label fw-semibold") }}
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fab fa-linkedin"></i></span>
+                                        {{ form.linkedin(class="form-control") }}
+                                    </div>
+                                    {% if form.linkedin.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.linkedin.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    {{ form.github.label(class="form-label fw-semibold") }}
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fab fa-github"></i></span>
+                                        {{ form.github(class="form-control") }}
+                                    </div>
+                                    {% if form.github.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.github.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    {{ form.portfolio.label(class="form-label fw-semibold") }}
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                        {{ form.portfolio(class="form-control") }}
+                                    </div>
+                                    {% if form.portfolio.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.portfolio.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notifications -->
+                        <div class="form-section mb-4">
+                            <div class="form-check">
+                                {{ form.notifications(class="form-check-input") }}
+                                {{ form.notifications.label(class="form-check-label") }}
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary btn-lg mt-3") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.section-title {
+    position: relative;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: #09539a;
+    border-bottom: 1px solid #eee;
+}
+
+.form-section {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    border-left: 5px solid #09539a;
+}
+
+.registration-progress .progress-label {
+    font-size: 14px;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+}
+
+.registration-progress .progress-label.completed {
+    color: #28a745;
+}
+
+.registration-progress .progress-label.active {
+    color: #007bff;
+}
+
+.skill-tag, .interest-tag {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 20px;
+    padding: 5px 10px;
+    margin: 3px;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.skill-tag .close, .interest-tag .close {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+#resumePreview {
+    min-height: 30px;
+}
+
+.file-preview {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+
+.file-preview i {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.file-info {
+    flex-grow: 1;
+}
+
+.file-name {
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.file-size {
+    font-size: 12px;
+    color: #6c757d;
+}
+</style>
+
+<script>
+// Character counter for bio
+document.addEventListener('DOMContentLoaded', function() {
+    const bioTextarea = document.getElementById('bio');
+    const bioCount = document.getElementById('bioCount');
+    
+    if(bioTextarea && bioCount) {
+        bioTextarea.addEventListener('input', function() {
+            const count = this.value.length;
+            bioCount.textContent = count;
+            
+            if (count > 500) {
+                bioCount.style.color = 'red';
+            } else {
+                bioCount.style.color = '';
+            }
+        });
+        
+        // Initialize counter
+        bioCount.textContent = bioTextarea.value.length;
+    }
+    
+    // Resume file preview
+    const resumeUpload = document.getElementById('resumeUpload');
+    const resumePreview = document.getElementById('resumePreview');
+    
+    if(resumeUpload && resumePreview) {
+        resumeUpload.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                const fileSize = (file.size / 1024 / 1024).toFixed(2); // in MB
+                
+                let preview = `
+                <div class="file-preview">
+                    <i class="far fa-file-pdf text-danger"></i>
+                    <div class="file-info">
+                        <p class="file-name">${file.name}</p>
+                        <p class="file-size">${fileSize} MB</p>
+                    </div>
+                </div>`;
+                
+                resumePreview.innerHTML = preview;
+            } else {
+                resumePreview.innerHTML = '';
+            }
+        });
+    }
+    
+    // Form validation
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+});
+</script>
+{% endblock %}
