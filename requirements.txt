@@ -8,7 +8,7 @@ click==8.1.7
 blinker==1.6.2  # For signals and events
 Flask-WTF==1.1.1
 WTForms==3.0.1
-email-validator==2.0.1
+email-validator
 
 # Environment Management
 python-dotenv==1.0.0
