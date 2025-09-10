@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Registration - InternGenius{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="fas fa-user-shield"></i> Administrator Registration</h4>
+                    <p class="mb-0">For authorized government personnel only</p>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Restricted Access:</strong> This registration is only for authorized government officials and InternGenius administrators.
+                    </div>
+
+                    <form method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" class="form-control" name="admin_name" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Department *</label>
+                                <select class="form-select" name="department" required>
+                                    <option value="">Select Department</option>
+                                    <option value="ministry_education">Ministry of Education</option>
+                                    <option value="skill_development">Skill Development</option>
+                                    <option value="it_services">IT Services</option>
+                                    <option value="interngenius_admin">InternGenius Admin</option>
+                                    <option value="regional_coordinator">Regional Coordinator</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Employee ID *</label>
+                                <input type="text" class="form-control" name="employee_id" required placeholder="GOI-EMP-XXXX">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Official Email *</label>
+                                <input type="email" class="form-control" name="email" required placeholder="name@gov.in">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Contact Phone *</label>
+                                <input type="tel" class="form-control" name="phone" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Verification Code *</label>
+                            <input type="text" class="form-control" name="verification_code" required placeholder="Enter admin verification code">
+                            <div class="form-text">This code is provided by the InternGenius system administrator.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Office Address</label>
+                            <textarea class="form-control" name="office_address" rows="3" placeholder="Official address"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="oath_taken" required>
+                                <label class="form-check-label">
+                                    I solemnly affirm that I am authorized to access this system and will use it in accordance with government policies *
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="data_protection" required>
+                                <label class="form-check-label">
+                                    I agree to maintain confidentiality and protect user data as per government data protection guidelines *
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-user-shield"></i> Register as Administrator
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p class="text-muted">For support, contact: <strong>admin@interngenius.gov.in</strong></p>
+                        <p><a href="{{ url_for('index') }}">← Back to Home</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-body bg-light">
+                    <h6 class="text-danger"><i class="fas fa-info-circle"></i> Demo Access</h6>
+                    <p class="mb-2 small">For demonstration purposes, use verification code: <code>ADMIN2025</code></p>
+                    <p class="mb-0 small text-muted">In production, this would be a secure, time-limited code provided by system administrators.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

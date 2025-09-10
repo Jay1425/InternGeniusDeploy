@@ -6,6 +6,7 @@
     <title>{% block title %}InternGenius{% endblock %}</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
     <meta name="description" content="InternGenius - National Internship Portal by Ministry of Education, Government of India">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -296,38 +297,66 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav govt-main-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('index') }}">
-                            Home
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search_internships') }}">
+                            <i class="fas fa-briefcase"></i> Internships
+                        </a>
+                    </li>
+                    {% if session.user_id %}
+                    <!-- Show these menu items only when user is logged in -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('my_applications') }}">
+                            <i class="fas fa-file-alt"></i> My Applications
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-question-circle"></i> Help
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            About
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Internships
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Organizations
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Resources
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Contact
+                            <i class="fas fa-phone"></i> Contact
                         </a>
                     </li>
                 </ul>
                 
                 <ul class="navbar-nav ms-auto">
+                    {% if session.user_id %}
+                    <!-- Show user menu when logged in -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle govt-auth-link" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>{{ session.user_name or 'User' }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('my_applications') }}">
+                                <i class="fas fa-file-alt me-2"></i>My Applications
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">
+                                <i class="fas fa-user-edit me-2"></i>Profile Settings
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <!-- Show login/signup when not logged in -->
                     <li class="nav-item">
                         <a class="nav-link govt-auth-link" href="{{ url_for('login') }}">
                             <i class="fas fa-sign-in-alt me-1"></i>Login
@@ -338,6 +367,7 @@
                             <i class="fas fa-user-plus me-1"></i>Sign Up
                         </a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -348,7 +378,16 @@
 
     <!-- Flash Messages -->
     <div class="container mt-3">
-        <!-- Flash messages section (simplified version) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </div>
 
     <!-- Main Content -->
