@@ -1,7 +1,7 @@
-# 🎓 InternGenius - National Internship Portal (Simplified Version)
+# 🎓 InternGenius - National Internship Portal
 
 [![Problem ID](https://img.shields.io/badge/Problem%20ID-25033-blue.svg)](https://github.com/InternGenius)
-[![Status](https://img.shields.io/badge/Status-Demo%20Ready-brightgreen.svg)](https://github.com/InternGenius)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](https://github.com/InternGenius)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Government](https://img.shields.io/badge/Government%20of%20India-Initiative-ff9933.svg)](https://education.gov.in/)
 
@@ -9,9 +9,7 @@
 
 ## Project Overview
 
-InternGenius is a comprehensive AI-powered national internship platform designed to connect students with relevant internship opportunities based on their skills, interests, and profiles. Our mission is to ensure equal access to quality internships for all students, regardless of their background or digital literacy.
-
-````markdown
+InternGenius is a comprehensive AI-powered national internship platform designed to connect students with relevant internship opportunities based on their skills, interests, and profiles. Our mission is to ensure equal access to quality internships for all students, regardless of their background or digital literacy. This project is developed as part of the Smart India Hackathon (SIH) to address the need for an inclusive and accessible national internship portal.
 # 🎓 InternGenius - National Internship Portal
 
 [![Problem ID](https://img.shields.io/badge/Problem%20ID-25033-blue.svg)](https://github.com/InternGenius)
@@ -84,7 +82,7 @@ To develop a transparent, accessible, and inclusive national internship portal t
 - 🏢 **Employer Dashboard** → Shortlisted candidates, filtering tools
 - 👩‍💼 **Admin Dashboard** → Analytics on inclusivity, region, and sector
 
-```mermaid
+```
 flowchart TD
     A[Student Input] --> B[Profile Creation]
     C[Employer Input] --> D[Internship Listings]
@@ -593,7 +591,7 @@ We welcome contributions from educators, developers, and students! Here's how yo
 
 ---
 
-## � Roadmap
+## 🗺 Roadmap
 
 ### **Phase 1: Foundation**
 - 📋 Student profiles + Internship DB + Basic filtering
@@ -602,10 +600,10 @@ We welcome contributions from educators, developers, and students! Here's how yo
 - 📋 Basic dashboard interfaces
 
 ### **Phase 2: Intelligence**
-- � AI recommendation engine integration
-- � Skill test integration and assessment
-- � Advanced matching algorithms
-- � Performance analytics implementation
+- 🧠 AI recommendation engine integration
+- 📝 Skill test integration and assessment
+- 🔍 Advanced matching algorithms
+- 📊 Performance analytics implementation
 
 ### **Phase 3: Engagement**
 - 📋 Notifications and alert systems
@@ -643,12 +641,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## �‍💻 Team
+## 👨‍💻 Team
 
 **Team InternGenius**
 - [Add other members with roles]
 
-## �🙏 Acknowledgments
+## 🙏 Acknowledgments
 
 - PM Internship Scheme for the opportunity
 - Open-source community for foundational tools
