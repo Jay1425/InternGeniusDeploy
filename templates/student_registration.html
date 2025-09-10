@@ -437,9 +437,10 @@
             </div>
         </div>
 
-        <form method="POST" action="{{ url_for('register_student') }}" enctype="multipart/form-data" id="registrationForm">
+        <form method="POST" action="{{ url_for('direct_student_registration') }}" enctype="multipart/form-data" id="registrationForm">
+            {{ csrf_token() }}
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <!-- Personal Information - Step 1 -->
+            <!-- Personal Information - Step 1 -->
         <div class="form-section active" id="section-1">
             <h4 class="section-title">
                 <i class="fas fa-user"></i> Personal Information
@@ -547,6 +548,50 @@
                         <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
                     </div>
                     <div class="invalid-feedback">Please select your category</div>
+                </div>
+            </div>
+
+            <!-- Password Section -->
+            <div class="row mt-4">
+                <div class="col-12 mb-3">
+                    <h6 class="text-primary fw-bold">
+                        <i class="fas fa-lock me-2"></i>Account Security
+                    </h6>
+                    <p class="text-muted small">Create a secure password for your InternGenius account</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="password" class="form-label required-field">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Create a strong password" required>
+                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                    </div>
+                    <div class="invalid-feedback">Please enter a strong password</div>
+                    <div class="help-text">
+                        Password must contain:
+                        <ul class="small mt-1 mb-0">
+                            <li>At least 8 characters</li>
+                            <li>At least one uppercase letter</li>
+                            <li>At least one lowercase letter</li>
+                            <li>At least one number</li>
+                            <li>At least one special character (!@#$%^&*)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="confirm_password" class="form-label required-field">Confirm Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                    </div>
+                    <div class="invalid-feedback">Passwords do not match</div>
+                    <div class="help-text">Enter the same password again</div>
                 </div>
             </div>
 
@@ -778,7 +823,7 @@
                             <input type="text" class="form-control" id="skills" name="skills" placeholder="e.g., Python, Java, Data Analysis" required>
                         </div>
                         <div class="invalid-feedback">Please enter at least one technical skill</div>
-                        <div class="help-text">Enter comma-separated skills</div>
+                        <div class="help-text">Type skills and press Enter to create chips, or just type comma-separated skills</div>
                         <div class="skill-chips" id="techSkillChips"></div>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -788,7 +833,7 @@
                             <input type="text" class="form-control" id="softSkills" name="soft_skills" placeholder="e.g., Communication, Leadership, Teamwork" required>
                         </div>
                         <div class="invalid-feedback">Please enter at least one soft skill</div>
-                        <div class="help-text">Enter comma-separated skills</div>
+                        <div class="help-text">Type skills and press Enter to create chips, or just type comma-separated skills</div>
                         <div class="skill-chips" id="softSkillChips"></div>
                     </div>
                 </div>
@@ -1091,6 +1136,23 @@
                     }
                 }
                 
+                // Special validation for password
+                if (field.name === 'password' && field.value) {
+                    if (!validatePasswordStrength(field.value)) {
+                        field.classList.add('is-invalid');
+                        valid = false;
+                    }
+                }
+                
+                // Special validation for confirm password
+                if (field.name === 'confirm_password' && field.value) {
+                    const passwordField = document.getElementById('password');
+                    if (field.value !== passwordField.value) {
+                        field.classList.add('is-invalid');
+                        valid = false;
+                    }
+                }
+                
                 // Special validation for date fields
                 if (field.type === 'date' && field.value) {
                     const selectedDate = new Date(field.value);
@@ -1112,6 +1174,12 @@
                 if (field.multiple && field.selectedOptions.length === 0) {
                     field.classList.add('is-invalid');
                     valid = false;
+                }
+                
+                // Special validation for skill fields - allow direct text input
+                if ((field.name === 'skills' || field.name === 'soft_skills') && field.value.trim()) {
+                    field.classList.remove('is-invalid');
+                    field.classList.add('is-valid');
                 }
             });
             
@@ -1376,6 +1444,19 @@
             
             observer.observe(container, { childList: true });
             
+            // Listen for direct typing in skill inputs
+            input.addEventListener('input', function() {
+                if (this.value.trim()) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    if (this.hasAttribute('required')) {
+                        this.classList.remove('is-valid');
+                        this.classList.add('is-invalid');
+                    }
+                }
+            });
+            
             // Focus/blur effects for better UX
             input.addEventListener('focus', function() {
                 this.placeholder = 'Type and press Enter or comma';
@@ -1385,6 +1466,55 @@
                 this.placeholder = originalPlaceholder;
             });
         });
+        
+        // Password strength validation
+        function validatePasswordStrength(password) {
+            if (password.length < 8) return false;
+            if (!/[a-z]/.test(password)) return false;  // lowercase
+            if (!/[A-Z]/.test(password)) return false;  // uppercase
+            if (!/[0-9]/.test(password)) return false;  // number
+            if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) return false;  // special char
+            return true;
+        }
+        
+        // Password validation on input
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm_password');
+        
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                if (validatePasswordStrength(this.value)) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    this.classList.remove('is-valid');
+                    this.classList.add('is-invalid');
+                }
+                
+                // Also validate confirm password if it has a value
+                if (confirmPasswordInput.value) {
+                    if (confirmPasswordInput.value === this.value) {
+                        confirmPasswordInput.classList.remove('is-invalid');
+                        confirmPasswordInput.classList.add('is-valid');
+                    } else {
+                        confirmPasswordInput.classList.remove('is-valid');
+                        confirmPasswordInput.classList.add('is-invalid');
+                    }
+                }
+            });
+        }
+        
+        if (confirmPasswordInput) {
+            confirmPasswordInput.addEventListener('input', function() {
+                if (this.value === passwordInput.value) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    this.classList.remove('is-valid');
+                    this.classList.add('is-invalid');
+                }
+            });
+        }
         
         function addSkillChip(skill, container, inputElement) {
             if (skill) {
@@ -1418,8 +1548,14 @@
                 .map(chip => chip.textContent.trim())
                 .join(', ');
             
-            if (skills) {
-                inputElement.value = skills;
+            // Check if there are chips OR if user has typed skills directly
+            const hasSkills = skills || inputElement.value.trim();
+            
+            if (hasSkills) {
+                // If there are chips, update the input value
+                if (skills) {
+                    inputElement.value = skills;
+                }
                 inputElement.classList.remove('is-invalid');
                 inputElement.classList.add('is-valid');
             } else {

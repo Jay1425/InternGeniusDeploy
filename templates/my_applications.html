@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}My Applications - InternGenius{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 text-primary">My Applications</h1>
+                    <p class="text-muted">Track your internship application status</p>
+                </div>
+                <a href="{{ url_for('search_internships') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Apply for More Internships
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications Summary -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-paper-plane fa-2x mb-2"></i>
+                    <h4>{{ applications|length }}</h4>
+                    <small>Total Applications</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-2x mb-2"></i>
+                    <h4>1</h4>
+                    <small>Under Review</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar fa-2x mb-2"></i>
+                    <h4>1</h4>
+                    <small>Interview Scheduled</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-check fa-2x mb-2"></i>
+                    <h4>0</h4>
+                    <small>Accepted</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Application History</h5>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-secondary active">All</button>
+                            <button class="btn btn-outline-secondary">Pending</button>
+                            <button class="btn btn-outline-secondary">Interviews</button>
+                            <button class="btn btn-outline-secondary">Accepted</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if applications %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Position</th>
+                                        <th>Company</th>
+                                        <th>Applied Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for application in applications %}
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <div class="fw-bold">{{ application.title }}</div>
+                                                <small class="text-muted">Full-time Internship</small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="company-avatar me-2 bg-primary text-white rounded d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 0.8rem;">
+                                                    {{ application.company[0] }}
+                                                </div>
+                                                {{ application.company }}
+                                            </div>
+                                        </td>
+                                        <td>{{ format_date(application.applied_date) }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ application.status_class }}">
+                                                {{ application.status }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#applicationModal{{ loop.index }}">
+                                                    <i class="fas fa-eye"></i> View
+                                                </button>
+                                                {% if application.status == 'Under Review' %}
+                                                    <button class="btn btn-outline-danger">
+                                                        <i class="fas fa-times"></i> Withdraw
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No Applications Yet</h5>
+                            <p class="text-muted">You haven't applied for any internships yet.</p>
+                            <a href="{{ url_for('search_internships') }}" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Browse Internships
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Application Details Modals -->
+{% for application in applications %}
+<div class="modal fade" id="applicationModal{{ loop.index }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Application Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Position</h6>
+                        <p>{{ application.title }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Company</h6>
+                        <p>{{ application.company }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Applied Date</h6>
+                        <p>{{ format_date(application.applied_date) }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Current Status</h6>
+                        <p><span class="badge bg-{{ application.status_class }}">{{ application.status }}</span></p>
+                    </div>
+                </div>
+                
+                <h6>Application Timeline</h6>
+                <div class="timeline">
+                    <div class="timeline-item completed">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Application Submitted</h6>
+                            <p class="text-muted">{{ format_date(application.applied_date) }}</p>
+                        </div>
+                    </div>
+                    {% if application.status != 'Under Review' %}
+                    <div class="timeline-item completed">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Application Reviewed</h6>
+                            <p class="text-muted">{{ format_date(application.applied_date) }} + 1 day</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if application.status == 'Interview Scheduled' %}
+                    <div class="timeline-item active">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Interview Scheduled</h6>
+                            <p class="text-muted">September 15, 2025 at 2:00 PM</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                {% if application.status == 'Interview Scheduled' %}
+                    <button type="button" class="btn btn-primary">Join Interview</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -23px;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #6c757d;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px #dee2e6;
+}
+
+.timeline-item.completed .timeline-marker {
+    background: #28a745;
+}
+
+.timeline-item.active .timeline-marker {
+    background: #007bff;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.timeline-content p {
+    margin-bottom: 0;
+    font-size: 0.8rem;
+}
+</style>
+{% endblock %}
