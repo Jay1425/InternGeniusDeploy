@@ -10,18 +10,6 @@
 ## Project Overview
 
 InternGenius is a comprehensive AI-powered national internship platform designed to connect students with relevant internship opportunities based on their skills, interests, and profiles. Our mission is to ensure equal access to quality internships for all students, regardless of their background or digital literacy. This project is developed as part of the Smart India Hackathon (SIH) to address the need for an inclusive and accessible national internship portal.
-# 🎓 InternGenius - National Internship Portal
-
-[![Problem ID](https://img.shields.io/badge/Problem%20ID-25033-blue.svg)](https://github.com/InternGenius)
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](https://github.com/InternGenius)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Government](https://img.shields.io/badge/Government%20of%20India-Initiative-ff9933.svg)](https://education.gov.in/)
-
-> **Connecting Students with Opportunities: Inclusive, Accessible, Intelligent**
-
-## Project Overview
-
-InternGenius is a comprehensive AI-powered national internship platform designed to connect students with relevant internship opportunities based on their skills, interests, and profiles. Our mission is to ensure equal access to quality internships for all students, regardless of their background or digital literacy. This project is developed as part of the Smart India Hackathon (SIH) to address the need for an inclusive and accessible national internship portal.
 
 ### Quick Start Installation
 
@@ -82,7 +70,7 @@ To develop a transparent, accessible, and inclusive national internship portal t
 - 🏢 **Employer Dashboard** → Shortlisted candidates, filtering tools
 - 👩‍💼 **Admin Dashboard** → Analytics on inclusivity, region, and sector
 
-```
+```mermaid
 flowchart TD
     A[Student Input] --> B[Profile Creation]
     C[Employer Input] --> D[Internship Listings]
