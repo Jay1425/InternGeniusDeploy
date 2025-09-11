@@ -26,7 +26,7 @@ InternGenius is a comprehensive AI-powered national internship platform designed
    ```
 4. Run the application:
    ```
-   python simple_app.py
+   python app.py
    ```
 5. Open your browser and go to `http://127.0.0.1:5000`
 
@@ -72,35 +72,58 @@ To develop a transparent, accessible, and inclusive national internship portal t
 
 ```mermaid
 flowchart TD
-    A[Student Input] --> B[Profile Creation]
-    C[Employer Input] --> D[Internship Listings]
+    A[👨‍🎓 Student Input] --> B[📝 Profile Creation]
+    C[🏢 Employer Input] --> D[📋 Internship Listings]
     
-    B --> E[Data Processing Layer]
+    B --> E[⚙️ Data Processing Layer]
     D --> E
     
-    E --> F[Rule-based Filtering]
-    E --> G[AI Recommendation Engine]
+    E --> F[🔍 Rule-based Filtering]
+    E --> G[🤖 AI Recommendation Engine]
     
-    F --> H{Match Generation}
+    F --> H{🎯 Match Generation}
     G --> H
     
-    H --> I[Student Dashboard]
-    H --> J[Employer Dashboard]
-    H --> K[Admin Analytics]
+    H --> I[📊 Student Dashboard]
+    H --> J[💼 Employer Dashboard]
+    H --> K[📈 Admin Analytics]
     
-    I --> L[Notification System]
+    I --> L[🔔 Notification System]
     
-    L --> M[Email Alerts]
-    L --> N[SMS Notifications]
-    L --> O[WhatsApp Updates]
+    L --> M[📧 Email Alerts]
+    L --> N[📱 SMS Notifications]
+    L --> O[💬 WhatsApp Updates]
     
-    style A fill:#e1f5fe
-    style C fill:#e1f5fe
-    style E fill:#fff3e0
-    style H fill:#fce4ec
-    style I fill:#f3e5f5
-    style J fill:#f3e5f5
-    style K fill:#f3e5f5
+    %% Input nodes - Blue gradient
+    style A fill:#4fc3f7,stroke:#0277bd,stroke-width:2px,color:#fff
+    style C fill:#4fc3f7,stroke:#0277bd,stroke-width:2px,color:#fff
+    
+    %% Profile creation - Green gradient
+    style B fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
+    style D fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#fff
+    
+    %% Processing layer - Orange gradient
+    style E fill:#ff9800,stroke:#f57c00,stroke-width:3px,color:#fff
+    
+    %% AI components - Purple gradient
+    style F fill:#ab47bc,stroke:#7b1fa2,stroke-width:2px,color:#fff
+    style G fill:#ab47bc,stroke:#7b1fa2,stroke-width:2px,color:#fff
+    
+    %% Match generation - Pink gradient (decision point)
+    style H fill:#ec407a,stroke:#c2185b,stroke-width:3px,color:#fff
+    
+    %% Dashboards - Teal gradient
+    style I fill:#26a69a,stroke:#00695c,stroke-width:2px,color:#fff
+    style J fill:#26a69a,stroke:#00695c,stroke-width:2px,color:#fff
+    style K fill:#26a69a,stroke:#00695c,stroke-width:2px,color:#fff
+    
+    %% Notification system - Indigo gradient
+    style L fill:#5c6bc0,stroke:#303f9f,stroke-width:2px,color:#fff
+    
+    %% Alert types - Light blue gradient
+    style M fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style N fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
+    style O fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#fff
 ```
 
 ---
@@ -160,8 +183,8 @@ cp .env.example .env      # Linux/Mac
 
 ### **6. Run Application**
 ```bash
-# Method 1: Using run script (recommended)
-python run.py
+# Method 1: Direct application run (recommended)
+python app.py
 
 # Method 2: Using Flask directly
 flask run

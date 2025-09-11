@@ -4,57 +4,114 @@
 
 {% block custom_css %}
 <style>
-    /* Government Portal Theme Colors */
+    /* Modern UI/UX Theme Colors */
     :root {
-        --govt-primary: #FF6F61;
-        --govt-secondary: #6B7A8F;
-        --govt-accent: #F7C331;
-        --govt-dark: #2C3E50;
-        --govt-light: #F3F4F6;
-        --govt-success: #2ECC71;
-        --govt-danger: #E74C3C;
-        --govt-warning: #F39C12;
-        --govt-info: #3498DB;
+        /* Government Website Professional Color Scheme */
+        --primary-color: #1e40af;
+        --primary-dark: #1e3a8a;
+        --secondary-color: #0f172a;
+        --accent-color: #3b82f6;
+        --success-color: #059669;
+        --warning-color: #d97706;
+        --danger-color: #dc2626;
+        --info-color: #0369a1;
+        --light-bg: #f8fafc;
+        --card-bg: #ffffff;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-muted: #64748b;
+        --border-color: #cbd5e1;
+        --input-border: #d1d5db;
+        --focus-border: #2563eb;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+        box-sizing: border-box;
     }
 
     body {
-        background-color: #f5f7fa;
+        background-color: var(--light-bg);
+        min-height: 100vh;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text-primary);
+        padding: 2rem 0;
+        line-height: 1.6;
     }
 
     .registration-container {
-        max-width: 950px;
-        margin: 2rem auto;
-        padding: 0;
-        background-color: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
+        max-width: 1000px;
+        margin: 0 auto;
+        background: var(--card-bg);
+        border-radius: 8px;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border-color);
         overflow: hidden;
-    }
-
-    .registration-header {
-        background: linear-gradient(135deg, var(--govt-primary) 0%, #ff8f61 100%);
-        color: white;
-        padding: 2rem;
         position: relative;
     }
 
-    .registration-header::after {
-        content: "";
+    .registration-container::before {
+        content: '';
         position: absolute;
-        bottom: -20px;
+        top: 0;
         left: 0;
         right: 0;
-        height: 20px;
-        background: linear-gradient(to bottom right, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%);
+        height: 4px;
+        background: var(--primary-color);
+    }
+
+    .registration-header {
+        background: var(--primary-color);
+        color: white;
+        padding: 2.5rem 2.5rem 2rem;
+        position: relative;
+        border-bottom: 3px solid var(--primary-dark);
+    }
+
+    .registration-header::before {
+        display: none;
+    }
+
+    .govt-logo {
+        height: 60px;
+        filter: brightness(1.2);
+        margin-right: 1rem;
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .header-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 1rem;
+    }
+
+    .header-description {
+        font-size: 1rem;
+        opacity: 0.8;
+        line-height: 1.6;
     }
 
     .form-content {
-        padding: 2rem;
+        padding: 3rem 2.5rem;
+        background: var(--card-bg);
     }
 
     .form-section {
         display: none;
-        animation: fadeIn 0.5s;
+        animation: slideInUp 0.6s ease-out;
     }
 
     .form-section.active {
@@ -62,37 +119,76 @@
     }
 
     .section-title {
-        color: var(--govt-primary);
-        margin-bottom: 1.5rem;
-        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+        font-weight: 700;
+        font-size: 1.8rem;
         display: flex;
         align-items: center;
+        position: relative;
+        padding-bottom: 1rem;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        border-radius: 2px;
     }
 
     .section-title i {
-        margin-right: 10px;
-        background-color: var(--govt-primary);
+        margin-right: 15px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
         color: white;
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1rem;
+        font-size: 1.2rem;
+        box-shadow: var(--shadow-md);
     }
 
-    /* Form Control Styles */
+    /* Enhanced Form Control Styles */
+    .form-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
     .form-control, .form-select {
         padding: 0.75rem 1rem;
-        border-radius: 8px;
-        border: 2px solid #e0e0e0;
-        transition: all 0.3s;
+        border-radius: 6px;
+        border: 1px solid var(--input-border);
+        background-color: white;
+        font-size: 0.9rem;
+        box-shadow: var(--shadow-sm);
+        width: 100%;
+        font-family: inherit;
     }
 
     .form-control:focus, .form-select:focus {
-        border-color: var(--govt-primary);
-        box-shadow: 0 0 0 0.25rem rgba(255, 111, 97, 0.25);
+        border-color: var(--focus-border);
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        outline: none;
+    }
+
+    .form-control:hover, .form-select:hover {
+        border-color: var(--focus-border);
     }
 
     .input-with-icon {
@@ -100,34 +196,73 @@
     }
     
     .input-with-icon .form-control {
-        padding-left: 40px;
+        padding-left: 2.75rem;
     }
     
     .input-with-icon i {
         position: absolute;
-        left: 15px;
+        left: 1rem;
         top: 50%;
         transform: translateY(-50%);
-        color: #6c757d;
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    .input-with-icon .form-control:focus + i,
+    .input-with-icon .form-control:focus ~ i {
+        color: var(--primary-color);
     }
 
     /* Required Field Style */
     .required-field::after {
         content: "*";
-        color: var(--govt-danger);
-        margin-left: 3px;
+        color: var(--danger-color);
+        margin-left: 5px;
+        font-weight: bold;
     }
 
-    /* Progress Indicator */
+    /* Validation Styles */
+    .form-control.is-valid {
+        border-color: var(--success-color);
+        background-color: #f0fff4;
+    }
+
+    .form-control.is-invalid {
+        border-color: var(--danger-color);
+        background-color: #fff5f5;
+    }
+
+    .valid-feedback, .invalid-feedback {
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        border-radius: 6px;
+    }
+
+    .valid-feedback {
+        color: var(--success-color);
+        background-color: #f0fff4;
+    }
+
+    .invalid-feedback {
+        color: var(--danger-color);
+        background-color: #fff5f5;
+        display: block;
+    }
+
+    /* Enhanced Progress Indicator */
     .step-progress {
         display: flex;
-        margin-bottom: 2rem;
+        margin-bottom: 3rem;
+        background: #f8fafc;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: var(--shadow-sm);
     }
 
     .step-item {
         flex: 1;
         text-align: center;
-        padding: 0.5rem;
         position: relative;
     }
 
@@ -135,92 +270,146 @@
         content: "";
         position: absolute;
         top: 25px;
-        left: 50%;
-        width: 100%;
-        height: 3px;
-        background-color: #e0e0e0;
+        left: calc(50% + 25px);
+        width: calc(100% - 50px);
+        height: 2px;
+        background-color: var(--border-color);
         z-index: 1;
     }
 
     .step-circle {
         width: 50px;
         height: 50px;
-        background-color: #e0e0e0;
+        background-color: #f1f5f9;
+        border: 2px solid var(--border-color);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 10px;
-        color: #fff;
+        margin: 0 auto 12px;
+        color: var(--text-muted);
         font-weight: 600;
+        font-size: 1.1rem;
         position: relative;
         z-index: 2;
     }
 
     .step-title {
-        font-size: 0.9rem;
-        color: #6c757d;
+        font-size: 0.875rem;
+        color: var(--text-muted);
         font-weight: 500;
     }
 
     .step-item.active .step-circle {
-        background-color: var(--govt-primary);
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
     }
 
     .step-item.active .step-title {
-        color: var(--govt-primary);
+        color: var(--primary-color);
         font-weight: 600;
     }
 
     .step-item.completed .step-circle {
-        background-color: var(--govt-success);
+        background-color: var(--success-color);
+        border-color: var(--success-color);
+        color: white;
+    }
+
+    .step-item.completed .step-title {
+        color: var(--success-color);
+        font-weight: 600;
     }
 
     .step-item.completed:not(:last-child)::after {
-        background-color: var(--govt-success);
+        background-color: var(--success-color);
     }
 
-    /* Form Navigation Buttons */
+    /* Enhanced Form Navigation Buttons */
     .form-navigation {
         display: flex;
         justify-content: space-between;
-        margin-top: 2rem;
+        align-items: center;
+        margin-top: 3rem;
+        padding: 2rem 0;
+        border-top: 1px solid var(--border-color);
     }
 
     .btn-next, .btn-prev, .btn-submit {
-        padding: 0.75rem 2rem;
-        border-radius: 8px;
-        font-weight: 500;
-        transition: all 0.3s;
+        padding: 0.875rem 2rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border: 1px solid;
+        cursor: pointer;
+        box-shadow: var(--shadow-sm);
+        font-family: inherit;
+        text-transform: none;
     }
 
     .btn-next, .btn-submit {
-        background-color: var(--govt-primary);
-        border-color: var(--govt-primary);
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
         color: white;
     }
 
     .btn-next:hover, .btn-submit:hover {
-        background-color: #e5634f;
-        border-color: #e5634f;
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
     }
 
     .btn-prev {
-        background-color: #e0e0e0;
-        border-color: #e0e0e0;
-        color: #333;
+        background-color: #f8fafc;
+        color: var(--text-primary);
+        border-color: var(--border-color);
     }
 
     .btn-prev:hover {
-        background-color: #c8c8c8;
-        border-color: #c8c8c8;
+        background-color: #f1f5f9;
+        border-color: #94a3b8;
+    }
+
+    .btn-submit {
+        background-color: var(--success-color);
+        border-color: var(--success-color);
+    }
+
+    .btn-submit:hover {
+        background-color: #047857;
+        border-color: #047857;
     }
 
     /* Help Text */
     .help-text {
-        font-size: 0.85rem;
-        color: #6c757d;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
         margin-top: 0.5rem;
+        padding: 0.5rem;
+        background-color: #f8fafc;
+        border-radius: 6px;
+        border-left: 3px solid var(--info-color);
+    }
+
+    /* Card Alert Improvements */
+    .card-alert {
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .card-alert.info {
+        border-left: 4px solid var(--info-color);
+        background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+    }
+
+    .card-alert i {
+        color: var(--info-color);
+        margin-right: 0.75rem;
+        font-size: 1.2rem;
     }
 
     /* File Upload Styling */
@@ -295,15 +484,12 @@
         color: #6c757d;
     }
 
-    /* Animations */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
+    /* Enhanced Animations */
+    /* Government Website Professional Styles - No Animations */
+
+    @keyframes spin {
         to {
-            opacity: 1;
-            transform: translateY(0);
+            transform: rotate(360deg);
         }
     }
 
@@ -384,21 +570,82 @@
         color: var(--govt-danger);
     }
 
-    /* Custom Checkbox */
+    /* Professional Checkbox Styling */
     .custom-checkbox {
         display: flex;
         align-items: flex-start;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        border-radius: 6px;
+        background-color: #f8fafc;
+        border: 1px solid var(--border-color);
     }
     
     .custom-checkbox .form-check-input {
-        width: 20px;
-        height: 20px;
-        margin-top: 3px;
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+        margin-right: 0;
+        border: 2px solid var(--input-border);
+        border-radius: 4px;
+        background-color: white;
+        flex-shrink: 0;
+    }
+    
+    .custom-checkbox .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .custom-checkbox .form-check-input:focus {
+        border-color: var(--focus-border);
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
     }
     
     .custom-checkbox .form-check-label {
-        font-size: 0.95rem;
-        margin-left: 10px;
+        font-size: 0.9rem;
+        margin-left: 0.75rem;
+        line-height: 1.5;
+        color: var(--text-primary);
+        cursor: pointer;
+        flex: 1;
+    }
+    
+    .custom-checkbox .form-check-label a {
+        color: var(--primary-color);
+        text-decoration: underline;
+    }
+    
+    .custom-checkbox .form-check-label a:hover {
+        text-decoration: none;
+        color: var(--primary-dark);
+    }
+    
+    /* Remove bottom margin from last checkbox in group */
+    .custom-checkbox:last-child {
+        margin-bottom: 0;
+    }
+    
+    /* Required checkbox indicator */
+    .custom-checkbox .form-check-input[required] + .form-check-label::after {
+        content: " *";
+        color: var(--danger-color);
+        font-weight: bold;
+    }
+    
+    /* Invalid checkbox styling */
+    .custom-checkbox .form-check-input:invalid {
+        border-color: var(--danger-color);
+    }
+    
+    .custom-checkbox .form-check-input:invalid + .form-check-label {
+        color: var(--danger-color);
+    }
+    
+    /* Hover effect */
+    .custom-checkbox:hover {
+        background-color: #f1f5f9;
+        border-color: var(--primary-color);
     }
 </style>
 {% endblock %}
@@ -406,14 +653,16 @@
 {% block content %}
 <div class="container registration-container mt-5">
     <div class="registration-header">
-        <div class="d-flex align-items-center mb-4">
-            <img src="{{ url_for('static', filename='images/emblem_of_india.svg') }}" alt="Government of India" class="govt-logo" style="height: 70px; margin-right: 1rem;">
-            <div>
-                <h2 class="mb-0 fw-bold">Student Registration</h2>
-                <p class="mb-0 opacity-75">InternGenius - National Internship Portal</p>
+        <div class="header-content">
+            <div class="d-flex align-items-center mb-4">
+                <img src="{{ url_for('static', filename='images/govt/emblem-enhanced.svg') }}" alt="Government of India" class="govt-logo">
+                <div>
+                    <h1 class="header-title mb-0">Student Registration</h1>
+                    <p class="header-subtitle mb-0">InternGenius - National Internship Portal</p>
+                </div>
             </div>
+            <p class="header-description mb-0">Join thousands of students discovering relevant internship opportunities aligned with their skills and interests. Complete your profile in 4 simple steps.</p>
         </div>
-        <p class="mb-0">Join thousands of students discovering relevant internship opportunities aligned with their skills and interests.</p>
     </div>
 
     <div class="form-content">
@@ -438,7 +687,6 @@
         </div>
 
         <form method="POST" action="{{ url_for('direct_student_registration') }}" enctype="multipart/form-data" id="registrationForm">
-            {{ csrf_token() }}
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <!-- Personal Information - Step 1 -->
         <div class="form-section active" id="section-1">
@@ -452,56 +700,58 @@
             </div>
             
             <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label for="firstName" class="form-label required-field">First Name</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-user"></i>
-                        <input type="text" class="form-control" id="firstName" name="first_name" placeholder="Enter your first name" required>
-                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
-                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
-                    </div>
-                    <div class="invalid-feedback">Please enter your first name</div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="middleName" class="form-label">Middle Name</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-user"></i>
-                        <input type="text" class="form-control" id="middleName" name="middle_name" placeholder="Enter your middle name">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="firstName" class="form-label required-field">First Name</label>
+                        <div class="input-with-icon">
+                            <input type="text" class="form-control" id="firstName" name="first_name" placeholder="Enter your first name" required>
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="invalid-feedback">Please enter your first name</div>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label for="lastName" class="form-label required-field">Last Name</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-user"></i>
-                        <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Enter your last name" required>
-                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
-                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="middleName" class="form-label">Middle Name</label>
+                        <div class="input-with-icon">
+                            <input type="text" class="form-control" id="middleName" name="middle_name" placeholder="Enter your middle name">
+                            <i class="fas fa-user"></i>
+                        </div>
                     </div>
-                    <div class="invalid-feedback">Please enter your last name</div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="lastName" class="form-label required-field">Last Name</label>
+                        <div class="input-with-icon">
+                            <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Enter your last name" required>
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="invalid-feedback">Please enter your last name</div>
+                    </div>
                 </div>
             </div>
 
             <div class="row mt-3">
-                <div class="col-md-6 mb-3">
-                    <label for="email" class="form-label required-field">Email Address</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
-                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
-                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="email" class="form-label required-field">Email Address</label>
+                        <div class="input-with-icon">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" required>
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid email address</div>
+                        <div class="help-text">This will be used as your login username</div>
                     </div>
-                    <div class="invalid-feedback">Please enter a valid email address</div>
-                    <div class="help-text">This will be used as your login username</div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label for="phone" class="form-label required-field">Mobile Number</label>
-                    <div class="input-with-icon">
-                        <i class="fas fa-phone-alt"></i>
-                        <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
-                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
-                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="phone" class="form-label required-field">Mobile Number</label>
+                        <div class="input-with-icon">
+                            <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid 10-digit mobile number</div>
                     </div>
-                    <div class="invalid-feedback">Please enter a valid 10-digit mobile number</div>
                 </div>
             </div>
 
@@ -1026,25 +1276,30 @@
             <div class="mb-4">
                 <h5 class="fw-bold mb-3">Terms & Privacy</h5>
                 
-                <div class="card border rounded p-3 mb-3">
-                    <div class="custom-checkbox mb-2">
+                <div class="card border rounded p-4 mb-3">
+                    <h6 class="mb-3 text-primary">
+                        <i class="fas fa-clipboard-check me-2"></i>
+                        Terms and Consent
+                    </h6>
+                    
+                    <div class="custom-checkbox">
                         <input class="form-check-input" type="checkbox" id="termsCheck" name="terms_accepted" required>
                         <label class="form-check-label" for="termsCheck">
                             I have read and agree to the <a href="#" target="_blank">Terms and Conditions</a> and <a href="#" target="_blank">Privacy Policy</a> of InternGenius
                         </label>
                     </div>
                     
-                    <div class="custom-checkbox mb-2">
+                    <div class="custom-checkbox">
                         <input class="form-check-input" type="checkbox" id="dataCheck" name="data_accuracy" required>
                         <label class="form-check-label" for="dataCheck">
                             I certify that all information provided is accurate and complete to the best of my knowledge
                         </label>
                     </div>
                     
-                    <div class="custom-checkbox mb-2">
+                    <div class="custom-checkbox">
                         <input class="form-check-input" type="checkbox" id="communicationCheck" name="communication_consent">
                         <label class="form-check-label" for="communicationCheck">
-                            I agree to receive communications about relevant internship opportunities and updates from InternGenius (Optional)
+                            I agree to receive communications about relevant internship opportunities and updates from InternGenius <span class="text-muted">(Optional)</span>
                         </label>
                     </div>
                     
@@ -1723,5 +1978,156 @@
             });
         }
     });
+
+    // Enhanced form interactions
+    function initializeModernFeatures() {
+        // Smooth input animations
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+                this.closest('.form-group')?.classList.add('focused');
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('focused');
+                this.closest('.form-group')?.classList.remove('focused');
+                
+                if (this.value.trim() !== '') {
+                    this.closest('.form-group')?.classList.add('filled');
+                } else {
+                    this.closest('.form-group')?.classList.remove('filled');
+                }
+            });
+
+            // Real-time validation feedback
+            input.addEventListener('input', function() {
+                validateFieldRealTime(this);
+            });
+        });
+
+        // Initialize loading states for buttons
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            if (button.type === 'submit') {
+                button.addEventListener('click', function(e) {
+                    if (this.form && this.form.checkValidity()) {
+                        showLoadingState(this);
+                    }
+                });
+            }
+        });
+
+        // Initialize tooltips and help text interactions
+        const helpTexts = document.querySelectorAll('.help-text');
+        helpTexts.forEach(text => {
+            text.style.opacity = '0';
+            text.style.transform = 'translateY(-10px)';
+        });
+
+        // Show help text on focus
+        inputs.forEach(input => {
+            const helpText = input.parentElement.nextElementSibling?.classList.contains('help-text') ? 
+                            input.parentElement.nextElementSibling : null;
+            
+            if (helpText) {
+                input.addEventListener('focus', () => {
+                    helpText.style.transition = 'all 0.3s ease';
+                    helpText.style.opacity = '1';
+                    helpText.style.transform = 'translateY(0)';
+                });
+
+                input.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        helpText.style.opacity = '0';
+                        helpText.style.transform = 'translateY(-10px)';
+                    }, 100);
+                });
+            }
+        });
+    }
+
+    function validateFieldRealTime(field) {
+        const value = field.value.trim();
+        let isValid = true;
+
+        // Clear previous validation
+        field.classList.remove('is-valid', 'is-invalid');
+
+        if (field.required && value === '') {
+            return; // Don't show error for empty required fields while typing
+        }
+
+        // Email validation
+        if (field.type === 'email' && value !== '') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            isValid = emailRegex.test(value);
+        }
+
+        // Phone validation
+        if (field.name === 'phone' && value !== '') {
+            const phoneRegex = /^[0-9]{10}$/;
+            isValid = phoneRegex.test(value);
+        }
+
+        // Aadhaar validation
+        if (field.name === 'aadhaar' && value !== '') {
+            const aadhaarRegex = /^[0-9]{12}$/;
+            isValid = aadhaarRegex.test(value);
+        }
+
+        // Apply validation with smooth animation
+        if (value !== '') {
+            setTimeout(() => {
+                field.classList.add(isValid ? 'is-valid' : 'is-invalid');
+            }, 150);
+        }
+    }
+
+    function showLoadingState(button) {
+        const originalText = button.innerHTML;
+        button.innerHTML = 'Processing...';
+        button.disabled = true;
+
+        // Reset after 3 seconds (in case of no form submission)
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }, 3000);
+    }
+
+    // Initialize professional features when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                validateFieldRealTime(this);
+            });
+        });
+
+        // Initialize checkbox validation
+        initializeCheckboxValidation();
+    });
+
+    function initializeCheckboxValidation() {
+        const checkboxes = document.querySelectorAll('.form-check-input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                validateCheckbox(this);
+            });
+        });
+    }
+
+    function validateCheckbox(checkbox) {
+        const customCheckbox = checkbox.closest('.custom-checkbox');
+        
+        if (checkbox.required && !checkbox.checked) {
+            customCheckbox.style.borderColor = 'var(--danger-color)';
+            customCheckbox.style.backgroundColor = '#fef2f2';
+        } else {
+            customCheckbox.style.borderColor = 'var(--border-color)';
+            customCheckbox.style.backgroundColor = '#f8fafc';
+        }
+    }
 </script>
 {% endblock %}
