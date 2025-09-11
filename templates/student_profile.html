@@ -169,6 +169,9 @@
         background-color: var(--govt-primary);
         border-radius: 3px;
     }
+    .skill-level-bar.soft {
+        background-color: #6B7A8F;
+    }
 
     .skill-tag {
         display: inline-block;
@@ -369,17 +372,17 @@
                 <p class="profile-headline">Student at {{ student.education[0].institution if student.education else "Educational Institution" }}</p>
                 
                 <div class="profile-badges mb-3">
-                    <span class="profile-badge"><i class="fas fa-user-graduate"></i> {{ student.education[0].qualification if student.education else "Student" }}</span>
-                    <span class="profile-badge"><i class="fas fa-map-marker-alt"></i> {{ student.address.city if student.address else "Location" }}, {{ student.address.state if student.address else "State" }}</span>
+                    <span class="profile-badge"><i class="fa-solid fa-user-graduate"></i> {{ student.education[0].qualification if student.education else "Student" }}</span>
+                    <span class="profile-badge"><i class="fa-solid fa-location-dot"></i> {{ student.address.city if student.address else "Location" }}, {{ student.address.state if student.address else "State" }}</span>
                 </div>
                 
                 <div class="profile-details">
                     <div class="profile-detail-item">
-                        <i class="fas fa-envelope"></i>
+                        <i class="fa-solid fa-envelope"></i>
                         <span>{{ student.personal_info.email }}</span>
                     </div>
                     <div class="profile-detail-item">
-                        <i class="fas fa-phone"></i>
+                        <i class="fa-solid fa-phone"></i>
                         <span>{{ student.personal_info.phone }}</span>
                     </div>
                 </div>
@@ -434,7 +437,7 @@
                     <div class="col-lg-8">
                         <!-- About Section -->
                         <div class="profile-section">
-                            <h3 class="profile-section-title"><i class="fas fa-user me-2"></i>About</h3>
+                            <h3 class="profile-section-title"><i class="fa-solid fa-user me-2"></i>About</h3>
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <h5 class="fw-bold">Personal Information</h5>
@@ -483,7 +486,7 @@
                         
                         <!-- Education Summary -->
                         <div class="profile-section">
-                            <h3 class="profile-section-title"><i class="fas fa-graduation-cap me-2"></i>Education</h3>
+                            <h3 class="profile-section-title"><i class="fa-solid fa-graduation-cap me-2"></i>Education</h3>
                             {% if student.education %}
                                 {% for edu in student.education[:2] %}
                                 <div class="timeline-content mb-4">
@@ -509,7 +512,7 @@
 
                         <!-- Skills Summary -->
                         <div class="profile-section">
-                            <h3 class="profile-section-title"><i class="fas fa-tools me-2"></i>Key Skills</h3>
+                            <h3 class="profile-section-title"><i class="fa-solid fa-screwdriver-wrench me-2"></i>Key Skills</h3>
                             {% if student.skills.technical_skills %}
                                 <div class="row">
                                     {% for skill in student.skills.technical_skills.split(',')[:6] %}
@@ -547,11 +550,11 @@
                             <div class="d-grid gap-2">
                                 {% if student.documents.resume %}
                                 <a href="{{ url_for('static', filename='uploads/resumes/' + student.documents.resume) }}" class="btn btn-outline-primary" target="_blank">
-                                    <i class="fas fa-file-alt me-2"></i>View Resume
+                                    <i class="fa-solid fa-file-lines me-2"></i>View Resume
                                 </a>
                                 {% endif %}
                                 <a href="#" class="btn btn-outline-secondary" onclick="window.print()">
-                                    <i class="fas fa-print me-2"></i>Print Profile
+                                    <i class="fa-solid fa-print me-2"></i>Print Profile
                                 </a>
                             </div>
                             
@@ -595,7 +598,7 @@
                             {% if student.documents.resume %}
                             <div class="document-card mb-3">
                                 <div class="document-icon">
-                                    <i class="fas fa-file-alt"></i>
+                                    <i class="fa-solid fa-file-lines"></i>
                                 </div>
                                 <div class="document-info">
                                     <div class="document-name">Resume/CV</div>
@@ -603,10 +606,10 @@
                                 </div>
                                 <div class="document-actions">
                                     <a href="{{ url_for('static', filename='uploads/resumes/' + student.documents.resume) }}" target="_blank" title="View">
-                                        <i class="fas fa-eye"></i>
+                                        <i class="fa-solid fa-eye"></i>
                                     </a>
                                     <a href="{{ url_for('static', filename='uploads/resumes/' + student.documents.resume) }}" download title="Download">
-                                        <i class="fas fa-download"></i>
+                                        <i class="fa-solid fa-download"></i>
                                     </a>
                                 </div>
                             </div>
@@ -615,7 +618,7 @@
                             {% if student.documents.additional_docs %}
                             <div class="document-card">
                                 <div class="document-icon">
-                                    <i class="fas fa-file-archive"></i>
+                                    <i class="fa-solid fa-file-zipper"></i>
                                 </div>
                                 <div class="document-info">
                                     <div class="document-name">Additional Documents</div>
@@ -623,10 +626,10 @@
                                 </div>
                                 <div class="document-actions">
                                     <a href="{{ url_for('static', filename='uploads/documents/' + student.documents.additional_docs) }}" target="_blank" title="View">
-                                        <i class="fas fa-eye"></i>
+                                        <i class="fa-solid fa-eye"></i>
                                     </a>
                                     <a href="{{ url_for('static', filename='uploads/documents/' + student.documents.additional_docs) }}" download title="Download">
-                                        <i class="fas fa-download"></i>
+                                        <i class="fa-solid fa-download"></i>
                                     </a>
                                 </div>
                             </div>
@@ -640,7 +643,7 @@
             <!-- Education Tab -->
             <div class="tab-pane fade" id="education" role="tabpanel" aria-labelledby="education-tab">
                 <div class="profile-section">
-                    <h3 class="profile-section-title"><i class="fas fa-graduation-cap me-2"></i>Education History</h3>
+                    <h3 class="profile-section-title"><i class="fa-solid fa-graduation-cap me-2"></i>Education History</h3>
                     
                     {% if student.education %}
                     <div class="timeline">
@@ -659,7 +662,7 @@
                                         {% if '%' in edu.percentage %}
                                             {% set score = edu.percentage.replace('%', '')|float %}
                                         {% endif %}
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ score if score <= 100 else 100 }}%"></div>
+                                        <div class="progress-bar bg-success edu-score-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-score="{{ score if score <= 100 else 100 }}"></div>
                                     </div>
                                     <span class="ms-2 badge bg-success">{{ edu.percentage }}</span>
                                 </div>
@@ -670,7 +673,7 @@
                     </div>
                     {% else %}
                     <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
+                        <i class="fa-solid fa-circle-info me-2"></i>
                         No education details have been added yet.
                     </div>
                     {% endif %}
@@ -682,25 +685,25 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="profile-section">
-                            <h3 class="profile-section-title"><i class="fas fa-code me-2"></i>Technical Skills</h3>
+                            <h3 class="profile-section-title"><i class="fa-solid fa-code me-2"></i>Technical Skills</h3>
                             
                             {% if student.skills.technical_skills %}
                                 {% for skill in student.skills.technical_skills.split(',') %}
                                 <div class="skill-card">
                                     <div class="skill-icon">
-                                        <i class="fas fa-code"></i>
+                                        <i class="fa-solid fa-code"></i>
                                     </div>
                                     <div class="skill-info">
                                         <div class="skill-name">{{ skill.strip() }}</div>
                                         <div class="skill-level">
-                                            <div class="skill-level-bar" style="width: {{ range(60, 95)|random }}%;"></div>
+                                            <div class="skill-level-bar" data-random="true" data-min="60" data-max="95"></div>
                                         </div>
                                     </div>
                                 </div>
                                 {% endfor %}
                             {% else %}
                             <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>
+                                <i class="fa-solid fa-circle-info me-2"></i>
                                 No technical skills have been added yet.
                             </div>
                             {% endif %}
@@ -709,32 +712,32 @@
                     
                     <div class="col-lg-6">
                         <div class="profile-section">
-                            <h3 class="profile-section-title"><i class="fas fa-comments me-2"></i>Soft Skills</h3>
+                            <h3 class="profile-section-title"><i class="fa-solid fa-comments me-2"></i>Soft Skills</h3>
                             
                             {% if student.skills.soft_skills %}
                                 {% for skill in student.skills.soft_skills.split(',') %}
                                 <div class="skill-card">
                                     <div class="skill-icon" style="background-color: #6B7A8F;">
-                                        <i class="fas fa-user-friends"></i>
+                                        <i class="fa-solid fa-user-friends"></i>
                                     </div>
                                     <div class="skill-info">
                                         <div class="skill-name">{{ skill.strip() }}</div>
                                         <div class="skill-level">
-                                            <div class="skill-level-bar" style="width: {{ range(70, 95)|random }}%; background-color: #6B7A8F;"></div>
+                                            <div class="skill-level-bar soft" data-random="true" data-min="70" data-max="95"></div>
                                         </div>
                                     </div>
                                 </div>
                                 {% endfor %}
                             {% else %}
                             <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>
+                                <i class="fa-solid fa-circle-info me-2"></i>
                                 No soft skills have been added yet.
                             </div>
                             {% endif %}
                         </div>
                         
                         <div class="profile-section">
-                            <h3 class="profile-section-title"><i class="fas fa-lightbulb me-2"></i>Areas of Interest</h3>
+                            <h3 class="profile-section-title"><i class="fa-solid fa-lightbulb me-2"></i>Areas of Interest</h3>
                             
                             {% if student.preferences.interests %}
                             <div class="row">
@@ -746,7 +749,7 @@
                             </div>
                             {% else %}
                             <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>
+                                <i class="fa-solid fa-circle-info me-2"></i>
                                 No areas of interest have been added yet.
                             </div>
                             {% endif %}
@@ -758,7 +761,7 @@
             <!-- Documents Tab -->
             <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">
                 <div class="profile-section">
-                    <h3 class="profile-section-title"><i class="fas fa-file-alt me-2"></i>Documents</h3>
+                    <h3 class="profile-section-title"><i class="fa-solid fa-file-lines me-2"></i>Documents</h3>
                     
                     <div class="row">
                         <div class="col-md-6 mb-4">
@@ -769,21 +772,21 @@
                                 <div class="card-body">
                                     {% if student.documents.resume %}
                                         <div class="text-center mb-3">
-                                            <i class="fas fa-file-pdf fa-5x text-danger mb-3"></i>
+                                            <i class="fa-solid fa-file-pdf fa-5x text-danger mb-3"></i>
                                             <h5>{{ student.documents.resume }}</h5>
                                         </div>
                                         
                                         <div class="d-grid gap-2">
                                             <a href="{{ url_for('static', filename='uploads/resumes/' + student.documents.resume) }}" class="btn btn-primary" target="_blank">
-                                                <i class="fas fa-eye me-2"></i>View Resume
+                                                <i class="fa-solid fa-eye me-2"></i>View Resume
                                             </a>
                                             <a href="{{ url_for('static', filename='uploads/resumes/' + student.documents.resume) }}" class="btn btn-outline-primary" download>
-                                                <i class="fas fa-download me-2"></i>Download Resume
+                                                <i class="fa-solid fa-download me-2"></i>Download Resume
                                             </a>
                                         </div>
                                     {% else %}
                                         <div class="text-center py-5">
-                                            <i class="fas fa-file-upload fa-3x text-muted mb-3"></i>
+                                            <i class="fa-solid fa-file-arrow-up fa-3x text-muted mb-3"></i>
                                             <p class="mb-0">No resume has been uploaded yet.</p>
                                         </div>
                                     {% endif %}
@@ -804,15 +807,15 @@
                                         
                                         <div class="d-grid gap-2">
                                             <a href="{{ url_for('static', filename='uploads/photos/' + student.documents.photo) }}" class="btn btn-primary photo-link" target="_blank">
-                                                <i class="fas fa-eye me-2"></i>View Full Size
+                                                <i class="fa-solid fa-eye me-2"></i>View Full Size
                                             </a>
                                             <a href="{{ url_for('static', filename='uploads/photos/' + student.documents.photo) }}" class="btn btn-outline-primary photo-link" download>
-                                                <i class="fas fa-download me-2"></i>Download Photo
+                                                <i class="fa-solid fa-download me-2"></i>Download Photo
                                             </a>
                                         </div>
                                     {% else %}
                                         <div class="text-center py-5">
-                                            <i class="fas fa-camera fa-3x text-muted mb-3"></i>
+                                            <i class="fa-solid fa-camera fa-3x text-muted mb-3"></i>
                                             <p class="mb-0">No profile photo has been uploaded yet.</p>
                                         </div>
                                     {% endif %}
@@ -828,21 +831,21 @@
                                 <div class="card-body">
                                     {% if student.documents.additional_docs %}
                                         <div class="text-center mb-3">
-                                            <i class="fas fa-file-archive fa-5x text-primary mb-3"></i>
+                                            <i class="fa-solid fa-file-zipper fa-5x text-primary mb-3"></i>
                                             <h5>{{ student.documents.additional_docs }}</h5>
                                         </div>
                                         
                                         <div class="d-grid gap-2">
                                             <a href="{{ url_for('static', filename='uploads/documents/' + student.documents.additional_docs) }}" class="btn btn-primary" target="_blank">
-                                                <i class="fas fa-eye me-2"></i>View Document
+                                                <i class="fa-solid fa-eye me-2"></i>View Document
                                             </a>
                                             <a href="{{ url_for('static', filename='uploads/documents/' + student.documents.additional_docs) }}" class="btn btn-outline-primary" download>
-                                                <i class="fas fa-download me-2"></i>Download Document
+                                                <i class="fa-solid fa-download me-2"></i>Download Document
                                             </a>
                                         </div>
                                     {% else %}
                                         <div class="text-center py-5">
-                                            <i class="fas fa-file-upload fa-3x text-muted mb-3"></i>
+                                            <i class="fa-solid fa-file-arrow-up fa-3x text-muted mb-3"></i>
                                             <p class="mb-0">No additional documents have been uploaded.</p>
                                         </div>
                                     {% endif %}
@@ -856,13 +859,13 @@
             <!-- Preferences Tab -->
             <div class="tab-pane fade" id="preferences" role="tabpanel" aria-labelledby="preferences-tab">
                 <div class="profile-section">
-                    <h3 class="profile-section-title"><i class="fas fa-sliders-h me-2"></i>Internship Preferences</h3>
+                    <h3 class="profile-section-title"><i class="fa-solid fa-sliders me-2"></i>Internship Preferences</h3>
                     
                     <div class="row">
                         <div class="col-md-6 mb-4">
                             <div class="card h-100">
                                 <div class="card-body">
-                                    <h5 class="card-title"><i class="fas fa-map-marker-alt text-danger me-2"></i>Preferred Locations</h5>
+                                    <h5 class="card-title"><i class="fa-solid fa-location-dot text-danger me-2"></i>Preferred Locations</h5>
                                     {% if student.preferences.preferred_locations %}
                                         <div class="d-flex flex-wrap mt-3">
                                             {% for location in student.preferences.preferred_locations.split(',') %}
@@ -879,7 +882,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="card h-100">
                                 <div class="card-body">
-                                    <h5 class="card-title"><i class="fas fa-laptop-house text-success me-2"></i>Work Mode</h5>
+                                    <h5 class="card-title"><i class="fa-solid fa-house-laptop text-success me-2"></i>Work Mode</h5>
                                     {% if student.preferences.work_mode %}
                                         <div class="mt-3">
                                             <span class="badge bg-success p-2">{{ student.preferences.work_mode|title }}</span>
@@ -892,7 +895,7 @@
                                                 {% elif student.preferences.work_mode == 'hybrid' %}
                                                     <p><i class="fas fa-exchange-alt me-2 text-muted"></i>Prefers a mix of office and remote work</p>
                                                 {% else %}
-                                                    <p><i class="fas fa-check-circle me-2 text-muted"></i>Flexible with any work arrangement</p>
+                                                    <p><i class="fa-solid fa-circle-check me-2 text-muted"></i>Flexible with any work arrangement</p>
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -906,7 +909,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="card h-100">
                                 <div class="card-body">
-                                    <h5 class="card-title"><i class="fas fa-calendar-alt text-primary me-2"></i>Duration & Availability</h5>
+                                    <h5 class="card-title"><i class="fa-solid fa-calendar-days text-primary me-2"></i>Duration & Availability</h5>
                                     {% if student.preferences.internship_duration %}
                                         <div class="mt-3">
                                             <p><strong>Preferred Duration:</strong> 
@@ -951,7 +954,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="card h-100">
                                 <div class="card-body">
-                                    <h5 class="card-title"><i class="fas fa-rupee-sign text-warning me-2"></i>Stipend Expectation</h5>
+                                    <h5 class="card-title"><i class="fa-solid fa-indian-rupee-sign text-warning me-2"></i>Stipend Expectation</h5>
                                     {% if student.preferences.expected_stipend %}
                                         <div class="mt-3">
                                             <span class="badge bg-warning text-dark p-2">
@@ -985,17 +988,17 @@
         
         <!-- Profile Actions -->
         <div class="profile-actions">
-            <a href="{{ url_for('index') }}" class="btn btn-primary">
-                <i class="fas fa-home"></i> Return to Homepage
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                <i class="fa-solid fa-house"></i> Go to Dashboard
             </a>
             <a href="#" class="btn btn-outline-secondary" onclick="window.print()">
-                <i class="fas fa-print"></i> Print Profile
+                <i class="fa-solid fa-print"></i> Print Profile
             </a>
             <a href="#" class="btn btn-outline-primary">
-                <i class="fas fa-share-alt"></i> Share Profile
+                <i class="fa-solid fa-share-nodes"></i> Share Profile
             </a>
-            <a href="#" class="btn btn-outline-success">
-                <i class="fas fa-edit"></i> Edit Profile
+            <a href="{{ url_for('complete_student_profile') }}" class="btn btn-outline-success">
+                <i class="fa-solid fa-pen-to-square"></i> Edit Profile
             </a>
         </div>
     </div>
@@ -1074,6 +1077,21 @@
                     alert('Photo is not available.');
                 });
             }
+        });
+
+        // Initialize education score bars from data-score
+        document.querySelectorAll('.edu-score-bar[data-score]').forEach(el => {
+            const pct = Math.max(0, Math.min(100, parseFloat(el.getAttribute('data-score')) || 0));
+            el.style.width = pct + '%';
+            el.setAttribute('aria-valuenow', pct);
+        });
+
+        // Initialize random skill bars
+        document.querySelectorAll('.skill-level-bar[data-random="true"]').forEach(el => {
+            const min = parseInt(el.getAttribute('data-min')) || 60;
+            const max = parseInt(el.getAttribute('data-max')) || 95;
+            const val = Math.floor(Math.random() * (max - min + 1)) + min;
+            el.style.width = val + '%';
         });
     });
 </script>

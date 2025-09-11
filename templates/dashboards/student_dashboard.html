@@ -2,6 +2,67 @@
 
 {% block title %}Student Dashboard - InternGenius{% endblock %}
 
+{% block custom_css %}
+<style>
+    /* Theme Colors */
+    :root {
+        --govt-primary: #1e40af;
+        --govt-secondary: #3b82f6;
+        --govt-saffron: #FF9933;
+        --govt-white: #FFFFFF;
+        --govt-green: #138808;
+        --govt-dark: #333333;
+        --govt-light: #f8f9fa;
+        --govt-info: #0369a1;
+        --govt-success: #059669;
+        --govt-warning: #d97706;
+        --govt-danger: #dc2626;
+    }
+    
+    body {
+        background-color: var(--govt-light);
+        color: var(--govt-dark);
+    }
+    
+    .btn-primary {
+        background-color: var(--govt-primary);
+        border-color: var(--govt-primary);
+    }
+    
+    .btn-primary:hover {
+        background-color: #1e3a8a;
+        border-color: #1e3a8a;
+    }
+    
+    .bg-primary {
+        background-color: var(--govt-primary) !important;
+    }
+    
+    .text-primary {
+        color: var(--govt-primary) !important;
+    }
+    
+    .card {
+        background-color: white;
+        border: 1px solid #e9ecef;
+    }
+
+.internship-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s;
+}
+
+.notification-item {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
     <!-- Student Dashboard Header -->
@@ -9,15 +70,18 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h1 class="h3 mb-0 text-primary">Student Dashboard</h1>
+                    <h1 class="h3 mb-0 text-primary">Welcome{% if user_name %}, {{ user_name|title }}{% endif %}</h1>
                     <p class="text-muted">Find and apply for internships that match your skills</p>
+                    {% if last_login %}
+                        <small class="text-muted">Last login: {{ last_login|default('') }}</small>
+                    {% endif %}
                 </div>
                 <div>
                     <a href="{{ url_for('student_profile') }}" class="btn btn-outline-primary me-2">
-                        <i class="fas fa-user"></i> View Profile
+                        <i class="fa-solid fa-user"></i> View Profile
                     </a>
-                    <a href="{{ url_for('direct_student_registration') }}" class="btn btn-primary">
-                        <i class="fas fa-edit"></i> Edit Profile
+                    <a href="{{ url_for('complete_student_profile') }}" class="btn btn-primary">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit Profile
                     </a>
                 </div>
             </div>
@@ -26,16 +90,16 @@
 
     <!-- Quick Stats -->
     <div class="row mb-4">
-        <div class="col-md-3 mb-3">
+    <div class="col-md-3 mb-3">
             <div class="card bg-primary text-white">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
                             <h6 class="card-title">Applications Sent</h6>
-                            <h2 class="mb-0">12</h2>
+                <h2 class="mb-0">{{ applications_count or 0 }}</h2>
                         </div>
                         <div class="align-self-center">
-                            <i class="fas fa-paper-plane fa-2x"></i>
+                            <i class="fa-solid fa-paper-plane fa-2x"></i>
                         </div>
                     </div>
                 </div>
@@ -48,10 +112,10 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h6 class="card-title">Interviews Scheduled</h6>
-                            <h2 class="mb-0">3</h2>
+                            <h2 class="mb-0">{{ interviews_count or 0 }}</h2>
                         </div>
                         <div class="align-self-center">
-                            <i class="fas fa-calendar fa-2x"></i>
+                            <i class="fa-solid fa-calendar-days fa-2x"></i>
                         </div>
                     </div>
                 </div>
@@ -64,10 +128,10 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h6 class="card-title">Profile Views</h6>
-                            <h2 class="mb-0">45</h2>
+                            <h2 class="mb-0">{{ profile_views or 0 }}</h2>
                         </div>
                         <div class="align-self-center">
-                            <i class="fas fa-eye fa-2x"></i>
+                            <i class="fa-solid fa-eye fa-2x"></i>
                         </div>
                     </div>
                 </div>
@@ -80,10 +144,10 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h6 class="card-title">Skill Score</h6>
-                            <h2 class="mb-0">85%</h2>
+                            <h2 class="mb-0">{{ (skill_score or 0) }}%</h2>
                         </div>
                         <div class="align-self-center">
-                            <i class="fas fa-star fa-2x"></i>
+                            <i class="fa-solid fa-star fa-2x"></i>
                         </div>
                     </div>
                 </div>
@@ -96,77 +160,43 @@
         <div class="col-md-8 mb-4">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-lightbulb"></i> Recommended Internships</h5>
+                    <h5 class="mb-0"><i class="fa-solid fa-lightbulb"></i> Recommended Internships</h5>
                 </div>
                 <div class="card-body">
+                    {% if recommended_internships %}
                     <div class="row">
+                        {% for job in recommended_internships %}
                         <div class="col-12 mb-3">
                             <div class="internship-card border rounded p-3">
                                 <div class="d-flex justify-content-between">
                                     <div>
-                                        <h6 class="text-primary">Software Development Intern</h6>
-                                        <p class="text-muted mb-2">TechCorp Solutions • Remote • 6 months</p>
-                                        <p class="mb-2">Looking for passionate developers to work on cutting-edge projects...</p>
+                                        <h6 class="text-primary">{{ job.title }}</h6>
+                                        <p class="text-muted mb-2">{{ job.company }} • {{ job.location }} • {{ job.duration }}</p>
+                                        <p class="mb-2">{{ job.description }}</p>
                                         <div class="mb-2">
-                                            <span class="badge bg-light text-dark me-1">Python</span>
-                                            <span class="badge bg-light text-dark me-1">React</span>
-                                            <span class="badge bg-light text-dark me-1">MongoDB</span>
+                                            {% for s in job.skills %}
+                                            <span class="badge bg-light text-dark me-1">{{ s }}</span>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                     <div class="text-end">
-                                        <div class="text-success fw-bold mb-2">₹25,000/month</div>
-                                        <button class="btn btn-primary btn-sm">Apply Now</button>
+                                        {% if job.stipend %}
+                                        <div class="text-success fw-bold mb-2">{{ job.stipend }}</div>
+                                        {% endif %}
+                                        <a href="{{ url_for('search_internships', keyword=job.title) }}" class="btn btn-primary btn-sm">Apply Now</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="col-12 mb-3">
-                            <div class="internship-card border rounded p-3">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h6 class="text-primary">Data Science Intern</h6>
-                                        <p class="text-muted mb-2">DataFlow Analytics • Bangalore • 4 months</p>
-                                        <p class="mb-2">Work with large datasets and build ML models for business insights...</p>
-                                        <div class="mb-2">
-                                            <span class="badge bg-light text-dark me-1">Python</span>
-                                            <span class="badge bg-light text-dark me-1">Machine Learning</span>
-                                            <span class="badge bg-light text-dark me-1">Pandas</span>
-                                        </div>
-                                    </div>
-                                    <div class="text-end">
-                                        <div class="text-success fw-bold mb-2">₹30,000/month</div>
-                                        <button class="btn btn-primary btn-sm">Apply Now</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-12 mb-3">
-                            <div class="internship-card border rounded p-3">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h6 class="text-primary">UI/UX Design Intern</h6>
-                                        <p class="text-muted mb-2">Creative Studios • Mumbai • 3 months</p>
-                                        <p class="mb-2">Create beautiful and intuitive user experiences for web and mobile...</p>
-                                        <div class="mb-2">
-                                            <span class="badge bg-light text-dark me-1">Figma</span>
-                                            <span class="badge bg-light text-dark me-1">Adobe XD</span>
-                                            <span class="badge bg-light text-dark me-1">Prototyping</span>
-                                        </div>
-                                    </div>
-                                    <div class="text-end">
-                                        <div class="text-success fw-bold mb-2">₹20,000/month</div>
-                                        <button class="btn btn-primary btn-sm">Apply Now</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
-                    
                     <div class="text-center">
-                        <a href="#" class="btn btn-outline-primary">View All Internships</a>
+                        <a href="{{ url_for('search_internships') }}" class="btn btn-outline-primary">View All Internships</a>
                     </div>
+                    {% else %}
+                        <p class="text-muted">No recommendations yet. Add your skills to get personalized suggestions.</p>
+                        <a href="{{ url_for('complete_student_profile') }}" class="btn btn-primary btn-sm">Update Skills</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -175,40 +205,40 @@
         <div class="col-md-4 mb-4">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-user"></i> Profile Completion</h5>
+                    <h5 class="mb-0"><i class="fa-solid fa-user"></i> Profile Completion</h5>
                 </div>
                 <div class="card-body">
                     <div class="progress mb-3">
-                        <div class="progress-bar bg-success" style="width: 85%"></div>
+                        <div class="progress-bar bg-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ profile_completion_percent or 0 }}" data-pct="{{ profile_completion_percent or 0 }}"></div>
                     </div>
-                    <p class="mb-2">Your profile is 85% complete</p>
+                    <p class="mb-2">Your profile is {{ profile_completion_percent or 0 }}% complete</p>
                     <ul class="list-unstyled mb-3">
-                        <li><i class="fas fa-check text-success"></i> Basic Information</li>
-                        <li><i class="fas fa-check text-success"></i> Education Details</li>
-                        <li><i class="fas fa-check text-success"></i> Skills & Interests</li>
-                        <li><i class="fas fa-times text-danger"></i> Portfolio Projects</li>
+                        <li><i class="fa-solid fa-check text-success"></i> Basic Information</li>
+                        <li><i class="fa-solid fa-check text-success"></i> Education Details</li>
+                        <li><i class="fa-solid fa-check text-success"></i> Skills & Interests</li>
+                        <li><i class="fa-solid fa-xmark text-danger"></i> Portfolio Projects</li>
                     </ul>
-                    <a href="{{ url_for('direct_student_registration') }}" class="btn btn-primary btn-sm">Complete Profile</a>
+                    <a href="{{ url_for('complete_student_profile') }}" class="btn btn-primary btn-sm">Complete Profile</a>
                 </div>
             </div>
 
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-tasks"></i> Quick Actions</h5>
+                    <h5 class="mb-0"><i class="fa-solid fa-list-check"></i> Quick Actions</h5>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        <a href="#" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-search"></i> Search Internships
+                        <a href="{{ url_for('search_internships') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fa-solid fa-magnifying-glass"></i> Search Internships
                         </a>
-                        <a href="#" class="btn btn-outline-success btn-sm">
-                            <i class="fas fa-file-alt"></i> My Applications
+                        <a href="{{ url_for('my_applications') }}" class="btn btn-outline-success btn-sm">
+                            <i class="fa-solid fa-file-lines"></i> My Applications
                         </a>
                         <a href="#" class="btn btn-outline-warning btn-sm">
-                            <i class="fas fa-calendar"></i> Interview Schedule
+                            <i class="fa-solid fa-calendar-days"></i> Interview Schedule
                         </a>
                         <a href="#" class="btn btn-outline-info btn-sm">
-                            <i class="fas fa-chart-line"></i> Skill Assessment
+                            <i class="fa-solid fa-chart-line"></i> Skill Assessment
                         </a>
                     </div>
                 </div>
@@ -216,7 +246,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-bell"></i> Notifications</h5>
+                    <h5 class="mb-0"><i class="fa-solid fa-bell"></i> Notifications</h5>
                 </div>
                 <div class="card-body">
                     <div class="notification-item mb-2">
@@ -235,19 +265,13 @@
     </div>
 </div>
 
-<style>
-.internship-card:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s;
-}
-
-.notification-item {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.5rem;
-}
-
-.notification-item:last-child {
-    border-bottom: none;
-}
-</style>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.progress-bar[data-pct]').forEach(function (el) {
+        var pct = parseInt(el.getAttribute('data-pct')) || 0;
+        if (pct < 0) pct = 0; if (pct > 100) pct = 100;
+        el.style.width = pct + '%';
+    });
+});
+</script>
 {% endblock %}

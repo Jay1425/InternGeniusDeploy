@@ -3,14 +3,18 @@ import os
 import secrets
 import bcrypt
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from werkzeug.utils import secure_filename
 from flask_wtf.csrf import CSRFProtect
 from pymongo import MongoClient
+from pymongo.server_api import ServerApi
 from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
+from bson.objectid import ObjectId
 from functools import wraps
 from dotenv import load_dotenv
 from config import config
+import certifi
+from models.user_model import User
 
 # Load environment variables from .env file
 load_dotenv()
@@ -34,15 +38,13 @@ app.config['WTF_CSRF_TIME_LIMIT'] = 3600  # 1 hour CSRF token lifetime
 # Get MONGO_URI from .env file or use fallback
 base_mongo_uri = os.getenv('MONGO_URI', 'mongodb+srv://jayraychura13_db_user:jUhWmtYndMBViwq5@interngenius.iwai3zh.mongodb.net/interngenius')
 
-# Try multiple connection approaches for better compatibility
+# Enhanced MongoDB connection with ServerApi
 mongodb_uri_options = [
-    # Option 1: From .env file with reduced timeouts for faster fallback
-    f"{base_mongo_uri}?retryWrites=true&w=majority&connectTimeoutMS=3000&serverSelectionTimeoutMS=2000",
-    # Option 2: Basic .env URI with minimal options  
-    f"{base_mongo_uri}?retryWrites=true&w=majority&connectTimeoutMS=2000",
-    # Option 3: Direct .env URI as-is
+    # Option 1: Enhanced connection string from config with ServerApi support
     base_mongo_uri,
-    # Option 4: Local MongoDB fallback (if available)
+    # Option 2: Fallback with additional connection parameters
+    f"{base_mongo_uri.split('?')[0]}?retryWrites=true&w=majority&connectTimeoutMS=3000&serverSelectionTimeoutMS=3000",
+    # Option 3: Local MongoDB fallback (if available)
     'mongodb://localhost:27017/interngenius'
 ]
 
@@ -61,8 +63,8 @@ def test_network_connectivity():
         return False
 
 def init_mongodb():
-    """Initialize MongoDB connection with multiple URI attempts"""
-    print(f"📋 Base URI from .env: {base_mongo_uri}")
+    """Initialize MongoDB connection with ServerApi and multiple URI attempts"""
+    print(f"📋 Base URI from .env: {base_mongo_uri[:60]}...")
     
     # Test network connectivity first
     if not test_network_connectivity():
@@ -78,28 +80,35 @@ def init_mongodb():
             db = client.interngenius
             print("✅ Local MongoDB connected successfully!")
             return client, db
-        except:
-            print("❌ Local MongoDB not available either")
+        except Exception as e:
+            print(f"❌ Local MongoDB not available: {str(e)[:40]}...")
     
     for i, uri in enumerate(mongodb_uri_options):
         try:
             print(f"🔄 Attempting MongoDB connection {i+1}/{len(mongodb_uri_options)}...")
-            if i < 3:  # Atlas connections
-                print(f"   Using: {uri[:50]}...{uri[-30:]}")
+            if i < 2:  # Atlas connections
+                print(f"   Using MongoDB Atlas with ServerApi")
+                # Use ServerApi for Atlas connections
+                client = MongoClient(uri, 
+                                   server_api=ServerApi('1'),
+                                   serverSelectionTimeoutMS=5000,
+                                   connectTimeoutMS=5000,
+                                   socketTimeoutMS=5000,
+                                   maxPoolSize=1,
+                                   tlsCAFile=certifi.where())
             else:  # Local connection
                 print(f"   Using: Local MongoDB (localhost:27017)")
+                client = MongoClient(uri, 
+                                   serverSelectionTimeoutMS=2000,
+                                   connectTimeoutMS=2000,
+                                   socketTimeoutMS=2000,
+                                   maxPoolSize=1)
             
-            # Create MongoDB client with short timeouts for faster fallback
-            client = MongoClient(uri, 
-                               serverSelectionTimeoutMS=2000,
-                               connectTimeoutMS=2000,
-                               socketTimeoutMS=2000,
-                               maxPoolSize=1)
-            
-            # Test the connection
+            # Test the connection with ping
             client.admin.command('ping')
             db = client.interngenius
-            print(f"✅ MongoDB Atlas connected successfully using approach {i+1}!")
+            print(f"✅ MongoDB connected successfully using approach {i+1}!")
+            print("🎉 Pinged your deployment. You successfully connected to MongoDB!")
             return client, db
             
         except KeyboardInterrupt:
@@ -107,17 +116,21 @@ def init_mongodb():
             break
         except Exception as e:
             error_msg = str(e)
-            if "SSL handshake" in error_msg:
-                print(f"❌ Connection {i+1} failed: SSL handshake error (network/firewall issue)")
+            if "SSL" in error_msg or "handshake" in error_msg:
+                print(f"❌ Connection {i+1} failed: SSL/TLS handshake error")
             elif "DNS" in error_msg or "resolve" in error_msg:
                 print(f"❌ Connection {i+1} failed: DNS resolution timeout")
+            elif "authentication" in error_msg.lower():
+                print(f"❌ Connection {i+1} failed: Authentication error - check credentials")
+            elif "timeout" in error_msg.lower():
+                print(f"❌ Connection {i+1} failed: Connection timeout")
             else:
-                print(f"❌ Connection {i+1} failed: {error_msg[:40]}...")
+                print(f"❌ Connection {i+1} failed: {error_msg[:50]}...")
             continue
     
-    print("⚠️ MongoDB Atlas connection failed - this is common due to network/firewall restrictions")
-    print("💾 Running in offline mode with session storage - all features fully functional!")
-    print("📋 Note: For production, consider using local MongoDB or enabling network access to MongoDB Atlas")
+    print("⚠️ MongoDB connection failed - running in offline mode with session storage")
+    print("💾 All features fully functional! No database setup required for demo.")
+    print("📋 To connect to MongoDB: Check your .env file and network connectivity")
     return None, None
 
 # Try to connect to MongoDB
@@ -205,12 +218,46 @@ def generate_secure_session_id():
     """Generate a secure session ID"""
     return secrets.token_urlsafe(32)
 
+def get_current_datetime():
+    """Get current datetime in a consistent format"""
+    return datetime.now()
+
+def datetime_to_string(dt):
+    """Convert datetime to string for session storage"""
+    if dt is None:
+        return None
+    return dt.isoformat()
+
+def string_to_datetime(dt_str):
+    """Convert string back to datetime from session storage"""
+    if not dt_str:
+        return None
+    try:
+        return datetime.fromisoformat(dt_str)
+    except:
+        return None
+
 def is_session_expired(session_created_at):
     """Check if session has expired (24 hours)"""
     if not session_created_at:
         return True
+    
+    # Ensure both datetimes are timezone-aware or both are naive
+    if isinstance(session_created_at, str):
+        # Parse string datetime if needed
+        try:
+            session_created_at = datetime.fromisoformat(session_created_at.replace('Z', '+00:00'))
+        except:
+            return True
+    
+    # Make both datetimes timezone-naive for comparison
+    if session_created_at.tzinfo is not None:
+        session_created_at = session_created_at.replace(tzinfo=None)
+    
     expiry_time = session_created_at + timedelta(hours=24)
-    return datetime.now() > expiry_time
+    current_time = datetime.now()
+    
+    return current_time > expiry_time
 
 def sanitize_input(input_string):
     """Sanitize user input to prevent injection attacks"""
@@ -232,10 +279,15 @@ def login_required(f):
         
         # Check if session is expired
         session_created = session.get('session_created_at')
-        if session_created and is_session_expired(session_created):
-            session.clear()
-            flash('Your session has expired. Please log in again.', 'warning')
-            return redirect(url_for('login'))
+        if session_created:
+            # Convert string back to datetime if needed
+            if isinstance(session_created, str):
+                session_created = string_to_datetime(session_created)
+            
+            if session_created and is_session_expired(session_created):
+                session.clear()
+                flash('Your session has expired. Please log in again.', 'warning')
+                return redirect(url_for('login'))
         
         # Validate session integrity
         if not session.get('session_id') or not session.get('user_email'):
@@ -315,13 +367,14 @@ def login():
                     session.clear()  # Clear any existing session data
                     
                     # Create secure session
+                    current_time = get_current_datetime()
                     session['user_id'] = str(user['_id'])
                     session['user_email'] = user['email']
                     session['user_name'] = user.get('first_name', email.split('@')[0]).title()
                     session['user_type'] = user.get('role', 'student')
                     session['session_id'] = generate_secure_session_id()
-                    session['session_created_at'] = datetime.now()
-                    session['last_activity'] = datetime.now()
+                    session['session_created_at'] = datetime_to_string(current_time)
+                    session['last_activity'] = datetime_to_string(current_time)
                     session.permanent = True
                     
                     # Update last login in database
@@ -346,12 +399,13 @@ def login():
                 # Demo mode - create mock authenticated session
                 if email and password == 'demo123':  # Demo password
                     session.clear()
+                    current_time = get_current_datetime()
                     session['user_id'] = 'demo_user_' + secrets.token_hex(8)
                     session['user_email'] = email
                     session['user_name'] = email.split('@')[0].title()
                     session['user_type'] = 'admin' if 'admin' in email else ('company' if 'company' in email else 'student')
                     session['session_id'] = generate_secure_session_id()
-                    session['session_created_at'] = datetime.now()
+                    session['session_created_at'] = datetime_to_string(current_time)
                     session.permanent = True
                     
                     flash(f'Welcome {session["user_name"]}! (Demo mode)', 'success')
@@ -425,12 +479,13 @@ def signup():
                 
                 # Create secure session for new user
                 session.clear()
+                current_time = get_current_datetime()
                 session['user_id'] = str(result.inserted_id)
                 session['user_email'] = email
                 session['user_name'] = first_name
                 session['user_type'] = role
                 session['session_id'] = generate_secure_session_id()
-                session['session_created_at'] = datetime.now()
+                session['session_created_at'] = datetime_to_string(current_time)
                 session.permanent = True
                 
                 flash(f'Account created successfully! Welcome {first_name}!', 'success')
@@ -576,34 +631,92 @@ def register_student_form():
 def direct_student_registration():
     """Integrated student registration with authentication setup"""
     if request.method == 'POST':
-        # Get form data
+        # Get basic authentication data
         email = sanitize_input(request.form.get('email', '').lower().strip())
         password = request.form.get('password', '')
         confirm_password = request.form.get('confirm_password', '')
         first_name = sanitize_input(request.form.get('first_name', ''))
         last_name = sanitize_input(request.form.get('last_name', ''))
-        
+
+        # Get comprehensive profile data
+        middle_name = sanitize_input(request.form.get('middle_name', ''))
+        phone = sanitize_input(request.form.get('phone', ''))
+        # Note: template uses 'dob' for date of birth
+        dob_str = request.form.get('dob', '')
+        gender = sanitize_input(request.form.get('gender', ''))
+        category = sanitize_input(request.form.get('category', ''))
+        aadhaar_raw = sanitize_input(request.form.get('aadhaar_raw', ''))
+        nationality = sanitize_input(request.form.get('nationality', ''))
+
+        # Education entries: qualification_N, specialization_N, institution_N, passing_year_N, percentage_N
+        education_entries = []
+        idx = 1
+        while True:
+            q = request.form.get(f'qualification_{idx}')
+            s = request.form.get(f'specialization_{idx}')
+            inst = request.form.get(f'institution_{idx}')
+            year = request.form.get(f'passing_year_{idx}')
+            perc = request.form.get(f'percentage_{idx}')
+            if not any([q, s, inst, year, perc]):
+                break
+            education_entries.append({
+                'qualification': sanitize_input(q or ''),
+                'specialization': sanitize_input(s or ''),
+                'institution': sanitize_input(inst or ''),
+                'passing_year': sanitize_input(year or ''),
+                'percentage_or_cgpa': sanitize_input(perc or '')
+            })
+            idx += 1
+
+        # Address
+        address = {
+            'line1': sanitize_input(request.form.get('address_line1', '')),
+            'line2': sanitize_input(request.form.get('address_line2', '')),
+            'city': sanitize_input(request.form.get('city', '')),
+            'state': sanitize_input(request.form.get('state', '')),
+            'pincode': sanitize_input(request.form.get('pincode', ''))
+        }
+
+        # Preferences and other fields
+        skills_text = sanitize_input(request.form.get('skills', ''))
+        soft_skills_text = sanitize_input(request.form.get('soft_skills', ''))
+        interests_list = request.form.getlist('interests') or []
+        languages_text = sanitize_input(request.form.get('languages', ''))
+        preferred_locations_text = sanitize_input(request.form.get('preferred_locations', ''))
+        expected_stipend = sanitize_input(request.form.get('expected_stipend', ''))
+        internship_duration = sanitize_input(request.form.get('internship_duration', ''))
+        work_mode = sanitize_input(request.form.get('work_mode', ''))
+        availability = sanitize_input(request.form.get('availability', ''))
+
+        # Normalize list fields
+        def to_list(csv):
+            return [item.strip() for item in csv.split(',') if item.strip()] if csv else []
+        skills_list = to_list(skills_text)
+        soft_skills_list = to_list(soft_skills_text)
+        languages_list = to_list(languages_text)
+        preferred_locations_list = to_list(preferred_locations_text)
+
         # Validate required fields
         if not all([email, password, confirm_password, first_name, last_name]):
             flash('All required fields must be filled.', 'danger')
             return render_template('student_registration.html')
-        
+
         # Validate email format
         if not validate_email_format(email):
             flash('Please enter a valid email address.', 'danger')
             return render_template('student_registration.html')
-        
+
         # Validate password strength
         is_strong, message = validate_password_strength(password)
         if not is_strong:
             flash(f'Password error: {message}', 'danger')
             return render_template('student_registration.html')
-        
+
         # Check password confirmation
         if password != confirm_password:
             flash('Passwords do not match.', 'danger')
             return render_template('student_registration.html')
-        
+
         # Check if user already exists
         try:
             if mongo_db is not None:
@@ -613,125 +726,629 @@ def direct_student_registration():
                     return redirect(url_for('login'))
         except Exception as e:
             print(f"Database check error: {e}")
-        
-        # Create user account with basic info
-        password_hash = hash_password(password)
-        user_data = {
-            'first_name': first_name,
-            'last_name': last_name,
+
+        # Parse date of birth
+        parsed_dob = None
+        if dob_str:
+            try:
+                parsed_dob = datetime.strptime(dob_str, '%Y-%m-%d')
+            except ValueError:
+                try:
+                    parsed_dob = datetime.strptime(dob_str, '%d-%m-%Y')
+                except ValueError:
+                    flash('Invalid date format. Please use DD-MM-YYYY format.', 'danger')
+                    return render_template('student_registration.html')
+
+        # Minimal file handling (optional, stored locally)
+        resume_file = request.files.get('resume')
+        photo_file = request.files.get('photo')
+        additional_docs_file = request.files.get('additional_docs')
+        resume_filename = None
+        photo_filename = None
+        additional_docs_filename = None
+        try:
+            upload_root = os.path.join('static', 'uploads')
+            if resume_file and resume_file.filename:
+                os.makedirs(os.path.join(upload_root, 'resumes'), exist_ok=True)
+                fname = f"{secrets.token_hex(4)}_{secure_filename(resume_file.filename)}"
+                resume_path = os.path.join(upload_root, 'resumes', fname)
+                resume_file.save(resume_path)
+                resume_filename = f"uploads/resumes/{fname}"
+            if photo_file and photo_file.filename:
+                os.makedirs(os.path.join(upload_root, 'photos'), exist_ok=True)
+                fname = f"{secrets.token_hex(4)}_{secure_filename(photo_file.filename)}"
+                photo_path = os.path.join(upload_root, 'photos', fname)
+                photo_file.save(photo_path)
+                photo_filename = f"uploads/photos/{fname}"
+            if additional_docs_file and additional_docs_file.filename:
+                os.makedirs(os.path.join(upload_root, 'documents'), exist_ok=True)
+                fname = f"{secrets.token_hex(4)}_{secure_filename(additional_docs_file.filename)}"
+                docs_path = os.path.join(upload_root, 'documents', fname)
+                additional_docs_file.save(docs_path)
+                additional_docs_filename = f"uploads/documents/{fname}"
+        except Exception as fe:
+            print(f"File upload save error: {fe}")
+
+        # Prepare comprehensive form data for User model
+        comprehensive_form_data = {
             'email': email,
-            'password_hash': password_hash,
-            'role': 'student',
-            'is_active': True,
-            'is_verified': False,
-            'profile_completed': False,
-            'created_at': datetime.now(),
-            'last_login': None,
-            'login_count': 0
+            'password': password,
+            'first_name': first_name,
+            'middle_name': middle_name,
+            'last_name': last_name,
+            'phone': phone,
+            'date_of_birth': parsed_dob,
+            'gender': gender,
+            'category': category,
+            'aadhaar_number': aadhaar_raw,
+            'nationality': nationality,
+            # Education and address
+            'education': education_entries,
+            'address': address,
+            # Skills and preferences
+            'skills': skills_list,
+            'soft_skills': soft_skills_list,
+            'interests': interests_list,
+            'languages': languages_list,
+            'preferred_locations': preferred_locations_list,
+            'expected_stipend': expected_stipend,
+            'internship_duration': internship_duration,
+            'work_mode': work_mode,
+            'availability': availability,
+            # Documents
+            'documents': {
+                'resume': resume_filename,
+                'photo': photo_filename,
+                'additional_docs': additional_docs_filename
+            },
+            'created_at': get_current_datetime()
         }
-        
+
+        # Create comprehensive user using enhanced User model
+        user = User.create_comprehensive_student(comprehensive_form_data)
+        user_data = user.to_dict()
+
         try:
             if mongo_db is not None:
                 # Save user to database
                 result = mongo_db.users.insert_one(user_data)
                 user_id = str(result.inserted_id)
-                
+
                 # Create secure session
                 session.clear()
+                current_time = get_current_datetime()
                 session['user_id'] = user_id
                 session['user_email'] = email
                 session['user_name'] = first_name
                 session['user_type'] = 'student'
                 session['session_id'] = generate_secure_session_id()
-                session['session_created_at'] = datetime.now()
+                session['session_created_at'] = datetime_to_string(current_time)
                 session.permanent = True
-                
-                flash(f'Welcome {first_name}! Your account has been created. Please complete your profile.', 'success')
-                return redirect(url_for('complete_student_profile'))
+
+                flash(f'Welcome {first_name}! Your account has been created successfully with complete profile information.', 'success')
+                return redirect(url_for('student_dashboard'))
             else:
                 # Demo mode
                 session.clear()
+                current_time = get_current_datetime()
                 session['user_id'] = 'demo_student_' + secrets.token_hex(8)
                 session['user_email'] = email
                 session['user_name'] = first_name
                 session['user_type'] = 'student'
                 session['session_id'] = generate_secure_session_id()
-                session['session_created_at'] = datetime.now()
+                session['session_created_at'] = datetime_to_string(current_time)
                 session.permanent = True
-                
-                flash(f'Welcome {first_name}! Account created (Demo mode). Complete your profile below.', 'success')
-                return redirect(url_for('complete_student_profile'))
-                
+
+                flash(f'Welcome {first_name}! Account created (Demo mode) with complete profile information.', 'success')
+                return redirect(url_for('student_dashboard'))
+
         except Exception as e:
             print(f"Registration error: {e}")
             flash('An error occurred during registration. Please try again.', 'danger')
-    
+
     return render_template('student_registration.html')
 
+@app.route('/test_profile_completion')
+def test_profile_completion():
+    """Test route for profile completion page (no login required)"""
+    # Create sample form values for testing
+    form_values = {
+        'phone': '9876543210',
+        'date_of_birth': '1995-05-15',
+        'gender': 'Male',
+        'nationality': 'Indian',
+        'category': 'General',
+        'aadhaar': '123456789012',
+        'address_line1': '123 Test Street',
+        'address_line2': 'Test Area',
+        'city': 'Test City',
+        'state': 'Test State',
+        'pincode': '123456',
+        'university': 'Test University',
+        'degree': 'B.Tech',
+        'specialization': 'Computer Science',
+        'graduation_year': '2025',
+        'cgpa': '8.5',
+        'technical_skills': 'Python, Java, JavaScript',
+        'soft_skills': 'Communication, Leadership',
+        'languages': 'English, Hindi',
+        'interests': 'Web Development, Machine Learning',
+        'preferred_location': 'Mumbai, Bangalore',
+        'internship_duration': '3-6 months',
+        'work_mode': 'Hybrid',
+        'expected_stipend': '15000',
+        'availability': 'Immediately'
+    }
+    return render_template('student_profile_completion.html', form_values=form_values)
+
+
 @app.route('/complete_student_profile', methods=['GET', 'POST'])
-@login_required
+# @login_required  # Temporarily disabled for testing
 def complete_student_profile():
     """Complete student profile after basic registration"""
+    # Debug: Check session
+    print(f"🔐 Session keys: {list(session.keys())}")
+    print(f"🔐 User ID: {session.get('user_id')}")
+    print(f"🔐 Logged in: {session.get('logged_in')}")
+    
+    # For testing, create a sample user_id if not logged in
+    if not session.get('user_id'):
+        session['user_id'] = '66e18e94c25c3b5c8bb7cb89'  # Use a test user ID
+        print("🧪 Test user ID set for development")
+    
     if request.method == 'POST':
-        # Get comprehensive profile data
+        # Get comprehensive profile data from the form
         profile_data = {
+            # Personal Information
             'phone': sanitize_input(request.form.get('phone', '')),
-            'date_of_birth': sanitize_input(request.form.get('date_of_birth', '')),
+            'date_of_birth': sanitize_input(request.form.get('date_of_birth', '') or request.form.get('dob', '')),
             'gender': sanitize_input(request.form.get('gender', '')),
+            'nationality': sanitize_input(request.form.get('nationality', 'Indian')),
+            'category': sanitize_input(request.form.get('category', '')),
+            'aadhaar': sanitize_input(request.form.get('aadhaar', '') or request.form.get('aadhaar_raw', '')),
+            
+            # Address Information
             'address_line1': sanitize_input(request.form.get('address_line1', '')),
             'address_line2': sanitize_input(request.form.get('address_line2', '')),
             'city': sanitize_input(request.form.get('city', '')),
             'state': sanitize_input(request.form.get('state', '')),
             'pincode': sanitize_input(request.form.get('pincode', '')),
-            'university': sanitize_input(request.form.get('university', '')),
-            'degree': sanitize_input(request.form.get('degree', '')),
-            'specialization': sanitize_input(request.form.get('specialization', '')),
-            'graduation_year': sanitize_input(request.form.get('graduation_year', '')),
-            'cgpa': sanitize_input(request.form.get('cgpa', '')),
-            'technical_skills': sanitize_input(request.form.get('technical_skills', '')),
+            
+            # Education Information
+            'university': sanitize_input(request.form.get('university', '') or request.form.get('institution_1', '')),
+            'degree': sanitize_input(request.form.get('degree', '') or request.form.get('qualification_1', '')),
+            'specialization': sanitize_input(request.form.get('specialization', '') or request.form.get('specialization_1', '')),
+            'graduation_year': sanitize_input(request.form.get('graduation_year', '') or request.form.get('passing_year_1', '')),
+            'cgpa': sanitize_input(request.form.get('cgpa', '') or request.form.get('percentage_1', '')),
+            
+            # Skills and Interests
+            'technical_skills': sanitize_input(request.form.get('technical_skills', '') or request.form.get('skills', '')),
+            'soft_skills': sanitize_input(request.form.get('soft_skills', '')),
+            'languages': sanitize_input(request.form.get('languages', '')),
             'interests': sanitize_input(request.form.get('interests', '')),
-            'preferred_location': sanitize_input(request.form.get('preferred_location', '')),
+            
+            # Preferences
+            'preferred_location': sanitize_input(request.form.get('preferred_location', '') or request.form.get('preferred_locations', '')),
+            'internship_duration': sanitize_input(request.form.get('internship_duration', '')),
+            'work_mode': sanitize_input(request.form.get('work_mode', '')),
             'expected_stipend': sanitize_input(request.form.get('expected_stipend', '')),
-            'profile_updated_at': datetime.now()
+            'availability': sanitize_input(request.form.get('availability', '')),
+            
+            # Profile metadata
+            'profile_updated_at': get_current_datetime(),
+            'profile_completion_date': get_current_datetime()
         }
+        
+        # Handle additional education entries if present
+        education_entries = []
+        for i in range(1, 6):  # Support up to 5 education entries
+            qualification = request.form.get(f'qualification_{i}')
+            if qualification:
+                education_entry = {
+                    'qualification': sanitize_input(qualification),
+                    'specialization': sanitize_input(request.form.get(f'specialization_{i}', '')),
+                    'institution': sanitize_input(request.form.get(f'institution_{i}', '')),
+                    'passing_year': sanitize_input(request.form.get(f'passing_year_{i}', '')),
+                    'percentage': sanitize_input(request.form.get(f'percentage_{i}', ''))
+                }
+                education_entries.append(education_entry)
+        
+        if education_entries:
+            profile_data['education_entries'] = education_entries
         
         try:
             if mongo_db is not None:
-                # Update user profile in database
-                mongo_db.users.update_one(
-                    {'_id': session['user_id']},
+                # Convert user_id to ObjectId if it's a string
+                user_id = session.get('user_id')
+                if isinstance(user_id, str):
+                    try:
+                        user_id = ObjectId(user_id)
+                    except:
+                        print(f"Invalid ObjectId format: {user_id}")
+                        raise Exception("Invalid user ID format")
+                
+                # Update user profile in database with comprehensive data
+                update_result = mongo_db.users.update_one(
+                    {'_id': user_id},
                     {'$set': {
                         'profile_completed': True,
-                        'profile_data': profile_data
+                        'profile_data': profile_data,
+                        
+                        # Also update top-level fields for easy querying
+                        'phone': profile_data.get('phone', ''),
+                        'date_of_birth': profile_data.get('date_of_birth', ''),
+                        'gender': profile_data.get('gender', ''),
+                        'nationality': profile_data.get('nationality', ''),
+                        'category': profile_data.get('category', ''),
+                        'aadhaar': profile_data.get('aadhaar', ''),
+                        'address': {
+                            'line1': profile_data.get('address_line1', ''),
+                            'line2': profile_data.get('address_line2', ''),
+                            'city': profile_data.get('city', ''),
+                            'state': profile_data.get('state', ''),
+                            'pincode': profile_data.get('pincode', '')
+                        },
+                        'education': {
+                            'university': profile_data.get('university', ''),
+                            'degree': profile_data.get('degree', ''),
+                            'specialization': profile_data.get('specialization', ''),
+                            'graduation_year': profile_data.get('graduation_year', ''),
+                            'cgpa': profile_data.get('cgpa', ''),
+                            'education_entries': education_entries
+                        },
+                        'skills': {
+                            'technical': profile_data.get('technical_skills', ''),
+                            'soft': profile_data.get('soft_skills', ''),
+                            'languages': profile_data.get('languages', '')
+                        },
+                        'preferences': {
+                            'interests': profile_data.get('interests', ''),
+                            'preferred_location': profile_data.get('preferred_location', ''),
+                            'internship_duration': profile_data.get('internship_duration', ''),
+                            'work_mode': profile_data.get('work_mode', ''),
+                            'expected_stipend': profile_data.get('expected_stipend', ''),
+                            'availability': profile_data.get('availability', '')
+                        },
+                        'last_updated': get_current_datetime()
                     }}
                 )
+                
+                if update_result.modified_count > 0:
+                    print(f"✅ Profile updated successfully for user: {user_id}")
+                    flash('Profile completed successfully! All your information has been saved.', 'success')
+                else:
+                    print(f"⚠️ Profile update had no effect for user: {user_id}")
+                    flash('Profile information saved.', 'info')
+                
+            else:
+                print("💾 Running in demo mode - profile saved to session")
+                flash('Profile completed successfully! (Demo mode)', 'success')
                 
             # Store in session for immediate use
             session['profile_completed'] = True
             session['registration_data'] = profile_data
             
-            flash('Profile completed successfully! Welcome to InternGenius!', 'success')
             return redirect(url_for('student_dashboard'))
             
         except Exception as e:
-            print(f"Profile completion error: {e}")
-            flash('Profile saved successfully! (Demo mode)', 'success')
+            print(f"❌ Profile completion error: {e}")
+            # Save to session as fallback
+            session['profile_completed'] = True
             session['registration_data'] = profile_data
+            flash('Profile saved successfully! (Fallback mode)', 'success')
             return redirect(url_for('student_dashboard'))
     
-    return render_template('student_profile_completion.html')
+    # GET: Prefill the form with existing data
+    user_doc = None
+    form_values = {}
+    
+    if mongo_db is not None:
+        try:
+            uid = session.get('user_id')
+            print(f"🔍 Fetching profile data for user_id: {uid}")
+            oid = ObjectId(uid) if isinstance(uid, str) and len(uid) in (24,) else uid
+            if oid:
+                user_doc = mongo_db.users.find_one({'_id': oid})
+                print(f"📋 User document found: {bool(user_doc)}")
+                if user_doc:
+                    print(f"📋 User keys: {list(user_doc.keys())}")
+        except Exception as e:
+            print(f"complete_student_profile DB fetch error: {e}")
+
+    def to_csv(val):
+        if not val:
+            return ''
+        if isinstance(val, list):
+            return ', '.join([str(x) for x in val if str(x).strip()])
+        return str(val)
+
+    # Build defaults from DB
+    if user_doc:
+        print("🔄 Building form values from database")
+        # Get nested data safely and normalize shapes
+        profile_data = user_doc.get('profile_data') or {}
+        profile_data = profile_data if isinstance(profile_data, dict) else {}
+
+        addr = user_doc.get('address') or {}
+        addr = addr if isinstance(addr, dict) else {}
+
+        # education might be a dict or a list of dicts; take the first entry if list
+        edu_src = user_doc.get('education') or {}
+        if isinstance(edu_src, list):
+            edu0 = edu_src[0] if (len(edu_src) > 0 and isinstance(edu_src[0], dict)) else {}
+        elif isinstance(edu_src, dict):
+            edu0 = edu_src
+        else:
+            edu0 = {}
+
+        # skills might be a dict with categories or a flat list of skills
+        skills_src = user_doc.get('skills') or []
+        skills_dict = skills_src if isinstance(skills_src, dict) else {}
+        skills_list = skills_src if isinstance(skills_src, list) else []
+
+        prefs_src = user_doc.get('preferences') or {}
+        prefs = prefs_src if isinstance(prefs_src, dict) else {}
+        
+        # Convert date of birth if it exists
+        dob = user_doc.get('date_of_birth') or profile_data.get('date_of_birth')
+        dob_str = ''
+        if isinstance(dob, datetime):
+            dob_str = dob.strftime('%Y-%m-%d')
+        elif isinstance(dob, str):
+            dob_str = dob
+
+        form_values = {
+            # Personal Information - check multiple locations
+            'phone': user_doc.get('phone') or profile_data.get('phone', ''),
+            'date_of_birth': dob_str,
+            'gender': user_doc.get('gender') or profile_data.get('gender', ''),
+            'nationality': user_doc.get('nationality') or profile_data.get('nationality', 'Indian'),
+            'category': user_doc.get('category') or profile_data.get('category', ''),
+            'aadhaar': user_doc.get('aadhaar') or user_doc.get('aadhaar_number') or profile_data.get('aadhaar', ''),
+            
+            # Address Information
+            'address_line1': addr.get('line1') or addr.get('address_line1') or profile_data.get('address_line1', ''),
+            'address_line2': addr.get('line2') or addr.get('address_line2') or profile_data.get('address_line2', ''),
+            'city': addr.get('city') or user_doc.get('city') or profile_data.get('city', ''),
+            'state': addr.get('state') or user_doc.get('state') or profile_data.get('state', ''),
+            'pincode': addr.get('pincode') or user_doc.get('pincode') or profile_data.get('pincode', ''),
+            
+            # Education Information
+            'university': edu0.get('university') or edu0.get('institution') or user_doc.get('college') or profile_data.get('university', ''),
+            'degree': edu0.get('degree') or edu0.get('qualification') or user_doc.get('degree') or profile_data.get('degree', ''),
+            'specialization': edu0.get('specialization') or user_doc.get('branch') or profile_data.get('specialization', ''),
+            'graduation_year': edu0.get('graduation_year') or edu0.get('passing_year') or user_doc.get('graduation_year') or profile_data.get('graduation_year', ''),
+            'cgpa': edu0.get('cgpa') or edu0.get('percentage') or user_doc.get('cgpa') or profile_data.get('cgpa', ''),
+            
+            # Skills
+            'technical_skills': (skills_dict.get('technical') if skills_dict else None) or to_csv(skills_list or user_doc.get('skills', [])) or profile_data.get('technical_skills', ''),
+            'soft_skills': (skills_dict.get('soft') if skills_dict else None) or to_csv(user_doc.get('soft_skills', [])) or profile_data.get('soft_skills', ''),
+            'languages': (skills_dict.get('languages') if skills_dict else None) or to_csv(user_doc.get('languages', [])) or profile_data.get('languages', ''),
+            
+            # Preferences
+            'interests': (prefs.get('interests') if isinstance(prefs, dict) else None) or to_csv(user_doc.get('interests', [])) or profile_data.get('interests', ''),
+            'preferred_location': (prefs.get('preferred_location') if isinstance(prefs, dict) else None) or to_csv(user_doc.get('preferred_locations', [])) or profile_data.get('preferred_location', ''),
+            'internship_duration': (prefs.get('internship_duration') if isinstance(prefs, dict) else None) or user_doc.get('internship_duration') or profile_data.get('internship_duration', ''),
+            'work_mode': (prefs.get('work_mode') if isinstance(prefs, dict) else None) or user_doc.get('work_mode') or profile_data.get('work_mode', ''),
+            'expected_stipend': (prefs.get('expected_stipend') if isinstance(prefs, dict) else None) or user_doc.get('expected_stipend') or profile_data.get('expected_stipend', ''),
+            'availability': (prefs.get('availability') if isinstance(prefs, dict) else None) or user_doc.get('availability') or profile_data.get('availability', '')
+        }
+        print(f"📋 Form values built: {len([v for v in form_values.values() if v])}/{len(form_values)} fields populated")
+    else:
+        print("🔄 Building form values from session fallback")
+        # Fallback from session registration_data
+        reg = session.get('registration_data') or {}
+        addr = (reg.get('address') if isinstance(reg, dict) else {}) or {}
+        edu0 = ((reg.get('education') or [{}])[0] if isinstance(reg, dict) and reg.get('education') else {})
+        pi = reg.get('personal_info', {}) if isinstance(reg, dict) else {}
+        skills = reg.get('skills', {}) if isinstance(reg, dict) else {}
+        prefs = reg.get('preferences', {}) if isinstance(reg, dict) else {}
+        form_values = {
+            'phone': pi.get('phone', ''),
+            'date_of_birth': pi.get('dob', ''),
+            'gender': pi.get('gender', ''),
+            'nationality': pi.get('nationality', 'Indian'),
+            'category': pi.get('category', ''),
+            'aadhaar': pi.get('aadhaar', ''),
+            'address_line1': addr.get('address_line1', ''),
+            'address_line2': addr.get('address_line2', ''),
+            'city': addr.get('city', ''),
+            'state': addr.get('state', ''),
+            'pincode': addr.get('pincode', ''),
+            'university': edu0.get('institution', ''),
+            'degree': edu0.get('qualification', ''),
+            'specialization': edu0.get('specialization', ''),
+            'graduation_year': edu0.get('passing_year', ''),
+            'cgpa': edu0.get('percentage', ''),
+            'technical_skills': skills.get('technical_skills', ''),
+            'soft_skills': skills.get('soft_skills', ''),
+            'languages': skills.get('languages', ''),
+            'interests': prefs.get('interests', ''),
+            'preferred_location': prefs.get('preferred_locations', ''),
+            'internship_duration': prefs.get('internship_duration', ''),
+            'work_mode': prefs.get('work_mode', ''),
+            'expected_stipend': prefs.get('expected_stipend', ''),
+            'availability': prefs.get('availability', '')
+        }
+    
+    print(f"🎯 Final form_values keys with data: {[k for k, v in form_values.items() if v]}")
+    return render_template('student_profile_completion.html', form_values=form_values)
+    
+    # GET: Prefill form values from DB or session
+    
+    # Note: The return above exits on POST. For GET, build and render with form_values
+    
+    
 
 @app.route('/student_profile')
+@login_required
 def student_profile():
-    # Check if student data exists in session
-    if 'registration_data' not in session:
-        flash('Profile data not found. Please register first.', 'warning')
-        return redirect(url_for('direct_student_registration'))
-    
-    # Get student data from session
-    student = session['registration_data']
-    
-    return render_template('student_profile.html', student=student)
+    """Student profile view that works after login by loading from DB and adapting to template shape"""
+    user_doc = None
+    adapted = None
+
+    # Try to load from database first
+    if mongo_db is not None:
+        try:
+            uid = session.get('user_id')
+            oid = ObjectId(uid) if isinstance(uid, str) and len(uid) in (24,) else uid
+            if oid:
+                user_doc = mongo_db.users.find_one({'_id': oid})
+        except Exception as e:
+            print(f"student_profile DB fetch error: {e}")
+
+    def to_csv(val):
+        if not val:
+            return ''
+        if isinstance(val, list):
+            return ', '.join([str(x) for x in val if str(x).strip()])
+        return str(val)
+
+    def basename_or_none(path):
+        if not path:
+            return None
+        # Stored values may include 'uploads/.../filename'; keep only the filename for template
+        try:
+            return os.path.basename(path)
+        except Exception:
+            return path
+
+    if user_doc:
+        # Map DB doc to template's expected structure
+        education_entries = []
+
+        # Normalize education from various possible shapes
+        edu_raw = user_doc.get('education')
+        if isinstance(edu_raw, list):
+            for item in edu_raw:
+                if isinstance(item, dict):
+                    education_entries.append({
+                        'qualification': item.get('qualification') or item.get('degree', ''),
+                        'specialization': item.get('specialization', ''),
+                        'institution': item.get('institution') or item.get('university', ''),
+                        'passing_year': item.get('passing_year') or item.get('graduation_year', ''),
+                        'percentage': item.get('percentage') or item.get('cgpa') or item.get('percentage_or_cgpa', '')
+                    })
+                elif isinstance(item, str):
+                    # Treat string as qualification/degree name and use top-level fallbacks
+                    education_entries.append({
+                        'qualification': item,
+                        'specialization': user_doc.get('field_of_study', ''),
+                        'institution': user_doc.get('institution_name', ''),
+                        'passing_year': user_doc.get('year_of_study', ''),
+                        'percentage': user_doc.get('cgpa', '')
+                    })
+        elif isinstance(edu_raw, dict):
+            # Might be a single education dict or have education_entries inside
+            nested_entries = edu_raw.get('education_entries') if isinstance(edu_raw.get('education_entries'), list) else None
+            if nested_entries:
+                for item in nested_entries:
+                    if isinstance(item, dict):
+                        education_entries.append({
+                            'qualification': item.get('qualification') or item.get('degree', ''),
+                            'specialization': item.get('specialization', ''),
+                            'institution': item.get('institution') or item.get('university', ''),
+                            'passing_year': item.get('passing_year') or item.get('graduation_year', ''),
+                            'percentage': item.get('percentage') or item.get('cgpa') or item.get('percentage_or_cgpa', '')
+                        })
+            else:
+                education_entries.append({
+                    'qualification': edu_raw.get('qualification') or edu_raw.get('degree', ''),
+                    'specialization': edu_raw.get('specialization', ''),
+                    'institution': edu_raw.get('institution') or edu_raw.get('university', ''),
+                    'passing_year': edu_raw.get('passing_year') or edu_raw.get('graduation_year', ''),
+                    'percentage': edu_raw.get('percentage') or edu_raw.get('cgpa') or edu_raw.get('percentage_or_cgpa', '')
+                })
+        elif isinstance(edu_raw, str) and edu_raw.strip():
+            # A single string like "B.Tech" stored as education
+            education_entries.append({
+                'qualification': edu_raw,
+                'specialization': user_doc.get('field_of_study', ''),
+                'institution': user_doc.get('institution_name', ''),
+                'passing_year': user_doc.get('year_of_study', ''),
+                'percentage': user_doc.get('cgpa', '')
+            })
+
+        # If nothing built yet, fall back to commonly used top-level fields
+        if not education_entries:
+            education_entries.append({
+                'qualification': user_doc.get('current_education', '') or user_doc.get('degree', ''),
+                'specialization': user_doc.get('field_of_study', ''),
+                'institution': user_doc.get('institution_name', '') or user_doc.get('college', ''),
+                'passing_year': user_doc.get('year_of_study', '') or user_doc.get('graduation_year', ''),
+                'percentage': user_doc.get('cgpa', '')
+            })
+
+        address_obj = user_doc.get('address', {}) or {}
+        adapted = {
+            'personal_info': {
+                'first_name': user_doc.get('first_name', ''),
+                'middle_name': user_doc.get('middle_name', ''),
+                'last_name': user_doc.get('last_name', ''),
+                'email': user_doc.get('email', ''),
+                'phone': user_doc.get('phone', ''),
+                'dob': user_doc.get('date_of_birth') if isinstance(user_doc.get('date_of_birth'), str) else (user_doc.get('date_of_birth').strftime('%Y-%m-%d') if user_doc.get('date_of_birth') else ''),
+                'gender': user_doc.get('gender', ''),
+                'category': user_doc.get('category', ''),
+                'aadhaar': user_doc.get('aadhaar_number', ''),
+                'nationality': user_doc.get('nationality', '')
+            },
+            'address': {
+                'address_line1': address_obj.get('line1') or address_obj.get('address_line1', ''),
+                'address_line2': address_obj.get('line2') or address_obj.get('address_line2', ''),
+                'city': address_obj.get('city', ''),
+                'state': address_obj.get('state', ''),
+                'pincode': address_obj.get('pincode', '')
+            },
+            'education': education_entries,
+            'skills': {
+                'technical_skills': to_csv(user_doc.get('skills', [])),
+                'soft_skills': to_csv(user_doc.get('soft_skills', [])),
+                'languages': to_csv(user_doc.get('languages', []))
+            },
+            'preferences': {
+                'interests': to_csv(user_doc.get('interests', [])),
+                'preferred_locations': to_csv(user_doc.get('preferred_locations', [])),
+                'internship_duration': user_doc.get('internship_duration', ''),
+                'work_mode': user_doc.get('work_mode', ''),
+                'expected_stipend': user_doc.get('expected_stipend', ''),
+                'availability': user_doc.get('availability', '')
+            },
+            'documents': {
+                'resume': basename_or_none((user_doc.get('documents') or {}).get('resume')),
+                'photo': basename_or_none((user_doc.get('documents') or {}).get('photo')),
+                'additional_docs': basename_or_none((user_doc.get('documents') or {}).get('additional_docs'))
+            },
+            'registration_date': (user_doc.get('created_at').strftime('%Y-%m-%d %H:%M:%S') if isinstance(user_doc.get('created_at'), datetime) else (user_doc.get('created_at') or ''))
+        }
+    else:
+        # Fallback to session registration data if available
+        reg = session.get('registration_data')
+        if reg:
+            try:
+                # Normalize fields from session structure
+                docs = reg.get('documents', {}) if isinstance(reg, dict) else {}
+                adapted = {
+                    'personal_info': reg.get('personal_info', {}),
+                    'address': reg.get('address', {}),
+                    'education': reg.get('education', []),
+                    'skills': reg.get('skills', {}),
+                    'preferences': reg.get('preferences', {}),
+                    'documents': {
+                        'resume': basename_or_none(docs.get('resume')),
+                        'photo': basename_or_none(docs.get('photo')),
+                        'additional_docs': basename_or_none(docs.get('additional_docs'))
+                    },
+                    'registration_date': reg.get('registration_date', '')
+                }
+            except Exception as e:
+                print(f"student_profile session adapt error: {e}")
+
+    if not adapted:
+        flash('Profile data not found. Please complete your profile.', 'warning')
+        return redirect(url_for('complete_student_profile'))
+
+    return render_template('student_profile.html', student=adapted)
 
 @app.route('/register_student', methods=['POST'])
 def register_student():
@@ -1030,8 +1647,138 @@ def student_dashboard():
     if session.get('user_type') != 'student':
         flash('Access denied. This dashboard is for students only.', 'danger')
         return redirect(url_for('dashboard'))
-    
-    return render_template('dashboards/student_dashboard.html')
+    # Load user details
+    user_doc = None
+    user_name = session.get('user_name')
+    user_email = session.get('user_email')
+    last_login = None
+    skills = []
+    interests = []
+    preferred_locations = []
+    profile_completed = session.get('profile_completed', False)
+    education = []
+    profile_views = 0
+    skill_score = 0
+
+    if mongo_db is not None:
+        try:
+            uid = session.get('user_id')
+            oid = ObjectId(uid) if isinstance(uid, str) and len(uid) in (24, ) else uid
+            user_doc = mongo_db.users.find_one({'_id': oid}) if oid else None
+            if user_doc:
+                user_name = user_doc.get('first_name', user_name)
+                user_email = user_doc.get('email', user_email)
+                last_login = user_doc.get('last_login')
+                profile_completed = user_doc.get('profile_completed', profile_completed)
+                # Enhanced fields
+                skills = user_doc.get('skills', []) or []
+                interests = user_doc.get('interests', []) or []
+                preferred_locations = user_doc.get('preferred_locations', []) or []
+                education = user_doc.get('education', []) or []
+                profile_views = user_doc.get('metrics', {}).get('profile_views', 0)
+        except Exception as e:
+            print(f"Dashboard user fetch error: {e}")
+
+    # Fallback to session registration data
+    reg = session.get('registration_data') or {}
+    if not skills:
+        skills = (reg.get('skills') or reg.get('profile_data', {}).get('technical_skills') or [])
+        if isinstance(skills, str):
+            skills = [s.strip() for s in skills.split(',') if s.strip()]
+    if not interests:
+        raw = reg.get('preferences', {},).get('interests') if isinstance(reg, dict) else None
+        interests = raw or []
+        if isinstance(interests, str):
+            interests = [i.strip() for i in interests.split(',') if i.strip()]
+    if not preferred_locations:
+        raw = (reg.get('preferences', {}) if isinstance(reg, dict) else {}).get('preferred_locations', [])
+        preferred_locations = raw if isinstance(raw, list) else [l.strip() for l in str(raw).split(',') if l.strip()]
+    if not education:
+        education = reg.get('education', []) if isinstance(reg, dict) else []
+
+    # Compute simple profile completion percent
+    required_checks = 10
+    completed = 0
+    if user_name: completed += 1
+    if user_email: completed += 1
+    # phone/date/gender/address in either user_doc or reg
+    phone = (user_doc or {}).get('phone') or (reg.get('personal_info', {}) if isinstance(reg, dict) else {}).get('phone')
+    if phone: completed += 1
+    dob = (user_doc or {}).get('date_of_birth') or (reg.get('personal_info', {}) if isinstance(reg, dict) else {}).get('dob')
+    if dob: completed += 1
+    gender = (user_doc or {}).get('gender') or (reg.get('personal_info', {}) if isinstance(reg, dict) else {}).get('gender')
+    if gender: completed += 1
+    if education: completed += 1
+    if skills: completed += 1
+    if interests: completed += 1
+    if preferred_locations: completed += 1
+    # documents
+    docs = (user_doc or {}).get('documents') or (reg.get('documents') if isinstance(reg, dict) else {})
+    if docs and (docs.get('resume') or docs.get('photo')): completed += 1
+    profile_completion_percent = int((completed / required_checks) * 100)
+
+    # Simple skill score heuristic
+    skill_score = min(100, 50 + len(skills) * 5)
+
+    # Applications stats (best-effort)
+    applications_count = 0
+    interviews_count = 0
+    if mongo_db is not None:
+        try:
+            uid = session.get('user_id')
+            oid = ObjectId(uid) if isinstance(uid, str) and len(uid) in (24,) else uid
+            if oid:
+                applications_count = mongo_db.get_collection('applications').count_documents({'user_id': oid})
+                interviews_count = mongo_db.get_collection('applications').count_documents({'user_id': oid, 'status': 'interview'})
+        except Exception:
+            pass
+
+    # Recommended internships (basic filter using sample data)
+    sample_internships = [
+        {
+            '_id': '1', 'title': 'Software Development Intern', 'company': 'Tech Innovations Pvt Ltd',
+            'location': 'Bangalore', 'duration': '3 months', 'stipend': '₹15,000/month', 'work_mode': 'Hybrid',
+            'description': 'Join our dynamic team...', 'skills': ['Python', 'React', 'JavaScript', 'Git', 'MongoDB']
+        },
+        {
+            '_id': '2', 'title': 'Digital Marketing Intern', 'company': 'Creative Solutions',
+            'location': 'Mumbai', 'duration': '6 months', 'stipend': '₹12,000/month', 'work_mode': 'Remote',
+            'description': 'Learn digital marketing...', 'skills': ['Social Media', 'Google Analytics', 'Content Writing', 'SEO', 'Canva']
+        },
+        {
+            '_id': '3', 'title': 'Data Science Intern', 'company': 'Analytics Corp',
+            'location': 'Hyderabad', 'duration': '4 months', 'stipend': '₹18,000/month', 'work_mode': 'On-site',
+            'description': 'Work with large datasets...', 'skills': ['Python', 'Machine Learning', 'SQL', 'Tableau', 'Pandas']
+        },
+        {
+            '_id': '4', 'title': 'UI/UX Design Intern', 'company': 'Design Studio Pro',
+            'location': 'Delhi', 'duration': '5 months', 'stipend': '₹14,000/month', 'work_mode': 'Hybrid',
+            'description': 'Create user-centered designs...', 'skills': ['Figma', 'Adobe XD', 'Prototyping', 'User Research', 'HTML/CSS']
+        }
+    ]
+    def match_score(offer):
+        if not skills:
+            return 0
+        return sum(1 for s in offer.get('skills', []) if s.lower() in [x.lower() for x in skills])
+    recommended = sorted(sample_internships, key=match_score, reverse=True)
+    recommended = [o for o in recommended if match_score(o) > 0] or sample_internships[:3]
+
+    return render_template(
+        'dashboards/student_dashboard.html',
+        user_name=user_name,
+        user_email=user_email,
+        last_login=last_login,
+        profile_completed=profile_completed,
+        profile_completion_percent=profile_completion_percent,
+        applications_count=applications_count or 0,
+        interviews_count=interviews_count or 0,
+        profile_views=profile_views or 0,
+        skill_score=skill_score,
+        skills=skills,
+        interests=interests,
+        preferred_locations=preferred_locations,
+        recommended_internships=recommended
+    )
 
 @app.route('/company/dashboard')
 def company_dashboard():

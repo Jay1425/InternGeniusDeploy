@@ -247,6 +247,13 @@
     .invalid-feedback {
         color: var(--danger-color);
         background-color: #fff5f5;
+        display: none; /* hidden by default */
+    }
+
+    /* Show validation message only when the corresponding control is invalid */
+    .form-group:has(.form-control.is-invalid) .invalid-feedback,
+    .form-group:has(.form-select.is-invalid) .invalid-feedback,
+    .file-upload-container.is-invalid + .invalid-feedback {
         display: block;
     }
 
@@ -691,11 +698,11 @@
             <!-- Personal Information - Step 1 -->
         <div class="form-section active" id="section-1">
             <h4 class="section-title">
-                <i class="fas fa-user"></i> Personal Information
+                <i class="fa-solid fa-user"></i> Personal Information
             </h4>
 
             <div class="card-alert info mb-4">
-                <i class="fas fa-info-circle"></i>
+                <i class="fa-solid fa-circle-info"></i>
                 Please fill in your personal details as they appear on your official documents.
             </div>
             
@@ -705,7 +712,7 @@
                         <label for="firstName" class="form-label required-field">First Name</label>
                         <div class="input-with-icon">
                             <input type="text" class="form-control" id="firstName" name="first_name" placeholder="Enter your first name" required>
-                            <i class="fas fa-user"></i>
+                            <i class="fa-solid fa-user"></i>
                         </div>
                         <div class="invalid-feedback">Please enter your first name</div>
                     </div>
@@ -715,7 +722,7 @@
                         <label for="middleName" class="form-label">Middle Name</label>
                         <div class="input-with-icon">
                             <input type="text" class="form-control" id="middleName" name="middle_name" placeholder="Enter your middle name">
-                            <i class="fas fa-user"></i>
+                            <i class="fa-solid fa-user"></i>
                         </div>
                     </div>
                 </div>
@@ -724,7 +731,7 @@
                         <label for="lastName" class="form-label required-field">Last Name</label>
                         <div class="input-with-icon">
                             <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Enter your last name" required>
-                            <i class="fas fa-user"></i>
+                            <i class="fa-solid fa-user"></i>
                         </div>
                         <div class="invalid-feedback">Please enter your last name</div>
                     </div>
@@ -737,7 +744,7 @@
                         <label for="email" class="form-label required-field">Email Address</label>
                         <div class="input-with-icon">
                             <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" required>
-                            <i class="fas fa-envelope"></i>
+                            <i class="fa-solid fa-envelope"></i>
                         </div>
                         <div class="invalid-feedback">Please enter a valid email address</div>
                         <div class="help-text">This will be used as your login username</div>
@@ -748,7 +755,7 @@
                         <label for="phone" class="form-label required-field">Mobile Number</label>
                         <div class="input-with-icon">
                             <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
-                            <i class="fas fa-phone-alt"></i>
+                            <i class="fa-solid fa-phone"></i>
                         </div>
                         <div class="invalid-feedback">Please enter a valid 10-digit mobile number</div>
                     </div>
@@ -759,17 +766,17 @@
                 <div class="col-md-4 mb-3">
                     <label for="dob" class="form-label required-field">Date of Birth</label>
                     <div class="input-with-icon">
-                        <i class="fas fa-calendar-alt"></i>
+                        <i class="fa-solid fa-calendar-days"></i>
                         <input type="date" class="form-control" id="dob" name="dob" required>
-                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
-                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                        <i class="fa-solid fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fa-solid fa-circle-exclamation input-response-icon invalid-feedback-icon"></i>
                     </div>
                     <div class="invalid-feedback">Please enter your date of birth</div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="gender" class="form-label required-field">Gender</label>
                     <div class="input-with-icon">
-                        <i class="fas fa-venus-mars"></i>
+                        <i class="fa-solid fa-venus-mars"></i>
                         <select class="form-select" id="gender" name="gender" required>
                             <option value="" selected disabled>Select gender</option>
                             <option value="male">Male</option>
@@ -777,15 +784,15 @@
                             <option value="other">Other</option>
                             <option value="prefer_not_to_say">Prefer not to say</option>
                         </select>
-                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
-                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                        <i class="fa-solid fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fa-solid fa-circle-exclamation input-response-icon invalid-feedback-icon"></i>
                     </div>
                     <div class="invalid-feedback">Please select your gender</div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="category" class="form-label required-field">Category</label>
                     <div class="input-with-icon">
-                        <i class="fas fa-id-card"></i>
+                        <i class="fa-solid fa-id-card"></i>
                         <select class="form-select" id="category" name="category" required>
                             <option value="" selected disabled>Select category</option>
                             <option value="general">General</option>
@@ -794,8 +801,8 @@
                             <option value="st">ST</option>
                             <option value="ews">EWS</option>
                         </select>
-                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
-                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+                        <i class="fa-solid fa-check input-response-icon valid-feedback-icon"></i>
+                        <i class="fa-solid fa-circle-exclamation input-response-icon invalid-feedback-icon"></i>
                     </div>
                     <div class="invalid-feedback">Please select your category</div>
                 </div>
@@ -805,20 +812,20 @@
             <div class="row mt-4">
                 <div class="col-12 mb-3">
                     <h6 class="text-primary fw-bold">
-                        <i class="fas fa-lock me-2"></i>Account Security
+                        <i class="fa-solid fa-lock me-2"></i>Account Security
                     </h6>
                     <p class="text-muted small">Create a secure password for your InternGenius account</p>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-6 mb-3">
+        <div class="col-md-6 mb-3">
                     <label for="password" class="form-label required-field">Password</label>
                     <div class="input-with-icon">
-                        <i class="fas fa-lock"></i>
+            <i class="fa-solid fa-lock"></i>
                         <input type="password" class="form-control" id="password" name="password" placeholder="Create a strong password" required>
-                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
-                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+            <i class="fa-solid fa-check input-response-icon valid-feedback-icon"></i>
+            <i class="fa-solid fa-circle-exclamation input-response-icon invalid-feedback-icon"></i>
                     </div>
                     <div class="invalid-feedback">Please enter a strong password</div>
                     <div class="help-text">
@@ -832,13 +839,13 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+        <div class="col-md-6 mb-3">
                     <label for="confirm_password" class="form-label required-field">Confirm Password</label>
                     <div class="input-with-icon">
-                        <i class="fas fa-lock"></i>
+            <i class="fa-solid fa-lock"></i>
                         <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
-                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
-                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+            <i class="fa-solid fa-check input-response-icon valid-feedback-icon"></i>
+            <i class="fa-solid fa-circle-exclamation input-response-icon invalid-feedback-icon"></i>
                     </div>
                     <div class="invalid-feedback">Passwords do not match</div>
                     <div class="help-text">Enter the same password again</div>
@@ -846,14 +853,14 @@
             </div>
 
             <div class="row mt-3">
-                <div class="col-md-6 mb-3">
+        <div class="col-md-6 mb-3">
                     <label for="aadhaar" class="form-label required-field">Aadhaar Number</label>
                     <div class="input-with-icon">
-                        <i class="fas fa-id-card-alt"></i>
+            <i class="fa-solid fa-id-card"></i>
                         <input type="text" class="form-control" id="aadhaar" name="aadhaar" placeholder="XXXX XXXX XXXX" required>
                         <input type="hidden" id="aadhaar_raw" name="aadhaar_raw">
-                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
-                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+            <i class="fa-solid fa-check input-response-icon valid-feedback-icon"></i>
+            <i class="fa-solid fa-circle-exclamation input-response-icon invalid-feedback-icon"></i>
                     </div>
                     <div class="invalid-feedback">Please enter a valid 12-digit Aadhaar number</div>
                     <div class="help-text">Enter your 12-digit Aadhaar number without spaces</div>
@@ -861,24 +868,24 @@
                 <div class="col-md-6 mb-3">
                     <label for="nationality" class="form-label required-field">Nationality</label>
                     <div class="input-with-icon">
-                        <i class="fas fa-flag"></i>
+            <i class="fa-solid fa-flag"></i>
                         <input type="text" class="form-control" id="nationality" name="nationality" placeholder="Enter your nationality" required value="Indian">
-                        <i class="fas fa-check input-response-icon valid-feedback-icon"></i>
-                        <i class="fas fa-exclamation-circle input-response-icon invalid-feedback-icon"></i>
+            <i class="fa-solid fa-check input-response-icon valid-feedback-icon"></i>
+            <i class="fa-solid fa-circle-exclamation input-response-icon invalid-feedback-icon"></i>
                     </div>
                     <div class="invalid-feedback">Please enter your nationality</div>
                 </div>
             </div>
 
             <div class="form-navigation mt-4">
-                <button type="button" class="btn btn-next">Next: Education & Address <i class="fas fa-arrow-right ms-2"></i></button>
+                <button type="button" class="btn btn-next">Next: Education & Address <i class="fa-solid fa-arrow-right ms-2"></i></button>
             </div>
         </div>
 
         <!-- Education & Address - Step 2 -->
         <div class="form-section" id="section-2">
             <h4 class="section-title">
-                <i class="fas fa-graduation-cap"></i> Education & Address
+                <i class="fa-solid fa-graduation-cap"></i> Education & Address
             </h4>
             
             <!-- Education Information -->
@@ -886,7 +893,7 @@
                 <h5 class="fw-bold mb-3">Educational Details</h5>
                 
                 <div class="card-alert info mb-4">
-                    <i class="fas fa-info-circle"></i>
+                    <i class="fa-solid fa-circle-info"></i>
                     Your education details help us match you with internships that align with your academic background.
                 </div>
                 
@@ -896,7 +903,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="qualification" class="form-label required-field">Qualification</label>
                                 <div class="input-with-icon">
-                                    <i class="fas fa-certificate"></i>
+                                    <i class="fa-solid fa-certificate"></i>
                                     <select class="form-select" id="qualification" name="qualification_1" required>
                                         <option value="" selected disabled>Select your qualification</option>
                                         <option value="high_school">High School (10th)</option>
@@ -912,7 +919,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="specialization" class="form-label required-field">Specialization/Stream</label>
                                 <div class="input-with-icon">
-                                    <i class="fas fa-book"></i>
+                                    <i class="fa-solid fa-book"></i>
                                     <input type="text" class="form-control" id="specialization" name="specialization_1" placeholder="e.g., Computer Science, Mechanical Engineering" required>
                                 </div>
                                 <div class="invalid-feedback">Please enter your specialization</div>
@@ -923,7 +930,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="institution" class="form-label required-field">Institution/University</label>
                                 <div class="input-with-icon">
-                                    <i class="fas fa-university"></i>
+                                    <i class="fa-solid fa-building-columns"></i>
                                     <input type="text" class="form-control" id="institution" name="institution_1" placeholder="Enter your institution name" required>
                                 </div>
                                 <div class="invalid-feedback">Please enter your institution name</div>
@@ -931,7 +938,7 @@
                             <div class="col-md-3 mb-3">
                                 <label for="passingYear" class="form-label required-field">Year of Passing</label>
                                 <div class="input-with-icon">
-                                    <i class="fas fa-calendar"></i>
+                                    <i class="fa-solid fa-calendar-days"></i>
                                     <select class="form-select" id="passingYear" name="passing_year_1" required>
                                         <option value="" selected disabled>Select year</option>
                                         {% for year in range(2025, 2000, -1) %}
@@ -944,7 +951,7 @@
                             <div class="col-md-3 mb-3">
                                 <label for="percentage" class="form-label required-field">Percentage/CGPA</label>
                                 <div class="input-with-icon">
-                                    <i class="fas fa-chart-line"></i>
+                                    <i class="fa-solid fa-chart-line"></i>
                                     <input type="text" class="form-control" id="percentage" name="percentage_1" placeholder="Enter marks" required>
                                 </div>
                                 <div class="invalid-feedback">Please enter your percentage or CGPA</div>
@@ -954,7 +961,7 @@
                 </div>
 
                 <button type="button" class="btn btn-outline-primary add-education-btn" id="addEducationBtn">
-                    <i class="fas fa-plus-circle"></i> Add Another Qualification
+                    <i class="fa-solid fa-circle-plus"></i> Add Another Qualification
                 </button>
             </div>
 
@@ -962,19 +969,19 @@
             <div class="mt-5">
                 <h5 class="fw-bold mb-3">Current Address</h5>
                 
-                <div class="mb-3">
+        <div class="mb-3">
                     <label for="addressLine1" class="form-label required-field">Address Line 1</label>
                     <div class="input-with-icon">
-                        <i class="fas fa-home"></i>
+            <i class="fa-solid fa-house"></i>
                         <input type="text" class="form-control" id="addressLine1" name="address_line1" placeholder="House/Flat No., Building Name, Street" required>
                     </div>
                     <div class="invalid-feedback">Please enter your address</div>
                 </div>
                 
-                <div class="mb-3">
+        <div class="mb-3">
                     <label for="addressLine2" class="form-label">Address Line 2</label>
                     <div class="input-with-icon">
-                        <i class="fas fa-map-marker-alt"></i>
+            <i class="fa-solid fa-location-dot"></i>
                         <input type="text" class="form-control" id="addressLine2" name="address_line2" placeholder="Locality/Area/Landmark">
                     </div>
                 </div>
@@ -983,7 +990,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="city" class="form-label required-field">City</label>
                         <div class="input-with-icon">
-                            <i class="fas fa-city"></i>
+                            <i class="fa-solid fa-city"></i>
                             <input type="text" class="form-control" id="city" name="city" placeholder="Enter city name" required>
                         </div>
                         <div class="invalid-feedback">Please enter your city</div>
@@ -991,7 +998,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="state" class="form-label required-field">State</label>
                         <div class="input-with-icon">
-                            <i class="fas fa-map"></i>
+                            <i class="fa-solid fa-map"></i>
                             <select class="form-select" id="state" name="state" required>
                                 <option value="" selected disabled>Select state</option>
                                 <option value="andhra_pradesh">Andhra Pradesh</option>
@@ -1037,7 +1044,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="pincode" class="form-label required-field">PIN Code</label>
                         <div class="input-with-icon">
-                            <i class="fas fa-map-pin"></i>
+                            <i class="fa-solid fa-map-pin"></i>
                             <input type="text" class="form-control" id="pincode" name="pincode" pattern="[0-9]{6}" placeholder="6-digit PIN code" required>
                         </div>
                         <div class="invalid-feedback">Please enter a valid 6-digit PIN code</div>
@@ -1046,19 +1053,19 @@
             </div>
 
             <div class="form-navigation mt-4">
-                <button type="button" class="btn btn-prev"><i class="fas fa-arrow-left me-2"></i> Previous: Personal Info</button>
-                <button type="button" class="btn btn-next">Next: Skills & Preferences <i class="fas fa-arrow-right ms-2"></i></button>
+                <button type="button" class="btn btn-prev"><i class="fa-solid fa-arrow-left me-2"></i> Previous: Personal Info</button>
+                <button type="button" class="btn btn-next">Next: Skills & Preferences <i class="fa-solid fa-arrow-right ms-2"></i></button>
             </div>
         </div>
 
         <!-- Skills & Preferences - Step 3 -->
         <div class="form-section" id="section-3">
             <h4 class="section-title">
-                <i class="fas fa-tools"></i> Skills & Preferences
+                <i class="fa-solid fa-screwdriver-wrench"></i> Skills & Preferences
             </h4>
 
             <div class="card-alert info mb-4">
-                <i class="fas fa-info-circle"></i>
+                <i class="fa-solid fa-circle-info"></i>
                 The better we understand your skills and preferences, the more accurately we can match you with relevant internships.
             </div>
 
@@ -1069,7 +1076,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="skills" class="form-label required-field">Technical Skills</label>
                         <div class="input-with-icon">
-                            <i class="fas fa-code"></i>
+                            <i class="fa-solid fa-code"></i>
                             <input type="text" class="form-control" id="skills" name="skills" placeholder="e.g., Python, Java, Data Analysis" required>
                         </div>
                         <div class="invalid-feedback">Please enter at least one technical skill</div>
@@ -1079,7 +1086,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="softSkills" class="form-label required-field">Soft Skills</label>
                         <div class="input-with-icon">
-                            <i class="fas fa-comments"></i>
+                            <i class="fa-solid fa-comments"></i>
                             <input type="text" class="form-control" id="softSkills" name="soft_skills" placeholder="e.g., Communication, Leadership, Teamwork" required>
                         </div>
                         <div class="invalid-feedback">Please enter at least one soft skill</div>
@@ -1096,7 +1103,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="interests" class="form-label required-field">Areas of Interest</label>
                         <div class="input-with-icon">
-                            <i class="fas fa-lightbulb"></i>
+                            <i class="fa-solid fa-lightbulb"></i>
                             <select class="form-select" id="interests" name="interests" required multiple>
                                 <option value="software_development">Software Development</option>
                                 <option value="data_science">Data Science & Analytics</option>
@@ -1122,7 +1129,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="languages" class="form-label required-field">Languages Known</label>
                         <div class="input-with-icon">
-                            <i class="fas fa-language"></i>
+                            <i class="fa-solid fa-language"></i>
                             <input type="text" class="form-control" id="languages" name="languages" placeholder="e.g., English, Hindi, Gujarati" required>
                         </div>
                         <div class="invalid-feedback">Please enter the languages you know</div>
@@ -1138,7 +1145,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="preferredLocations" class="form-label required-field">Preferred Work Locations</label>
                         <div class="input-with-icon">
-                            <i class="fas fa-map-marker-alt"></i>
+                            <i class="fa-solid fa-location-dot"></i>
                             <input type="text" class="form-control" id="preferredLocations" name="preferred_locations" placeholder="e.g., Mumbai, Delhi, Remote" required>
                         </div>
                         <div class="invalid-feedback">Please enter your preferred locations</div>
@@ -1147,7 +1154,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="expectedStipend" class="form-label">Expected Monthly Stipend (₹)</label>
                         <div class="input-with-icon">
-                            <i class="fas fa-rupee-sign"></i>
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
                             <select class="form-select" id="expectedStipend" name="expected_stipend">
                                 <option value="" selected disabled>Select expected stipend range</option>
                                 <option value="unpaid">Unpaid/Certificate Only</option>
@@ -1166,7 +1173,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="internshipDuration" class="form-label required-field">Preferred Internship Duration</label>
                         <div class="input-with-icon">
-                            <i class="fas fa-calendar-alt"></i>
+                            <i class="fa-solid fa-calendar-days"></i>
                             <select class="form-select" id="internshipDuration" name="internship_duration" required>
                                 <option value="" selected disabled>Select duration</option>
                                 <option value="1_month">1 month</option>
@@ -1182,7 +1189,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="workMode" class="form-label required-field">Preferred Work Mode</label>
                         <div class="input-with-icon">
-                            <i class="fas fa-laptop-house"></i>
+                            <i class="fa-solid fa-house-laptop"></i>
                             <select class="form-select" id="workMode" name="work_mode" required>
                                 <option value="" selected disabled>Select mode</option>
                                 <option value="onsite">Onsite</option>
@@ -1199,7 +1206,7 @@
                     <div class="col-md-12 mb-3">
                         <label for="availability" class="form-label required-field">Availability to Start</label>
                         <div class="input-with-icon">
-                            <i class="fas fa-business-time"></i>
+                            <i class="fa-solid fa-business-time"></i>
                             <select class="form-select" id="availability" name="availability" required>
                                 <option value="" selected disabled>When can you start?</option>
                                 <option value="immediately">Immediately</option>
@@ -1215,15 +1222,15 @@
             </div>
 
             <div class="form-navigation mt-4">
-                <button type="button" class="btn btn-prev"><i class="fas fa-arrow-left me-2"></i> Previous: Education & Address</button>
-                <button type="button" class="btn btn-next">Next: Documents & Review <i class="fas fa-arrow-right ms-2"></i></button>
+                <button type="button" class="btn btn-prev"><i class="fa-solid fa-arrow-left me-2"></i> Previous: Education & Address</button>
+                <button type="button" class="btn btn-next">Next: Documents & Review <i class="fa-solid fa-arrow-right ms-2"></i></button>
             </div>
         </div>
 
         <!-- Documents & Review - Step 4 -->
         <div class="form-section" id="section-4">
             <h4 class="section-title">
-                <i class="fas fa-file-alt"></i> Documents & Review
+                <i class="fa-solid fa-file-lines"></i> Documents & Review
             </h4>
 
             <!-- Document Upload Section -->
@@ -1231,7 +1238,7 @@
                 <h5 class="fw-bold mb-3">Upload Documents</h5>
                 
                 <div class="card-alert info mb-4">
-                    <i class="fas fa-info-circle"></i>
+                    <i class="fa-solid fa-circle-info"></i>
                     Please upload your resume and photo for your profile. Your resume helps employers learn more about your qualifications.
                 </div>
                 
@@ -1239,7 +1246,7 @@
                     <div class="col-md-6 mb-4">
                         <label class="form-label required-field">Resume/CV</label>
                         <div class="file-upload-container" id="resumeUploadContainer">
-                            <i class="fas fa-file-upload upload-icon"></i>
+                            <i class="fa-solid fa-file-arrow-up upload-icon"></i>
                             <p class="mb-1">Drag & drop your resume here or click to browse</p>
                             <p class="text-muted small">Supported formats: PDF, DOCX (Max: 2MB)</p>
                             <input type="file" class="d-none" id="resumeUpload" name="resume" accept=".pdf,.docx" required>
@@ -1250,7 +1257,7 @@
                     <div class="col-md-6 mb-4">
                         <label class="form-label">Profile Photo</label>
                         <div class="file-upload-container" id="photoUploadContainer">
-                            <i class="fas fa-image upload-icon"></i>
+                            <i class="fa-solid fa-image upload-icon"></i>
                             <p class="mb-1">Drag & drop your photo here or click to browse</p>
                             <p class="text-muted small">Supported formats: JPG, PNG (Max: 1MB)</p>
                             <input type="file" class="d-none" id="photoUpload" name="photo" accept=".jpg,.jpeg,.png">
@@ -1263,7 +1270,7 @@
                     <div class="col-md-6 mb-4">
                         <label class="form-label">Additional Documents (Optional)</label>
                         <div class="file-upload-container" id="additionalDocsContainer">
-                            <i class="fas fa-file-alt upload-icon"></i>
+                            <i class="fa-solid fa-file-lines upload-icon"></i>
                             <p class="mb-1">Upload certificates, projects, or portfolios</p>
                             <p class="text-muted small">Supported formats: PDF, ZIP (Max: 5MB)</p>
                             <input type="file" class="d-none" id="additionalDocs" name="additional_docs" accept=".pdf,.zip">
@@ -1278,7 +1285,7 @@
                 
                 <div class="card border rounded p-4 mb-3">
                     <h6 class="mb-3 text-primary">
-                        <i class="fas fa-clipboard-check me-2"></i>
+                        <i class="fa-solid fa-clipboard-check me-2"></i>
                         Terms and Consent
                     </h6>
                     
@@ -1312,14 +1319,14 @@
                 </div>
                 
                 <div class="alert alert-warning mt-3">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
                     <strong>Important:</strong> Please review all your information before submitting. Once submitted, you'll receive a confirmation email with your registration details.
                 </div>
             </div>
 
             <div class="form-navigation mt-4">
-                <button type="button" class="btn btn-prev"><i class="fas fa-arrow-left me-2"></i> Previous: Skills & Preferences</button>
-                <button type="submit" class="btn btn-submit"><i class="fas fa-check-circle me-2"></i> Submit Registration</button>
+                <button type="button" class="btn btn-prev"><i class="fa-solid fa-arrow-left me-2"></i> Previous: Skills & Preferences</button>
+                <button type="submit" class="btn btn-submit"><i class="fa-solid fa-circle-check me-2"></i> Submit Registration</button>
             </div>
         </div>
     </form>
@@ -1540,7 +1547,7 @@
                     
                     // Validate file size
                     if (fileSize > upload.maxSize) {
-                        uploadIcon.className = 'fas fa-exclamation-circle upload-icon';
+                        uploadIcon.className = 'fa-solid fa-circle-exclamation upload-icon';
                         uploadIcon.style.color = '#dc3545';
                         uploadText.textContent = `File too large: ${fileName} (${fileSize} MB). Max size: ${upload.maxSize}MB`;
                         this.value = '';
@@ -1549,7 +1556,7 @@
                     
                     // Validate file type
                     if (upload.acceptedTypes && !upload.acceptedTypes.includes(fileType)) {
-                        uploadIcon.className = 'fas fa-exclamation-circle upload-icon';
+                        uploadIcon.className = 'fa-solid fa-circle-exclamation upload-icon';
                         uploadIcon.style.color = '#dc3545';
                         uploadText.textContent = `Invalid file type: ${fileName}. Please upload correct format.`;
                         this.value = '';
@@ -1557,7 +1564,7 @@
                     }
                     
                     // File is valid
-                    uploadIcon.className = 'fas fa-check-circle upload-icon';
+                    uploadIcon.className = 'fa-solid fa-circle-check upload-icon';
                     uploadIcon.style.color = '#28a745';
                     uploadText.textContent = `Selected: ${fileName} (${fileSize} MB)`;
                     
@@ -1644,7 +1651,7 @@
             rowDiv.innerHTML = `
                 <div class="col-12 text-end">
                     <button type="button" class="btn btn-sm btn-outline-danger remove-education-btn">
-                        <i class="fas fa-trash-alt me-1"></i> Remove
+                        <i class="fa-solid fa-trash-can me-1"></i> Remove
                     </button>
                 </div>
             `;
@@ -1782,7 +1789,7 @@
                     if (!existingSkills.includes(s.trim().toLowerCase())) {
                         const chip = document.createElement('div');
                         chip.className = 'skill-chip';
-                        chip.innerHTML = `${s.trim()} <i class="fas fa-times"></i>`;
+                        chip.innerHTML = `${s.trim()} <i class="fa-solid fa-xmark"></i>`;
                         
                         chip.querySelector('i').addEventListener('click', function() {
                             chip.remove();
@@ -1838,21 +1845,21 @@
             let icon, bgClass;
             switch(type) {
                 case 'success':
-                    icon = 'fa-check-circle';
+                    icon = 'fa-circle-check';
                     bgClass = 'bg-success';
                     break;
                 case 'warning':
-                    icon = 'fa-exclamation-triangle';
+                    icon = 'fa-triangle-exclamation';
                     bgClass = 'bg-warning text-dark';
                     break;
                 case 'danger':
                 case 'error':
-                    icon = 'fa-exclamation-circle';
+                    icon = 'fa-circle-exclamation';
                     bgClass = 'bg-danger';
                     break;
                 case 'info':
                 default:
-                    icon = 'fa-info-circle';
+                    icon = 'fa-circle-info';
                     bgClass = 'bg-primary';
             }
             
@@ -1860,7 +1867,7 @@
             const toastHtml = `
                 <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
                     <div class="toast-header ${bgClass} text-white">
-                        <i class="fas ${icon} me-2"></i>
+                        <i class="fa-solid ${icon} me-2"></i>
                         <strong class="me-auto">InternGenius</strong>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
@@ -1893,7 +1900,7 @@
                 // Show loading indicator
                 const submitBtn = document.querySelector('.btn-submit');
                 const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Processing...';
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Processing...';
                 submitBtn.disabled = true;
                 
                 // Submit the form

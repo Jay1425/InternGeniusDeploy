@@ -8,8 +8,8 @@ class Config:
     # Flask Configuration
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'interngenius-secret-key-change-in-production'
     
-    # MongoDB Configuration
-    MONGO_URI = os.environ.get('MONGO_URI') or 'mongodb+srv://jayraychura13_db_user:jUhWmtYndMBViwq5@interngenius.iwai3zh.mongodb.net/interngenius'
+    # MongoDB Configuration with improved connection string
+    MONGO_URI = os.environ.get('MONGO_URI') or 'mongodb+srv://jayraychura13_db_user:jUhWmtYndMBViwq5@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius'
     
     # Flask-Login Configuration
     REMEMBER_COOKIE_DURATION = 86400  # 1 day in seconds

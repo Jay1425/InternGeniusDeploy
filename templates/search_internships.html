@@ -2,6 +2,72 @@
 
 {% block title %}Search Internships - InternGenius{% endblock %}
 
+{% block custom_css %}
+<style>
+    /* Theme Colors */
+    :root {
+        --govt-primary: #1e40af;
+        --govt-secondary: #3b82f6;
+        --govt-saffron: #FF9933;
+        --govt-white: #FFFFFF;
+        --govt-green: #138808;
+        --govt-dark: #333333;
+        --govt-light: #f8f9fa;
+        --govt-info: #0369a1;
+        --govt-success: #059669;
+        --govt-warning: #d97706;
+        --govt-danger: #dc2626;
+    }
+    
+    body {
+        background-color: var(--govt-light);
+        color: var(--govt-dark);
+    }
+    
+    .btn-primary {
+        background-color: var(--govt-primary);
+        border-color: var(--govt-primary);
+    }
+    
+    .btn-primary:hover {
+        background-color: #1e3a8a;
+        border-color: #1e3a8a;
+    }
+    
+    .bg-primary {
+        background-color: var(--govt-primary) !important;
+    }
+    
+    .text-primary {
+        color: var(--govt-primary) !important;
+    }
+
+.internship-card {
+    border: 1px solid #e9ecef;
+    transition: all 0.3s;
+    background-color: white;
+}
+
+.internship-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.company-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.skills-tags .badge {
+    font-size: 0.75rem;
+}
+
+.internship-meta .badge {
+    font-weight: normal;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <!-- Search Header -->
@@ -53,7 +119,7 @@
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary w-100">
-                                <i class="fas fa-search"></i> Search
+                                <i class="fa-solid fa-magnifying-glass"></i> Search
                             </button>
                         </div>
                     </form>
@@ -69,10 +135,10 @@
                 <h5>{{ internships|length }} Internships Found</h5>
                 <div class="btn-group btn-group-sm">
                     <button class="btn btn-outline-secondary active">
-                        <i class="fas fa-list"></i> List View
+                        <i class="fa-solid fa-list"></i> List View
                     </button>
                     <button class="btn btn-outline-secondary">
-                        <i class="fas fa-th"></i> Grid View
+                        <i class="fa-solid fa-table-cells"></i> Grid View
                     </button>
                 </div>
             </div>
@@ -100,13 +166,13 @@
                                     
                                     <div class="internship-meta mb-3">
                                         <span class="badge bg-light text-dark me-2">
-                                            <i class="fas fa-map-marker-alt"></i> {{ internship.location }}
+                                            <i class="fa-solid fa-location-dot"></i> {{ internship.location }}
                                         </span>
                                         <span class="badge bg-light text-dark me-2">
-                                            <i class="fas fa-clock"></i> {{ internship.duration }}
+                                            <i class="fa-regular fa-clock"></i> {{ internship.duration }}
                                         </span>
                                         <span class="badge bg-success">
-                                            <i class="fas fa-rupee-sign"></i> {{ internship.stipend }}
+                                            <i class="fa-solid fa-indian-rupee-sign"></i> {{ internship.stipend }}
                                         </span>
                                     </div>
                                     
@@ -125,14 +191,14 @@
                                 </div>
                                 <div class="mt-3">
                                     <a href="{{ url_for('internship_details', internship_id=loop.index) }}" class="btn btn-outline-primary btn-sm me-2">
-                                        <i class="fas fa-eye"></i> View Details
+                                        <i class="fa-solid fa-eye"></i> View Details
                                     </a>
                                     <button class="btn btn-primary btn-sm">
-                                        <i class="fas fa-paper-plane"></i> Apply Now
+                                        <i class="fa-solid fa-paper-plane"></i> Apply Now
                                     </button>
                                     <div class="mt-2">
                                         <button class="btn btn-link btn-sm text-muted p-0">
-                                            <i class="fas fa-bookmark"></i> Save for Later
+                                            <i class="fa-regular fa-bookmark"></i> Save for Later
                                         </button>
                                     </div>
                                 </div>
@@ -170,31 +236,6 @@
         </div>
     </div>
 </div>
-
-<style>
-.internship-card {
-    border: 1px solid #e9ecef;
-    transition: all 0.3s;
-}
-
-.internship-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
-}
-
-.company-logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.skills-tags .badge {
-    font-size: 0.75rem;
-}
-
-.internship-meta .badge {
-    font-weight: normal;
-}
-</style>
 
 <script>
 function applyForInternship(internshipId) {
