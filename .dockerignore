@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environments
+.env
+.venv
+venv/
+ENV/
+
+# Git & VCS
+.git/
+.gitignore
+
+# OS & IDE
+.DS_Store
+.vscode/
+*.swp
+
+# Node
+node_modules/
+
+# Tests & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build artifacts
+build/
+dist/
+*.log
+
+# Local data/uploads (volume mounted at runtime)
+static/uploads/

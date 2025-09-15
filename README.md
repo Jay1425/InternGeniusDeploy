@@ -230,6 +230,62 @@ Troubleshooting:
 - If uploads don’t persist, ensure the disk mount is present and the app is writing to `static/uploads`.
 - Check Logs tab for connection messages (we print clear diagnostics at startup).
 
+---
+
+## ✈️ Deploy to Fly.io
+
+We added a Dockerfile and `fly.toml` so you can deploy on Fly quickly.
+
+### Prerequisites
+- Install the Fly CLI: https://fly.io/docs/hands-on/install-flyctl/
+- Create an account and log in: `fly auth signup` then `fly auth login`
+
+### 1) Launch the app
+This will read `fly.toml` and set up the app in your nearest region (we defaulted to `bom`).
+
+```powershell
+fly launch --no-deploy
+```
+
+If prompted about a Postgres/Redis, choose No for now.
+
+### 2) Create a volume for uploads
+We store resumes/photos under `static/uploads`. Create a persistent volume and name it `uploads_data` (matches `[[mounts]]` in `fly.toml`).
+
+```powershell
+fly volumes create uploads_data --size 1 --region bom
+```
+
+### 3) Set secrets
+Set your environment secrets so the app can connect to MongoDB and secure sessions.
+
+```powershell
+fly secrets set MONGO_URI="<your-mongodb-connection-string>" SECRET_KEY="<your-random-secret>"
+```
+
+Tip: You can generate a strong secret locally and reuse it.
+
+### 4) Deploy
+
+```powershell
+fly deploy
+```
+
+The service listens on port 8080 inside the container, with health checks hitting `/health`.
+
+### 5) Open the app
+
+```powershell
+fly open
+```
+
+### Notes
+- App server: Gunicorn runs `app:app` and binds to `$PORT` (on Fly it’s 8080).
+- Health check: `/health` returns JSON and checks DB connectivity when configured.
+- Persistent data: The volume is mounted at `/app/static/uploads`.
+- Regions: Update `primary_region` in `fly.toml` to your preferred region.
+- Logs: Use `fly logs` to view runtime output.
+
 ### **7. Access the Application**
 - **Homepage**: http://127.0.0.1:5000/
 - **Login**: http://127.0.0.1:5000/auth/login

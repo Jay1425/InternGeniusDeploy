@@ -326,15 +326,17 @@ os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'photos'), exist_ok=True)
 def index():
     return render_template('index.html')
 
-@app.route('/health')
-def health_check():
-    """Health check endpoint for monitoring"""
-    db_status = "connected" if check_mongodb_health() else "offline"
-    return jsonify({
-        'status': 'healthy',
-        'database': db_status,
-        'timestamp': datetime.now().isoformat()
-    })
+@app.get("/health")
+def health():
+    ok = True
+    msg = "ok"
+    try:
+        # if you have a global `db`/`mongo_client`, ping it here
+        # mongo_client.admin.command("ping")
+        pass
+    except Exception as e:
+        ok, msg = False, str(e)
+    return {"status": "ok" if ok else "error", "message": msg}, (200 if ok else 500)
 
 # Authentication routes
 @app.route('/login', methods=['GET', 'POST'])

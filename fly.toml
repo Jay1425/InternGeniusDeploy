@@ -1,0 +1,33 @@
+# fly.toml app configuration file generated for interngenius on 2025-09-15
+
+app = "interngenius"           # change if taken: fly apps create <unique-name> and update here
+primary_region = "bom"
+
+[build]
+  # Uses Dockerfile
+
+[env]
+  PYTHONUNBUFFERED = "1"
+  PORT = "8080"
+
+[[mounts]]
+  source = "uploads_data"
+  destination = "/app/static/uploads"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 20
+    hard_limit = 40
+
+  [http_service.healthcheck]
+    path = "/health"
+    interval = "15s"
+    timeout = "5s"
