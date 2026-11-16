@@ -36,9 +36,11 @@ app.config['WTF_CSRF_TIME_LIMIT'] = 3600  # 1 hour CSRF token lifetime
 
 # MongoDB Configuration - Load from environment variables
 # Get MONGO_URI from .env file or use fallback
-base_mongo_uri = os.getenv('MONGO_URI')
+base_mongo_uri = os.getenv('MONGO_URI', '').strip()
+if config_name == 'production' and not base_mongo_uri:
+    raise RuntimeError('MONGO_URI must be configured in production')
 if not base_mongo_uri:
-    raise RuntimeError('MONGO_URI must be configured')
+    base_mongo_uri = 'mongodb://localhost:27017/interngenius'
 
 # Enhanced MongoDB connection with ServerApi
 mongodb_uri_options = [
