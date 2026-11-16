@@ -82,8 +82,8 @@ def setup_environment_file():
         print("❌ MONGO_URI must start with mongodb:// or mongodb+srv://")
         return False
     if not mongo_uri:
-        mongo_uri = "your-mongodb-atlas-connection-string"
-        print("💡 Add MONGO_URI to .env before enabling MongoDB features")
+        mongo_uri = "mongodb://localhost:27017/interngenius"
+        print("💡 Using local MongoDB; the app can fall back to offline demo mode")
 
     # Create .env file
     env_content = f"""# InternGenius Environment Configuration
