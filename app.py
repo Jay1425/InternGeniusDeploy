@@ -59,9 +59,13 @@ app.config['MONGO_URI'] = mongodb_uri_options[0]
 def test_network_connectivity():
     """Quick DNS test for the configured MongoDB host."""
     import socket
+    from urllib.parse import urlparse
     try:
-        # Test DNS resolution for MongoDB Atlas
-        socket.gethostbyname(__import__("urllib.parse", fromlist=["urlparse"]).urlparse(base_mongo_uri).hostname or "")
+        # Test DNS resolution for the configured MongoDB host.
+        host = urlparse(base_mongo_uri).hostname
+        if not host:
+            return False
+        socket.gethostbyname(host)
         return True
     except socket.gaierror:
         return False
