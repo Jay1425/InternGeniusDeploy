@@ -17,7 +17,9 @@ def test_user_profiles():
     """Test and display user profiles from MongoDB"""
     
     # Get MongoDB URI from environment
-    mongo_uri = os.getenv('MONGO_URI', 'mongodb+srv://jayraychura13_db_user:YOUR_PASSWORD@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius')
+    mongo_uri = os.getenv('MONGO_URI')
+    if not mongo_uri:
+        raise RuntimeError('MONGO_URI must be configured before running this test')
     
     try:
         # Connect to MongoDB
@@ -76,7 +78,9 @@ def test_user_profiles():
 def test_specific_user(email):
     """Test specific user profile by email"""
     
-    mongo_uri = os.getenv('MONGO_URI', 'mongodb+srv://jayraychura13_db_user:YOUR_PASSWORD@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius')
+    mongo_uri = os.getenv('MONGO_URI')
+    if not mongo_uri:
+        raise RuntimeError('MONGO_URI must be configured before running this test')
     
     try:
         client = MongoClient(mongo_uri, server_api=ServerApi('1'))
