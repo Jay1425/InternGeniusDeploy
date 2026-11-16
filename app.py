@@ -66,7 +66,7 @@ def test_network_connectivity():
 
 def init_mongodb():
     """Initialize MongoDB connection with ServerApi and multiple URI attempts"""
-    print(f"📋 Base URI from .env: {base_mongo_uri[:60]}...")
+    print("📋 MongoDB URI is configured (value hidden)")
     
     # Test network connectivity first
     if not test_network_connectivity():
@@ -127,7 +127,7 @@ def init_mongodb():
             elif "timeout" in error_msg.lower():
                 print(f"❌ Connection {i+1} failed: Connection timeout")
             else:
-                print(f"❌ Connection {i+1} failed: {error_msg[:50]}...")
+                print(f"❌ Connection {i+1} failed: connection error; verify MONGO_URI and network settings")
             continue
     
     print("⚠️ MongoDB connection failed - running in offline mode with session storage")
