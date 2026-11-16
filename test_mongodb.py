@@ -80,10 +80,10 @@ def create_env_file():
     if not os.path.exists('.env'):
         env_content = """# MongoDB Configuration
 # Replace YOUR_PASSWORD with your actual MongoDB password
-MONGO_URI=mongodb+srv://jayraychura13_db_user:YOUR_PASSWORD@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius
+MONGO_URI=your-mongodb-atlas-connection-string
 
 # Flask Configuration
-SECRET_KEY=your-secret-key-for-development
+SECRET_KEY=replace-with-a-long-random-secret
 FLASK_ENV=development
 """
         with open('.env', 'w') as f:
