@@ -41,6 +41,8 @@ class ProductionConfig(Config):
     """Production configuration."""
     if os.environ.get("FLASK_ENV") == "production" and not os.environ.get("SECRET_KEY"):
         raise RuntimeError("SECRET_KEY must be configured in production")
+    if os.environ.get("FLASK_ENV") == "production" and not os.environ.get("SECRET_KEY"):
+        raise RuntimeError("SECRET_KEY must be configured in production")
     DEBUG = False
     MONGO_URI = os.environ.get('PROD_MONGO_URI') or os.environ.get('MONGO_URI')
 
