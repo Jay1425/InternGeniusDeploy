@@ -5,6 +5,8 @@ Helps users set up the project with proper MongoDB configuration
 """
 
 import os
+from getpass import getpass
+import secrets
 import sys
 import subprocess
 from pathlib import Path
@@ -71,24 +73,22 @@ def setup_environment_file():
         print("✅ .env file already exists")
         return True
     
-    # Get MongoDB password from user
-    print("\n🔑 MongoDB Configuration:")
-    print("To connect to MongoDB Atlas, we need your database password.")
-    print("If you don't have it, the app will run in demo mode (fully functional).")
-    
-    mongo_password = input("Enter your MongoDB password (or press Enter to skip): ").strip()
-    
-    if mongo_password:
-        mongo_uri = f"mongodb+srv://jayraychura13_db_user:{mongo_password}@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius"
-    else:
-        mongo_uri = "mongodb+srv://jayraychura13_db_user:YOUR_PASSWORD@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius"
-        print("💡 You can update the password in .env file later")
+    # Read the full connection URI securely; do not embed credentials in source code.
+    mongo_uri = os.getenv("MONGO_URI", "").strip()
+    if not mongo_uri:
+        mongo_uri = getpass("Paste MongoDB connection URI (input hidden; Enter to skip): ").strip()
+    if mongo_uri and not mongo_uri.startswith(("mongodb://", "mongodb+srv://")):
+        print("❌ MONGO_URI must start with mongodb:// or mongodb+srv://")
+        return False
+    if not mongo_uri:
+        mongo_uri = "mongodb://localhost:27017/interngenius"
+        print("💡 Using local MongoDB; the app can fall back to offline demo mode")
     
     # Create .env file
     env_content = f"""# InternGenius Environment Configuration
 
 # Flask Configuration
-SECRET_KEY=dev-secret-key-change-in-production
+SECRET_KEY={secrets.token_urlsafe(32)}
 FLASK_ENV=development
 
 # MongoDB Configuration
