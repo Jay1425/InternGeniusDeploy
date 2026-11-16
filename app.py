@@ -57,11 +57,11 @@ app.config['MONGO_URI'] = mongodb_uri_options[0]
 
 # Initialize MongoDB with multiple connection attempts
 def test_network_connectivity():
-    """Quick network test to MongoDB Atlas domain"""
+    """Quick DNS test for the configured MongoDB host."""
     import socket
     try:
         # Test DNS resolution for MongoDB Atlas
-        socket.gethostbyname(base_mongo_uri.split("@")[-1].split("/")[0].split("?")[0])
+        socket.gethostbyname(__import__("urllib.parse", fromlist=["urlparse"]).urlparse(base_mongo_uri).hostname or "")
         return True
     except socket.gaierror:
         return False
