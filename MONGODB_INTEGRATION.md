@@ -19,7 +19,7 @@ Your InternGenius project now has a **robust MongoDB integration** with the foll
 
 3. **Connection String Optimization**
    ```
-   mongodb+srv://jayraychura13_db_user:PASSWORD@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius
+   mongodb+srv://<username>:<password>@<cluster-host>/<database>?retryWrites=true&w=majority
    ```
 
 ### 📁 **New Files Added**
@@ -55,7 +55,7 @@ python app.py
 cp .env.example .env
 
 # Edit .env with your MongoDB password
-MONGO_URI=mongodb+srv://jayraychura13_db_user:YOUR_PASSWORD@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster-host>/<database>?retryWrites=true&w=majority
 
 # Test and run
 python test_mongodb.py

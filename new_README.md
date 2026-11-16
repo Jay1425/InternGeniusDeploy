@@ -181,7 +181,7 @@ cp .env.example .env    # Linux/Mac
 ```bash
 # The app is pre-configured for MongoDB Atlas
 # Just update your password in .env file:
-MONGO_URI=mongodb+srv://jayraychura13_db_user:YOUR_PASSWORD@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster-host>/<database>?retryWrites=true&w=majority
 
 # Test connection
 python test_mongodb.py
@@ -746,7 +746,7 @@ flask run --reload
 **❌ MongoDB Connection Failed**
 ```bash
 # Solution 1: Check connection string
-export MONGO_URI="mongodb+srv://user:pass@cluster.mongodb.net/dbname"
+export MONGO_URI="mongodb+srv://<username>:<password>@<cluster-host>/<database>?retryWrites=true&w=majority"
 
 # Solution 2: Use demo mode (no database required)
 python app.py  # Automatically falls back to session storage
