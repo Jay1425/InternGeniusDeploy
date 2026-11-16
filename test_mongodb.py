@@ -15,11 +15,13 @@ load_dotenv()
 def test_mongodb_connection():
     """Test MongoDB connection with proper error handling"""
     
-    # Get MongoDB URI from environment or use default
-    mongo_uri = os.getenv('MONGO_URI', 'mongodb+srv://jayraychura13_db_user:YOUR_PASSWORD@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius')
+    # Get MongoDB URI from environment; never use a committed fallback
+    mongo_uri = os.getenv('MONGO_URI')
+    if not mongo_uri:
+        raise RuntimeError('MONGO_URI must be configured before running this test')
     
     print("🔄 Testing MongoDB Connection...")
-    print(f"📋 URI: {mongo_uri[:60]}...")
+    print("📋 MongoDB URI is configured (value hidden)")
     
     try:
         # Create MongoDB client with ServerApi
