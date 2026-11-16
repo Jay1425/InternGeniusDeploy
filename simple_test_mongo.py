@@ -18,7 +18,9 @@ def main():
     
     try:
         # Connect to MongoDB Atlas
-        uri = os.getenv('MONGO_URI') or 'mongodb+srv://jayraychura13_db_user:jUhWmtYndMBViwq5@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius'
+        uri = os.getenv('MONGO_URI')
+        if not uri:
+            raise RuntimeError('MONGO_URI must be configured')
         print(f"🔗 Connecting to: {uri[:50]}...")
         client = MongoClient(uri, server_api=ServerApi('1'))
         client.admin.command('ping')
