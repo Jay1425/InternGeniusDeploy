@@ -28,7 +28,7 @@ app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload size
 
 # Security configuration
-app.config['SESSION_COOKIE_SECURE'] = False  # Set to True in production with HTTPS
+app.config['SESSION_COOKIE_SECURE'] = config_name == 'production'
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=24)
@@ -36,7 +36,9 @@ app.config['WTF_CSRF_TIME_LIMIT'] = 3600  # 1 hour CSRF token lifetime
 
 # MongoDB Configuration - Load from environment variables
 # Get MONGO_URI from .env file or use fallback
-base_mongo_uri = os.getenv('MONGO_URI', 'mongodb+srv://jayraychura13_db_user:jUhWmtYndMBViwq5@interngenius.iwai3zh.mongodb.net/interngenius')
+base_mongo_uri = os.getenv('MONGO_URI')
+if not base_mongo_uri:
+    raise RuntimeError('MONGO_URI must be configured')
 
 # Enhanced MongoDB connection with ServerApi
 mongodb_uri_options = [
@@ -57,14 +59,14 @@ def test_network_connectivity():
     import socket
     try:
         # Test DNS resolution for MongoDB Atlas
-        socket.gethostbyname("interngenius.iwai3zh.mongodb.net")
+        socket.gethostbyname(base_mongo_uri.split("@")[-1].split("/")[0].split("?")[0])
         return True
     except socket.gaierror:
         return False
 
 def init_mongodb():
     """Initialize MongoDB connection with ServerApi and multiple URI attempts"""
-    print(f"📋 Base URI from .env: {base_mongo_uri[:60]}...")
+    print("📋 MongoDB URI is configured (value hidden)")
     
     # Test network connectivity first
     if not test_network_connectivity():
@@ -81,7 +83,7 @@ def init_mongodb():
             print("✅ Local MongoDB connected successfully!")
             return client, db
         except Exception as e:
-            print(f"❌ Local MongoDB not available: {str(e)[:40]}...")
+            print("❌ Local MongoDB is unavailable")
     
     for i, uri in enumerate(mongodb_uri_options):
         try:
@@ -125,7 +127,7 @@ def init_mongodb():
             elif "timeout" in error_msg.lower():
                 print(f"❌ Connection {i+1} failed: Connection timeout")
             else:
-                print(f"❌ Connection {i+1} failed: {error_msg[:50]}...")
+                print(f"❌ Connection {i+1} failed: connection error; verify MONGO_URI and network settings")
             continue
     
     print("⚠️ MongoDB connection failed - running in offline mode with session storage")
