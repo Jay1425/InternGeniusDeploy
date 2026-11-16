@@ -16,10 +16,12 @@ def test_mongodb_connection():
     """Test MongoDB connection with proper error handling"""
     
     # Get MongoDB URI from environment or use default
-    mongo_uri = os.getenv('MONGO_URI', 'mongodb+srv://jayraychura13_db_user:YOUR_PASSWORD@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius')
+    mongo_uri = os.getenv('MONGO_URI')
+    if not mongo_uri:
+        raise RuntimeError('MONGO_URI must be configured before running this test')
     
     print("🔄 Testing MongoDB Connection...")
-    print(f"📋 URI: {mongo_uri[:60]}...")
+    print("📋 MongoDB URI is configured (value hidden)")
     
     try:
         # Create MongoDB client with ServerApi
@@ -64,7 +66,7 @@ def test_mongodb_connection():
         return True
         
     except Exception as e:
-        print(f"❌ MongoDB connection failed: {e}")
+        print("❌ MongoDB connection failed; verify MONGO_URI and network settings")
         print("\n🔧 Troubleshooting tips:")
         print("1. Check your .env file has the correct MONGO_URI")
         print("2. Ensure your MongoDB Atlas cluster is running")
@@ -78,10 +80,10 @@ def create_env_file():
     if not os.path.exists('.env'):
         env_content = """# MongoDB Configuration
 # Replace YOUR_PASSWORD with your actual MongoDB password
-MONGO_URI=mongodb+srv://jayraychura13_db_user:YOUR_PASSWORD@interngenius.iwai3zh.mongodb.net/?retryWrites=true&w=majority&appName=InternGenius
+MONGO_URI=your-mongodb-atlas-connection-string
 
 # Flask Configuration
-SECRET_KEY=your-secret-key-for-development
+SECRET_KEY=replace-with-a-long-random-secret
 FLASK_ENV=development
 """
         with open('.env', 'w') as f:
