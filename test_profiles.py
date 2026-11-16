@@ -73,7 +73,7 @@ def test_user_profiles():
         client.close()
         
     except Exception as e:
-        print(f"❌ Error connecting to MongoDB: {e}")
+        print("❌ MongoDB profile test failed; verify MONGO_URI and network settings")
 
 def test_specific_user(email):
     """Test specific user profile by email"""
