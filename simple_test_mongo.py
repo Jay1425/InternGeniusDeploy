@@ -21,7 +21,7 @@ def main():
         uri = os.getenv('MONGO_URI')
         if not uri:
             raise RuntimeError('MONGO_URI must be configured')
-        print(f"🔗 Connecting to: {uri[:50]}...")
+        print("🔗 MongoDB URI is configured (value hidden)")
         client = MongoClient(uri, server_api=ServerApi('1'))
         client.admin.command('ping')
         print("✅ Successfully connected to MongoDB Atlas!")
