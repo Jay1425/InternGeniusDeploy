@@ -61,7 +61,7 @@ def test_network_connectivity():
     import socket
     try:
         # Test DNS resolution for MongoDB Atlas
-        socket.gethostbyname("interngenius.iwai3zh.mongodb.net")
+        socket.gethostbyname(base_mongo_uri.split("@")[-1].split("/")[0].split("?")[0])
         return True
     except socket.gaierror:
         return False
