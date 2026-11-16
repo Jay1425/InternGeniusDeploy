@@ -66,7 +66,7 @@ def test_mongodb_connection():
         return True
         
     except Exception as e:
-        print(f"❌ MongoDB connection failed: {e}")
+        print("❌ MongoDB connection failed; verify MONGO_URI and network settings")
         print("\n🔧 Troubleshooting tips:")
         print("1. Check your .env file has the correct MONGO_URI")
         print("2. Ensure your MongoDB Atlas cluster is running")
