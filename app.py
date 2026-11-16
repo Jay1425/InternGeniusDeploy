@@ -36,7 +36,9 @@ app.config['WTF_CSRF_TIME_LIMIT'] = 3600  # 1 hour CSRF token lifetime
 
 # MongoDB Configuration - Load from environment variables
 # Get MONGO_URI from .env file or use fallback
-base_mongo_uri = os.getenv('MONGO_URI', 'mongodb+srv://jayraychura13_db_user:jUhWmtYndMBViwq5@interngenius.iwai3zh.mongodb.net/interngenius')
+base_mongo_uri = os.getenv('MONGO_URI')
+if not base_mongo_uri:
+    raise RuntimeError('MONGO_URI must be configured')
 
 # Enhanced MongoDB connection with ServerApi
 mongodb_uri_options = [
