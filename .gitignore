@@ -46,6 +46,9 @@ instance/
 .webassets-cache
 
 # Environment variables
+.env.*
+!.env.example
+client_secret*.json
 .env
 .env.local
 .env.development
